@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>AI Center | HelpHub AI</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary-fixed": "#410005",
+                        "on-tertiary-container": "#711419",
+                        "surface-container-low": "#f5f3ef",
+                        "tertiary-fixed-dim": "#ffb3af",
+                        "on-primary-container": "#00422b",
+                        "surface-dim": "#dbdad6",
+                        "surface-variant": "#e4e2de",
+                        "primary": "#006c49",
+                        "secondary": "#54615d",
+                        "secondary-fixed-dim": "#bbcac4",
+                        "on-surface-variant": "#3c4a42",
+                        "inverse-surface": "#30312e",
+                        "surface": "#fbf9f5",
+                        "primary-fixed": "#6ffbbe",
+                        "on-secondary-fixed": "#111e1a",
+                        "surface-container-highest": "#e4e2de",
+                        "on-secondary": "#ffffff",
+                        "tertiary-fixed": "#ffdad7",
+                        "on-secondary-fixed-variant": "#3c4a45",
+                        "outline-variant": "#bbcabf",
+                        "surface-tint": "#006c49",
+                        "on-surface": "#1b1c1a",
+                        "secondary-container": "#d7e6e0",
+                        "outline": "#6c7a71",
+                        "on-background": "#1b1c1a",
+                        "tertiary": "#a43a3a",
+                        "error": "#ba1a1a",
+                        "on-tertiary-fixed-variant": "#842225",
+                        "on-primary-fixed-variant": "#005236",
+                        "on-secondary-container": "#596762",
+                        "on-tertiary": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "background": "#fbf9f5",
+                        "inverse-primary": "#4edea3",
+                        "surface-bright": "#fbf9f5",
+                        "surface-container-lowest": "#ffffff",
+                        "primary-fixed-dim": "#4edea3",
+                        "on-primary": "#ffffff",
+                        "surface-container-high": "#eae8e4",
+                        "inverse-on-surface": "#f2f0ed",
+                        "primary-container": "#10b981",
+                        "tertiary-container": "#fc7c78",
+                        "error-container": "#ffdad6",
+                        "surface-container": "#efeeea",
+                        "on-primary-fixed": "#002113",
+                        "on-error": "#ffffff",
+                        "secondary-fixed": "#d7e6e0"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Plus Jakarta Sans"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; background-color: #fbf9f5; }
+        h1, h2, h3, .headline { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .glass-header { backdrop-filter: blur(24px); }
+    </style>
+</head>
+<body class="text-on-surface">
+<!-- TopNavBar -->
+<nav class="bg-[#fbf9f5]/80 dark:bg-[#23302c]/80 backdrop-blur-xl docked full-width top-0 sticky z-50 bg-[#f5f3ef] dark:bg-[#23302c] shadow-none">
+<div class="flex justify-between items-center px-8 py-4 max-w-7xl mx-auto w-full font-['Plus_Jakarta_Sans'] tracking-tight">
+<div class="text-xl font-bold text-[#23302c] dark:text-[#10b981] flex items-center gap-2">
+<span class="material-symbols-outlined text-[#10b981]" style="font-variation-settings: 'FILL' 1;">hub</span>
+                HelpHub AI
+            </div>
+<div class="hidden md:flex items-center gap-8">
+<a class="text-[#54615d] dark:text-[#f5f3ef] font-medium hover:scale-[1.02] hover:text-[#10b981] transition-all duration-300" href="#">Dashboard</a>
+<a class="text-[#54615d] dark:text-[#f5f3ef] font-medium hover:scale-[1.02] hover:text-[#10b981] transition-all duration-300" href="#">Create Request</a>
+<a class="text-[#10b981] font-bold border-b-2 border-[#10b981] pb-1 hover:scale-[1.02] transition-all duration-300" href="#">AI Center</a>
+</div>
+<div class="flex items-center gap-4">
+<button class="hidden md:block px-6 py-2 rounded-full bg-primary-container text-on-primary-container font-semibold hover:scale-[1.02] transition-all shadow-[0px_24px_48px_rgba(35,48,44,0.06)]">Sign In</button>
+<span class="material-symbols-outlined text-secondary cursor-pointer hover:text-primary transition-colors">account_circle</span>
+</div>
+</div>
+</nav>
+<main class="max-w-7xl mx-auto px-6 pt-8">
+<!-- Hero Section -->
+<section class="relative">
+<div class="bg-[#23302C] rounded-xl p-12 md:p-20 overflow-hidden relative min-h-[500px] flex flex-col justify-center">
+<!-- Abstract Greenery Overlay -->
+<div class="absolute top-0 right-0 w-1/2 h-full opacity-20 pointer-events-none">
+<img class="w-full h-full object-cover mix-blend-screen" data-alt="abstract close up of lush green monstera leaves with soft natural shadows and high contrast botanical textures" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCX--EZ29nYTznyTs-lnLjdxqQrh1SebAO8L1a0I1kII1so47MyLRZExwebOCXCXHA1qpUaxXhEE0HVe6Gt8rxMVXRC2X8_X8vw7tdGIc2WHYJB5UGvU4-c4Q8A54jH1kSvuy3PcC9xmA_19YFr3pWI8BxJYuGXBjox-LykaKa5uN6tpIfLcRMt0KHhPJG0EUgGTEeFpN1pu644LsCAVApjo4-m1f_orUApLm9drsbyfc1soMDgkVZ8TmkaM8-M7dH1K24wqJ64RLhu"/>
+</div>
+<div class="relative z-10 max-w-3xl">
+<span class="inline-block px-4 py-1.5 rounded-full bg-primary/20 text-primary-fixed border border-primary/30 text-xs font-bold tracking-widest uppercase mb-6">AI CENTER</span>
+<h1 class="text-4xl md:text-6xl font-extrabold text-white leading-[1.1] tracking-tight mb-8">
+                        See what the platform intelligence is noticing.
+                    </h1>
+<p class="text-xl md:text-2xl text-[#bbcac4] leading-relaxed font-body">
+                        AI-like insights summarize demand trends, helper readiness, urgency signals, and request recommendations.
+                    </p>
+</div>
+</div>
+<!-- Overlapping Cards -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 -mt-16 px-6 md:px-12 relative z-20">
+<!-- Card 1 -->
+<div class="bg-surface-container-lowest rounded-lg p-8 shadow-[0px_24px_48px_rgba(35,48,44,0.06)] hover:scale-[1.02] transition-all duration-300">
+<div class="flex justify-between items-start mb-4">
+<span class="text-xs font-bold text-primary tracking-widest uppercase">TREND PULSE</span>
+<span class="material-symbols-outlined text-primary-container">trending_up</span>
+</div>
+<h3 class="text-2xl font-bold text-secondary mb-2">Web Development</h3>
+<p class="text-on-surface-variant text-sm leading-relaxed">Most common support area based on active community requests.</p>
+</div>
+<!-- Card 2 -->
+<div class="bg-surface-container-lowest rounded-lg p-8 shadow-[0px_24px_48px_rgba(35,48,44,0.06)] hover:scale-[1.02] transition-all duration-300">
+<div class="flex justify-between items-start mb-4">
+<span class="text-xs font-bold text-primary tracking-widest uppercase">URGENCY WATCH</span>
+<span class="material-symbols-outlined text-tertiary">priority_high</span>
+</div>
+<h3 class="text-4xl font-extrabold text-secondary mb-2">2</h3>
+<p class="text-on-surface-variant text-sm leading-relaxed">Requests currently flagged high priority by the urgency detector.</p>
+</div>
+<!-- Card 3 -->
+<div class="bg-surface-container-lowest rounded-lg p-8 shadow-[0px_24px_48px_rgba(35,48,44,0.06)] hover:scale-[1.02] transition-all duration-300">
+<div class="flex justify-between items-start mb-4">
+<span class="text-xs font-bold text-primary tracking-widest uppercase">MENTOR POOL</span>
+<span class="material-symbols-outlined text-secondary">verified_user</span>
+</div>
+<h3 class="text-4xl font-extrabold text-secondary mb-2">2</h3>
+<p class="text-on-surface-variant text-sm leading-relaxed">Trusted helpers with strong response history and contribution signals.</p>
+</div>
+</div>
+</section>
+<!-- AI Recommendations Section -->
+<section class="mt-24 mb-12">
+<div class="bg-surface-container-lowest rounded-xl p-8 md:p-12 shadow-[0px_24px_48px_rgba(35,48,44,0.06)]">
+<div class="mb-12">
+<span class="inline-block px-4 py-1.5 rounded-full bg-surface-container-low text-primary text-xs font-bold tracking-widest uppercase mb-4">AI RECOMMENDATIONS</span>
+<h2 class="text-3xl font-extrabold text-secondary tracking-tight">Requests needing attention</h2>
+</div>
+<div class="space-y-6">
+<!-- Request Card 1 -->
+<div class="group bg-surface rounded-lg p-6 md:p-8 flex flex-col md:flex-row items-start md:items-center gap-6 hover:bg-surface-container transition-colors duration-300">
+<div class="flex-1">
+<h4 class="text-xl font-bold text-secondary mb-3 group-hover:text-primary transition-colors">Need help making my portfolio responsive before demo day</h4>
+<p class="text-on-surface-variant text-base leading-relaxed mb-4">
+<span class="inline-flex items-center gap-1.5 text-primary font-medium mr-2">
+<span class="material-symbols-outlined text-[18px]">auto_awesome</span>
+                                    AI Summary:
+                                </span>
+                                Responsive layout issue with a short deadline. Requires CSS Grid and Media Query expertise to resolve layout shifts on mobile.
+                            </p>
+<div class="flex flex-wrap gap-2">
+<span class="px-4 py-1 rounded-full bg-secondary-container text-on-secondary-container text-xs font-semibold">Web Development</span>
+<span class="px-4 py-1 rounded-full bg-tertiary-container text-on-tertiary-container text-xs font-semibold">High Urgency</span>
+<span class="px-4 py-1 rounded-full bg-surface-container-high text-on-surface-variant text-xs font-semibold">Next 24h</span>
+</div>
+</div>
+<button class="w-full md:w-auto px-8 py-3 rounded-full bg-primary text-white font-bold hover:scale-[1.05] transition-all shadow-lg shadow-primary/10">Assist Now</button>
+</div>
+<!-- Request Card 2 -->
+<div class="group bg-surface rounded-lg p-6 md:p-8 flex flex-col md:flex-row items-start md:items-center gap-6 hover:bg-surface-container transition-colors duration-300">
+<div class="flex-1">
+<h4 class="text-xl font-bold text-secondary mb-3 group-hover:text-primary transition-colors">Debugging Python FastAPI endpoint for file uploads</h4>
+<p class="text-on-surface-variant text-base leading-relaxed mb-4">
+<span class="inline-flex items-center gap-1.5 text-primary font-medium mr-2">
+<span class="material-symbols-outlined text-[18px]">auto_awesome</span>
+                                    AI Summary:
+                                </span>
+                                Backend logic error specifically during multi-part form data handling. Recommended for users with Python and API infrastructure experience.
+                            </p>
+<div class="flex flex-wrap gap-2">
+<span class="px-4 py-1 rounded-full bg-secondary-container text-on-secondary-container text-xs font-semibold">Backend</span>
+<span class="px-4 py-1 rounded-full bg-surface-container-high text-on-surface-variant text-xs font-semibold">Medium Urgency</span>
+</div>
+</div>
+<button class="w-full md:w-auto px-8 py-3 rounded-full bg-primary text-white font-bold hover:scale-[1.05] transition-all shadow-lg shadow-primary/10">Assist Now</button>
+</div>
+<!-- Request Card 3 -->
+<div class="group bg-surface rounded-lg p-6 md:p-8 flex flex-col md:flex-row items-start md:items-center gap-6 hover:bg-surface-container transition-colors duration-300">
+<div class="flex-1">
+<h4 class="text-xl font-bold text-secondary mb-3 group-hover:text-primary transition-colors">UI Design critique for a sustainable fashion app</h4>
+<p class="text-on-surface-variant text-base leading-relaxed mb-4">
+<span class="inline-flex items-center gap-1.5 text-primary font-medium mr-2">
+<span class="material-symbols-outlined text-[18px]">auto_awesome</span>
+                                    AI Summary:
+                                </span>
+                                Visual hierarchy and accessibility review. User is seeking feedback on color contrast and component spacing for a niche market.
+                            </p>
+<div class="flex flex-wrap gap-2">
+<span class="px-4 py-1 rounded-full bg-secondary-container text-on-secondary-container text-xs font-semibold">Design</span>
+<span class="px-4 py-1 rounded-full bg-surface-container-high text-on-surface-variant text-xs font-semibold">Low Urgency</span>
+</div>
+</div>
+<button class="w-full md:w-auto px-8 py-3 rounded-full bg-primary text-white font-bold hover:scale-[1.05] transition-all shadow-lg shadow-primary/10">Assist Now</button>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-[#f5f3ef] dark:bg-[#23302c] full-width rounded-t-[3rem] mt-12 font-['Plus_Jakarta_Sans'] text-sm leading-relaxed">
+<div class="flex flex-col md:flex-row justify-between items-center px-12 py-16 max-w-7xl mx-auto w-full">
+<div class="mb-8 md:mb-0">
+<div class="font-bold text-[#23302c] dark:text-[#10b981] text-lg mb-2">HelpHub AI</div>
+<p class="text-[#54615d] dark:text-[#f5f3ef]">© 2024 HelpHub AI. Organic Precision in Support.</p>
+</div>
+<div class="flex flex-wrap justify-center gap-8">
+<a class="text-[#54615d] dark:text-[#f5f3ef] hover:text-[#10b981] transition-colors" href="#">Privacy Policy</a>
+<a class="text-[#54615d] dark:text-[#f5f3ef] hover:text-[#10b981] transition-colors" href="#">Terms of Service</a>
+<a class="text-[#54615d] dark:text-[#f5f3ef] hover:text-[#10b981] transition-colors" href="#">Documentation</a>
+<a class="text-[#54615d] dark:text-[#f5f3ef] hover:text-[#10b981] transition-colors" href="#">Support</a>
+</div>
+</div>
+</footer>
+</body></html>

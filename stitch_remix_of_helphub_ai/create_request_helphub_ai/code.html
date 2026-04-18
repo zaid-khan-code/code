@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-bright": "#fbf9f5",
+                    "on-secondary-container": "#596762",
+                    "on-primary-fixed-variant": "#005236",
+                    "on-tertiary-fixed": "#410005",
+                    "tertiary": "#a43a3a",
+                    "tertiary-container": "#fc7c78",
+                    "surface-dim": "#dbdad6",
+                    "error": "#ba1a1a",
+                    "inverse-on-surface": "#f2f0ed",
+                    "primary-container": "#10b981",
+                    "tertiary-fixed": "#ffdad7",
+                    "surface-container-lowest": "#ffffff",
+                    "primary": "#006c49",
+                    "on-tertiary-container": "#711419",
+                    "on-background": "#1b1c1a",
+                    "primary-fixed-dim": "#4edea3",
+                    "secondary-fixed-dim": "#bbcac4",
+                    "outline": "#6c7a71",
+                    "background": "#fbf9f5",
+                    "on-secondary": "#ffffff",
+                    "tertiary-fixed-dim": "#ffb3af",
+                    "on-error-container": "#93000a",
+                    "on-surface-variant": "#3c4a42",
+                    "surface-container-low": "#f5f3ef",
+                    "inverse-primary": "#4edea3",
+                    "on-primary": "#ffffff",
+                    "secondary-fixed": "#d7e6e0",
+                    "surface-container-high": "#eae8e4",
+                    "error-container": "#ffdad6",
+                    "surface": "#fbf9f5",
+                    "secondary": "#54615d",
+                    "on-tertiary": "#ffffff",
+                    "on-surface": "#1b1c1a",
+                    "primary-fixed": "#6ffbbe",
+                    "on-secondary-fixed-variant": "#3c4a45",
+                    "on-primary-container": "#00422b",
+                    "on-primary-fixed": "#002113",
+                    "surface-tint": "#006c49",
+                    "outline-variant": "#bbcabf",
+                    "surface-variant": "#e4e2de",
+                    "on-tertiary-fixed-variant": "#842225",
+                    "surface-container-highest": "#e4e2de",
+                    "secondary-container": "#d7e6e0",
+                    "surface-container": "#efeeea",
+                    "on-secondary-fixed": "#111e1a",
+                    "inverse-surface": "#30312e",
+                    "on-error": "#ffffff"
+            },
+            "borderRadius": {
+                    "DEFAULT": "1rem",
+                    "lg": "2rem",
+                    "xl": "3rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Plus Jakarta Sans"],
+                    "body": ["Inter"],
+                    "label": ["Inter"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .bg-soil { background-color: #23302C; }
+        .text-emerald { color: #10B981; }
+        .bg-emerald { background-color: #10B981; }
+        .glass-nav { backdrop-filter: blur(20px); }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body selection:bg-primary-fixed-dim selection:text-on-primary-fixed">
+<!-- TopNavBar -->
+<nav class="sticky top-0 w-full z-50 bg-white/70 dark:bg-[#23302C]/70 backdrop-blur-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
+<div class="flex justify-between items-center px-10 py-4 w-full max-w-screen-2xl mx-auto font-['Plus_Jakarta_Sans'] tracking-tight">
+<div class="flex items-center gap-2 text-xl font-bold text-[#23302C] dark:text-white">
+<span class="material-symbols-outlined text-[#10B981]" style="font-variation-settings: 'FILL' 1;">eco</span>
+<span>HelpHub AI</span>
+</div>
+<div class="hidden md:flex items-center gap-2">
+<a class="text-[#23302C]/70 dark:text-emerald-100/70 px-4 py-2 hover:text-[#10B981] transition-all rounded-full hover:bg-[#10B981]/5" href="#">Dashboard</a>
+<a class="text-[#23302C]/70 dark:text-emerald-100/70 px-4 py-2 hover:text-[#10B981] transition-all rounded-full hover:bg-[#10B981]/5" href="#">Explore</a>
+<a class="bg-[#10B981]/10 text-[#10B981] px-4 py-2 rounded-full font-semibold" href="#">Create Request</a>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 hover:bg-[#10B981]/5 rounded-full transition-colors active:scale-95 duration-200 ease-out">
+<span class="material-symbols-outlined text-on-surface-variant">notifications</span>
+</button>
+<button class="p-2 hover:bg-[#10B981]/5 rounded-full transition-colors active:scale-95 duration-200 ease-out">
+<span class="material-symbols-outlined text-on-surface-variant">account_circle</span>
+</button>
+</div>
+</div>
+</nav>
+<main class="max-w-7xl mx-auto px-6 py-12 space-y-12">
+<!-- Hero Section -->
+<section class="relative overflow-hidden bg-soil rounded-xl min-h-[340px] flex flex-col justify-center px-12 md:px-20 text-white shadow-2xl">
+<div class="relative z-10 max-w-3xl">
+<span class="font-headline font-bold tracking-[0.2em] text-surface-dim/50 text-sm mb-4 block">CREATE REQUEST</span>
+<h1 class="font-headline text-4xl md:text-6xl font-extrabold tracking-tight mb-6">Turn a rough problem into a clear help request.</h1>
+<p class="text-surface-variant text-lg md:text-xl leading-relaxed opacity-90">Use built-in AI suggestions for category, urgency, tags, and a stronger description rewrite.</p>
+</div>
+<!-- Decorative Elements -->
+<div class="absolute -right-20 -top-20 w-96 h-96 bg-primary-container/10 rounded-full blur-3xl"></div>
+<div class="absolute -bottom-10 right-20 w-64 h-64 bg-emerald/5 rounded-full blur-2xl"></div>
+</section>
+<!-- Main Content -->
+<div class="grid grid-cols-1 lg:grid-cols-10 gap-8">
+<!-- Left Column (Form Card) -->
+<div class="lg:col-span-6 space-y-8">
+<div class="bg-surface-container-lowest rounded-xl p-10 shadow-[0_30px_60px_rgba(27,28,26,0.06)]">
+<form class="space-y-8">
+<div class="space-y-2">
+<label class="font-headline font-bold text-on-surface text-sm tracking-wide">REQUEST TITLE</label>
+<input class="w-full bg-surface-container-low border-none rounded-lg p-4 font-medium text-on-surface focus:ring-2 focus:ring-primary-container focus:bg-surface-container-lowest transition-all" type="text" value="Need review on my JavaScript quiz app before submission"/>
+</div>
+<div class="space-y-2">
+<label class="font-headline font-bold text-on-surface text-sm tracking-wide">DESCRIPTION</label>
+<textarea class="w-full bg-surface-container-low border-none rounded-lg p-4 font-medium text-on-surface focus:ring-2 focus:ring-primary-container focus:bg-surface-container-lowest transition-all resize-none" placeholder="Explain the challenge..." rows="6">I've built a quiz application using vanilla JS. It works mostly, but I'm worried about the way I'm handling state and the timer logic. I'd love a senior dev to look at the architecture.</textarea>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="space-y-2">
+<label class="font-headline font-bold text-on-surface text-sm tracking-wide">CATEGORY</label>
+<div class="relative">
+<select class="w-full appearance-none bg-surface-container-low border-none rounded-lg p-4 font-medium text-on-surface focus:ring-2 focus:ring-primary-container">
+<option>Web Development</option>
+<option>Mobile Apps</option>
+<option>AI/ML</option>
+<option>DevOps</option>
+</select>
+<span class="material-symbols-outlined absolute right-4 top-4 text-on-surface-variant pointer-events-none">expand_more</span>
+</div>
+</div>
+<div class="space-y-2">
+<label class="font-headline font-bold text-on-surface text-sm tracking-wide">URGENCY</label>
+<div class="relative">
+<select class="w-full appearance-none bg-surface-container-low border-none rounded-lg p-4 font-medium text-on-surface focus:ring-2 focus:ring-primary-container">
+<option>High</option>
+<option>Medium</option>
+<option>Low</option>
+</select>
+<span class="material-symbols-outlined absolute right-4 top-4 text-on-surface-variant pointer-events-none">expand_more</span>
+</div>
+</div>
+</div>
+<div class="space-y-2">
+<label class="font-headline font-bold text-on-surface text-sm tracking-wide">TAGS</label>
+<input class="w-full bg-surface-container-low border-none rounded-lg p-4 font-medium text-on-surface focus:ring-2 focus:ring-primary-container focus:bg-surface-container-lowest transition-all" type="text" value="JavaScript, Debugging, Review"/>
+</div>
+<div class="pt-6 flex flex-col sm:flex-row gap-4 items-center justify-between">
+<button class="group flex items-center gap-2 px-6 py-4 rounded-full font-bold text-on-secondary-container hover:bg-surface-container-high transition-colors active:scale-95 duration-200" type="button">
+<span class="material-symbols-outlined text-emerald group-hover:rotate-12 transition-transform">auto_awesome</span>
+                                Apply AI suggestions
+                            </button>
+<button class="w-full sm:w-auto px-10 py-4 bg-emerald text-white rounded-full font-bold shadow-lg shadow-emerald/20 hover:shadow-xl hover:shadow-emerald/30 transition-all active:scale-95 duration-200" type="submit">
+                                Publish request
+                            </button>
+</div>
+</form>
+</div>
+</div>
+<!-- Right Column (AI Assistant Card) -->
+<div class="lg:col-span-4 space-y-6">
+<div class="bg-surface-container-lowest rounded-xl p-8 shadow-[0_30px_60px_rgba(27,28,26,0.06)] relative overflow-hidden">
+<!-- The Greenhouse "Pulse" -->
+<div class="absolute top-8 right-8">
+<div class="flex items-center gap-2">
+<span class="relative flex h-3 w-3">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald opacity-75"></span>
+<span class="relative inline-flex rounded-full h-3 w-3 bg-emerald"></span>
+</span>
+<span class="text-[10px] font-bold tracking-widest text-emerald uppercase">Live Analysis</span>
+</div>
+</div>
+<span class="font-headline font-bold text-emerald text-xs tracking-widest mb-2 block uppercase">AI Assistant</span>
+<h2 class="font-headline text-2xl font-extrabold text-on-surface mb-8">Smart request guidance</h2>
+<div class="space-y-8">
+<div class="flex gap-4">
+<div class="flex-shrink-0 w-10 h-10 rounded-full bg-primary-container/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-emerald" style="font-variation-settings: 'FILL' 1;">category</span>
+</div>
+<div class="space-y-1">
+<p class="text-xs font-bold text-on-secondary-container tracking-wide uppercase">Suggested category</p>
+<p class="text-on-surface font-medium">Community Learning</p>
+</div>
+</div>
+<div class="flex gap-4">
+<div class="flex-shrink-0 w-10 h-10 rounded-full bg-tertiary-container/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-tertiary" style="font-variation-settings: 'FILL' 1;">priority_high</span>
+</div>
+<div class="space-y-1">
+<p class="text-xs font-bold text-on-secondary-container tracking-wide uppercase">Detected urgency</p>
+<p class="text-on-surface font-medium">Low <span class="text-on-secondary-container/60 font-normal ml-1">— Project deadline is 4 days away</span></p>
+</div>
+</div>
+<div class="flex gap-4">
+<div class="flex-shrink-0 w-10 h-10 rounded-full bg-secondary-container/40 flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">label</span>
+</div>
+<div class="space-y-1">
+<p class="text-xs font-bold text-on-secondary-container tracking-wide uppercase">Suggested tags</p>
+<p class="text-on-surface font-medium italic">Add more detail like "Refactoring" or "Architecture"</p>
+</div>
+</div>
+<div class="bg-surface-container-low rounded-lg p-6 space-y-4">
+<div class="flex items-center justify-between">
+<p class="text-xs font-bold text-emerald tracking-widest uppercase">Rewrite suggestion</p>
+<span class="material-symbols-outlined text-emerald text-sm">tips_and_updates</span>
+</div>
+<p class="text-on-surface-variant text-sm leading-relaxed">
+                                "Seeking architecture review for a Vanilla JS quiz application. Specifically interested in optimizing state management and timer logic efficiency..."
+                            </p>
+<button class="text-emerald font-bold text-xs hover:underline">Apply this version</button>
+</div>
+</div>
+</div>
+<!-- Decorative Card -->
+<div class="bg-soil rounded-xl p-8 text-white relative overflow-hidden">
+<img alt="Collaboration" class="absolute inset-0 w-full h-full object-cover opacity-20" data-alt="Modern collaborative workspace with lush indoor plants and warm sunlight through large windows, minimalist professional aesthetic" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAlsQxpHRDqrJhYNDO9sIzdjYmnofERrKsKYebp_lTs9hVE40qVmne1pMT7OKdgImtPI6bqGkgD3-Re2xjwe3RhrDUfHjqsCCOTog1W4nbBAY3XFbV2FUtyTcJ_ESjXtmkomfmrCvfqi-I8o0EgzgdEGG-VIam9Pyf10NWMLJf1_pFF3vIsujN9y0wmv9qFtCUWqjOLcRAXa53emY9RXTdomvfMScgUS4vRP5quvQABdZJRJTJi1YKIyN7s9X5Sgctr-2rFUh7s37Hn"/>
+<div class="relative z-10">
+<h3 class="font-headline font-bold text-lg mb-2">Need immediate help?</h3>
+<p class="text-surface-variant text-sm opacity-80 mb-6">Upgrade to Premium to get your requests reviewed by verified mentors in under 2 hours.</p>
+<button class="flex items-center gap-2 font-bold text-sm text-emerald">
+                            Learn more
+                            <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="w-full py-12 mt-auto bg-[#FDFBF7] dark:bg-[#23302C] border-t border-emerald-900/5 dark:border-emerald-100/5">
+<div class="flex flex-col md:flex-row justify-between items-center px-10 max-w-7xl mx-auto gap-6 font-['Inter'] text-sm tracking-wide">
+<div class="font-['Plus_Jakarta_Sans'] font-bold text-[#23302C] dark:text-white flex items-center gap-2">
+<span class="material-symbols-outlined text-[#10B981]">eco</span>
+                HelpHub AI
+            </div>
+<div class="flex flex-wrap justify-center gap-8">
+<a class="text-[#23302C]/60 dark:text-emerald-100/60 hover:text-[#10B981] dark:hover:text-emerald-400 transition-colors" href="#">Privacy Policy</a>
+<a class="text-[#23302C]/60 dark:text-emerald-100/60 hover:text-[#10B981] dark:hover:text-emerald-400 transition-colors" href="#">Terms of Service</a>
+<a class="text-[#23302C]/60 dark:text-emerald-100/60 hover:text-[#10B981] dark:hover:text-emerald-400 transition-colors" href="#">Support Center</a>
+<a class="text-[#23302C]/60 dark:text-emerald-100/60 hover:text-[#10B981] dark:hover:text-emerald-400 transition-colors" href="#">Documentation</a>
+</div>
+<p class="text-[#23302C]/60 dark:text-emerald-100/60 text-center md:text-right">
+                © 2024 HelpHub AI. Cultivating better workflows.
+            </p>
+</div>
+</footer>
+</body></html>

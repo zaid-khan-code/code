@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>HelpHub AI - Leaderboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary-fixed": "#ffdad7",
+                        "on-error": "#ffffff",
+                        "tertiary-container": "#fc7c78",
+                        "on-secondary-fixed": "#111e1a",
+                        "on-secondary": "#ffffff",
+                        "on-secondary-fixed-variant": "#3c4a45",
+                        "primary-container": "#10b981",
+                        "outline-variant": "#bbcabf",
+                        "surface-container-lowest": "#ffffff",
+                        "primary-fixed-dim": "#4edea3",
+                        "on-tertiary-container": "#711419",
+                        "error": "#ba1a1a",
+                        "surface-container-high": "#eae8e4",
+                        "on-tertiary-fixed-variant": "#842225",
+                        "on-primary-container": "#00422b",
+                        "secondary-container": "#d7e6e0",
+                        "inverse-primary": "#4edea3",
+                        "inverse-on-surface": "#f2f0ed",
+                        "surface-tint": "#006c49",
+                        "surface-bright": "#fbf9f5",
+                        "background": "#fbf9f5",
+                        "surface-container-low": "#f5f3ef",
+                        "secondary-fixed": "#d7e6e0",
+                        "on-background": "#1b1c1a",
+                        "surface-dim": "#dbdad6",
+                        "primary-fixed": "#6ffbbe",
+                        "on-primary-fixed": "#002113",
+                        "surface-container": "#efeeea",
+                        "on-secondary-container": "#596762",
+                        "on-primary": "#ffffff",
+                        "tertiary": "#a43a3a",
+                        "outline": "#6c7a71",
+                        "on-surface": "#1b1c1a",
+                        "tertiary-fixed-dim": "#ffb3af",
+                        "error-container": "#ffdad6",
+                        "secondary-fixed-dim": "#bbcac4",
+                        "on-error-container": "#93000a",
+                        "on-tertiary-fixed": "#410005",
+                        "surface-variant": "#e4e2de",
+                        "secondary": "#54615d",
+                        "surface": "#fbf9f5",
+                        "surface-container-highest": "#e4e2de",
+                        "on-surface-variant": "#3c4a42",
+                        "on-primary-fixed-variant": "#005236",
+                        "primary": "#006c49",
+                        "on-tertiary": "#ffffff",
+                        "inverse-surface": "#30312e"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Plus Jakarta Sans"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Inter', sans-serif; }
+        h1, h2, h3, .headline { font-family: 'Plus Jakarta Sans', sans-serif; }
+    </style>
+</head>
+<body class="bg-background text-on-background selection:bg-primary-container selection:text-on-primary-container">
+<!-- TopNavBar -->
+<header class="docked full-width top-0 sticky bg-stone-50/80 dark:bg-emerald-950/80 backdrop-blur-xl z-50 shadow-2xl shadow-emerald-900/5 font-plus-jakarta-sans antialiased">
+<div class="flex justify-between items-center w-full px-8 py-4 max-w-screen-2xl mx-auto">
+<div class="flex items-center">
+<div class="flex items-center justify-center bg-emerald-500 text-white w-8 h-8 rounded-full font-bold text-sm mr-2">H</div>
+<span class="text-emerald-500 dark:text-emerald-400 font-extrabold tracking-tight text-xl">HelpHub AI</span>
+</div>
+<nav class="hidden md:flex items-center gap-2">
+<a class="text-stone-600 dark:text-emerald-200/70 hover:text-emerald-600 dark:hover:text-emerald-400 px-5 py-2 transition-colors hover:scale-[1.02] transition-transform duration-300" href="#">Dashboard</a>
+<a class="text-stone-600 dark:text-emerald-200/70 hover:text-emerald-600 dark:hover:text-emerald-400 px-5 py-2 transition-colors hover:scale-[1.02] transition-transform duration-300" href="#">Explore</a>
+<a class="bg-emerald-100/50 dark:bg-emerald-800/30 text-emerald-700 dark:text-emerald-300 px-5 py-2 rounded-full font-semibold transition-all hover:scale-[1.02] transition-transform duration-300" href="#">Leaderboard</a>
+</nav>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-on-surface-variant hover:scale-[1.02] transition-transform duration-300" data-icon="search">search</button>
+<div class="w-10 h-10 rounded-full bg-surface-container-high overflow-hidden hover:scale-[1.02] transition-transform duration-300">
+<img class="w-full h-full object-cover" data-alt="professional portrait of a man with a friendly smile, warm studio lighting, clean background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDgP0aVNsStOZKQClzvUVNCUPNJ7TvIVvWbjWjwhdeoYftdEOiKexBrQ6XbY8NfxQNWERM18V58Onup5FmGHJkbbl9vVkUk-WdMZyv85zV1-5dq4mOVnX5A8jjPpqKzTJwWgZhRMqxB-ODk6QLtktcj5--iiBPD2gYNy1ct76VnP6ih8iPmBLUOOF4f9-YqEbctxyDbIa1Df43eUnDEIYR6QBzEmXoNsRBGZcRUz8U4JFVFVeMFImYNhrB11FYFlMBPDTfMcaFHopoW"/>
+</div>
+</div>
+</div>
+</header>
+<main class="max-w-screen-2xl mx-auto px-8 pt-12 pb-24 space-y-16">
+<!-- Hero Section -->
+<section class="relative overflow-hidden rounded-xl bg-on-secondary-fixed p-12 md:p-20 text-white shadow-2xl">
+<div class="absolute inset-0 opacity-20">
+<img class="w-full h-full object-cover" data-alt="deep misty forest with tall evergreen trees and soft light filtering through the canopy, atmospheric and tranquil" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBqrbSAvT1opxRfEMT1wQatXZHLk_qaLG0I-Ln5LFOVh0jTXz34Br2FpjOGkRgRGdYeqZNU1Xod4qXcLdi_EwHYofjVaoQZ8rEPR3szaBM4VVezLeFQvn-N6KNUJqNIuxbxbq_VLSGHkWhXu8YBmgHwStMaLXNy63R3KmIJqOEAkyVgilTJxDO8XOGLwqzMy4DHhpeOb-Xo41dorAc-NTT9WNdGkGVbCEy6AkM776GljrEQdEIS59HXX2o0nui37mxhOT0OIc74mVrB"/>
+</div>
+<div class="relative z-10 max-w-3xl">
+<span class="label-md uppercase tracking-[0.2em] font-semibold text-primary-fixed mb-6 block">LEADERBOARD</span>
+<h1 class="text-5xl md:text-7xl font-extrabold tracking-tight mb-8 leading-tight">Recognize the people who keep the community moving.</h1>
+<p class="text-xl text-secondary-fixed/80 leading-relaxed font-body">Trust score, contribution count, and badges create visible momentum for reliable helpers.</p>
+</div>
+</section>
+<!-- Main Content Layout -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+<!-- Left Column: Rankings Card -->
+<div class="lg:col-span-7 bg-surface-container-lowest rounded-xl p-10 shadow-[0_40px_100px_-20px_rgba(27,28,26,0.06)] flex flex-col">
+<div class="mb-12">
+<span class="label-md uppercase tracking-widest font-bold text-primary mb-2 block">TOP HELPERS</span>
+<h2 class="text-4xl font-bold tracking-tight text-on-background">Rankings</h2>
+</div>
+<div class="space-y-8">
+<!-- Helper #1 -->
+<div class="group flex items-center justify-between p-6 rounded-lg hover:bg-surface-container-low transition-all duration-300">
+<div class="flex items-center gap-6">
+<span class="text-2xl font-bold text-outline-variant/50 w-8">#1</span>
+<div class="relative">
+<div class="w-16 h-16 rounded-full bg-[#1e3a8a] flex items-center justify-center text-white font-bold text-xl ring-4 ring-primary-container/10">HA</div>
+<div class="absolute -bottom-1 -right-1 bg-primary text-white rounded-full p-1 border-2 border-surface-container-lowest">
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+</div>
+<div>
+<h3 class="text-xl font-bold text-on-surface">Hassan Ali</h3>
+<p class="text-sm text-on-surface-variant/70 font-body mt-1">JavaScript, React, Git/GitHub</p>
+</div>
+</div>
+<div class="text-right">
+<div class="text-2xl font-black text-primary">88%</div>
+<div class="text-xs font-bold uppercase tracking-tighter text-on-surface-variant/50">24 contributions</div>
+</div>
+</div>
+<!-- Helper #2 -->
+<div class="group flex items-center justify-between p-6 rounded-lg hover:bg-surface-container-low transition-all duration-300">
+<div class="flex items-center gap-6">
+<span class="text-2xl font-bold text-outline-variant/50 w-8">#2</span>
+<div class="relative">
+<div class="w-16 h-16 rounded-full bg-[#f97316] flex items-center justify-center text-white font-bold text-xl ring-4 ring-primary-container/10">SN</div>
+</div>
+<div>
+<h3 class="text-xl font-bold text-on-surface">Sara Noor</h3>
+<p class="text-sm text-on-surface-variant/70 font-body mt-1">Python, Data Analysis</p>
+</div>
+</div>
+<div class="text-right">
+<div class="text-2xl font-black text-primary">74%</div>
+<div class="text-xs font-bold uppercase tracking-tighter text-on-surface-variant/50">11 contributions</div>
+</div>
+</div>
+<!-- Decorative Spacer -->
+<div class="pt-8 flex justify-center">
+<button class="group flex items-center gap-2 text-primary font-bold hover:gap-4 transition-all">
+                            View Full Leaderboard
+                            <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Right Column: Badge System Card -->
+<div class="lg:col-span-5 bg-surface-container-lowest rounded-xl p-10 shadow-[0_40px_100px_-20px_rgba(27,28,26,0.06)]">
+<div class="mb-12">
+<span class="label-md uppercase tracking-widest font-bold text-primary mb-2 block">BADGE SYSTEM</span>
+<h2 class="text-4xl font-bold tracking-tight text-on-background">Trust and achievement</h2>
+</div>
+<div class="space-y-12">
+<!-- Progress Item 1 -->
+<div>
+<div class="flex justify-between items-end mb-4">
+<div>
+<h4 class="font-bold text-on-surface">Hassan Ali</h4>
+<div class="flex flex-wrap gap-2 mt-2">
+<span class="bg-primary-container/10 text-primary px-3 py-1 rounded-full text-xs font-bold">Code Rescuer</span>
+<span class="bg-primary-container/10 text-primary px-3 py-1 rounded-full text-xs font-bold">Bug Hunter</span>
+</div>
+</div>
+<span class="text-sm font-bold text-primary">88%</span>
+</div>
+<div class="w-full h-3 bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-gradient-to-r from-yellow-400 to-primary-container rounded-full" style="width: 88%;"></div>
+</div>
+</div>
+<!-- Progress Item 2 -->
+<div>
+<div class="flex justify-between items-end mb-4">
+<div>
+<h4 class="font-bold text-on-surface">Sara Noor</h4>
+<div class="flex flex-wrap gap-2 mt-2">
+<span class="bg-primary-container/10 text-primary px-3 py-1 rounded-full text-xs font-bold">Community Voice</span>
+</div>
+</div>
+<span class="text-sm font-bold text-primary">74%</span>
+</div>
+<div class="w-full h-3 bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-gradient-to-r from-yellow-400 to-primary-container rounded-full" style="width: 74%;"></div>
+</div>
+</div>
+<!-- Legend Section -->
+<div class="bg-surface-container-low rounded-lg p-6 mt-8">
+<h5 class="font-bold text-on-surface mb-4">Earning Badges</h5>
+<ul class="space-y-4">
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-primary text-xl" data-weight="fill">workspace_premium</span>
+<p class="text-sm text-on-surface-variant leading-relaxed">Badges are awarded based on cumulative contribution quality and peer peer verification.</p>
+</li>
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-primary text-xl" data-weight="fill">history_edu</span>
+<p class="text-sm text-on-surface-variant leading-relaxed">Complete 10 successful help requests to unlock your first Sanctuary Badge.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<!-- Achievement Grid (Bonus Visual Element) -->
+<section class="grid grid-cols-2 md:grid-cols-4 gap-8">
+<div class="bg-surface-container-low p-8 rounded-xl text-center group hover:scale-[1.02] transition-transform">
+<span class="material-symbols-outlined text-4xl text-primary mb-4" data-weight="fill">diversity_3</span>
+<div class="text-3xl font-black text-on-background">12.4k</div>
+<div class="text-xs font-bold text-on-surface-variant uppercase tracking-widest mt-2">Total Helpers</div>
+</div>
+<div class="bg-surface-container-low p-8 rounded-xl text-center group hover:scale-[1.02] transition-transform">
+<span class="material-symbols-outlined text-4xl text-primary mb-4" data-weight="fill">volunteer_activism</span>
+<div class="text-3xl font-black text-on-background">450k</div>
+<div class="text-xs font-bold text-on-surface-variant uppercase tracking-widest mt-2">Solutions Provided</div>
+</div>
+<div class="bg-surface-container-low p-8 rounded-xl text-center group hover:scale-[1.02] transition-transform">
+<span class="material-symbols-outlined text-4xl text-primary mb-4" data-weight="fill">verified_user</span>
+<div class="text-3xl font-black text-on-background">98%</div>
+<div class="text-xs font-bold text-on-surface-variant uppercase tracking-widest mt-2">Accuracy Rate</div>
+</div>
+<div class="bg-surface-container-low p-8 rounded-xl text-center group hover:scale-[1.02] transition-transform">
+<span class="material-symbols-outlined text-4xl text-primary mb-4" data-weight="fill">star</span>
+<div class="text-3xl font-black text-on-background">1.2k</div>
+<div class="text-xs font-bold text-on-surface-variant uppercase tracking-widest mt-2">Top Tier Badges</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="w-full py-12 bg-stone-100 dark:bg-emerald-950 font-plus-jakarta-sans text-sm tracking-wide">
+<div class="max-w-screen-2xl mx-auto px-8 flex flex-col md:flex-row justify-between items-center gap-6">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-emerald-600 flex items-center justify-center text-[10px] text-white font-bold">H</div>
+<span class="text-emerald-600 font-bold">HelpHub AI</span>
+<span class="text-stone-500 dark:text-emerald-400/60 ml-4">© 2024 HelpHub AI. Designed for focus.</span>
+</div>
+<div class="flex gap-8">
+<a class="text-stone-500 dark:text-emerald-400/60 hover:text-emerald-500 transition-colors" href="#">Privacy</a>
+<a class="text-stone-500 dark:text-emerald-400/60 hover:text-emerald-500 transition-colors" href="#">Terms</a>
+<a class="text-stone-500 dark:text-emerald-400/60 hover:text-emerald-500 transition-colors" href="#">Support</a>
+<a class="text-stone-500 dark:text-emerald-400/60 hover:text-emerald-500 transition-colors" href="#">Contact</a>
+</div>
+</div>
+</footer>
+</body></html>
