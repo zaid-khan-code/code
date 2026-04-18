@@ -1,0 +1,14 @@
+{
+  "env": {
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
+  },
+  "permissions": {
+    "allow": [
+      "Bash(claude plugin *)",
+      "Bash(claude mcp *)",
+      "Bash(npx create-next-app@latest . --ts --app --src-dir --eslint --tailwind --turbopack --import-alias \"@/*\" --yes)",
+      "Bash(npm i *)",
+      "Bash(npx playwright *)"
+    ]
+  }
+}
