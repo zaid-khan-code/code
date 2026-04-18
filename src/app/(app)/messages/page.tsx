@@ -115,7 +115,7 @@ export default async function MessagesPage({
                     <div className="flex items-center justify-between gap-3">
                       <div>
                         <p className="text-sm font-semibold text-[#111111]">
-                          {otherUser?.full_name ?? "Community"} to {user.user_metadata?.full_name ?? "you"}
+                          {otherUser?.full_name ?? "Community"} → {user.user_metadata?.full_name ?? "You"}
                         </p>
                         <p className="mt-2 max-w-[420px] text-sm leading-6 text-[#6B6B6B]">
                           {preview?.body ?? "No messages yet."}

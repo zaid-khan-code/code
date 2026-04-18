@@ -1,11 +1,9 @@
 import Link from "next/link";
-import Image from "next/image";
 import { createClient } from "@/lib/supabase/server";
 export const revalidate = 60;
 
 async function getCommunityStats() {
   const supabase = await createClient();
-
   const [
     { count: totalMembers },
     { count: openRequests },
@@ -17,7 +15,6 @@ async function getCommunityStats() {
     supabase.from("requests").select("*", { count: "exact", head: true }).eq("status", "solved").gte("solved_at", new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString()),
     supabase.from("request_helpers").select("*", { count: "exact", head: true }),
   ]);
-
   return {
     totalMembers: totalMembers ?? 0,
     openRequests: openRequests ?? 0,
@@ -26,485 +23,259 @@ async function getCommunityStats() {
   };
 }
 
+async function getFeaturedRequests() {
+  const supabase = await createClient();
+  const { data: requests } = await supabase
+    .from("requests")
+    .select("id, title, description, category, urgency, status, tags, location, author_id, created_at")
+    .eq("status", "open")
+    .order("created_at", { ascending: false })
+    .limit(3);
+  if (!requests || requests.length === 0) return [];
+  const authorIds = [...new Set(requests.map((r) => r.author_id))];
+  const { data: profiles } = await supabase
+    .from("profiles")
+    .select("id, full_name, username, location")
+    .in("id", authorIds);
+  const profileMap = new Map((profiles ?? []).map((p) => [p.id, p]));
+  const requestIds = requests.map((r) => r.id);
+  const { data: helpers } = await supabase
+    .from("request_helpers")
+    .select("request_id")
+    .in("request_id", requestIds);
+  const helperCounts = new Map<string, number>();
+  for (const h of helpers ?? []) {
+    helperCounts.set(h.request_id, (helperCounts.get(h.request_id) ?? 0) + 1);
+  }
+  return requests.map((r) => ({
+    ...r,
+    author: profileMap.get(r.author_id),
+    helperCount: helperCounts.get(r.id) ?? 0,
+  }));
+}
+
 async function getFeaturedHelpers() {
   const supabase = await createClient();
-
   const { data: helpers } = await supabase
     .from("profiles")
     .select("id, full_name, username, avatar_url, trust_score")
     .order("trust_score", { ascending: false })
     .limit(4);
-
-  if (!helpers) return [];
-
-  // Get badge counts for each helper
-  const helpersWithBadges = await Promise.all(
-    helpers.map(async (helper) => {
-      const { count: badgeCount } = await supabase
-        .from("user_badges")
-        .select("*", { count: "exact", head: true })
-        .eq("user_id", helper.id);
-
-      return {
-        ...helper,
-        badgeCount: badgeCount ?? 0,
-      };
-    })
-  );
-
-  return helpersWithBadges;
+  return helpers ?? [];
 }
 
+const urgencyColors: Record<string, string> = {
+  critical: "#EF4444",
+  high: "#F97316",
+  medium: "#F59E0B",
+  low: "#10B981",
+};
+
+const statusColors: Record<string, string> = {
+  open: "#10B981",
+  solved: "#6B7280",
+  in_progress: "#3B82F6",
+  closed: "#6B7280",
+};
+
 export default async function LandingPage() {
-  const stats = await getCommunityStats();
-  const featuredHelpers = await getFeaturedHelpers();
+  const [stats, featuredRequests] = await Promise.all([
+    getCommunityStats(),
+    getFeaturedRequests(),
+  ]);
 
   return (
-    <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
+    <div style={{ minHeight: "100vh", background: "#F5F0EA", fontFamily: '"Inter", ui-sans-serif, system-ui, -apple-system, sans-serif' }}>
       {/* Topbar */}
-      <header style={topbarStyle}>
-        <div style={containerStyle}>
-          <div style={topbarInnerStyle}>
-            <Link href="/" style={logoStyle}>
-              Helplytics
+      <header style={{ background: "#F5F0EA", borderBottom: "1px solid #E8E2D9", position: "sticky", top: 0, zIndex: 100 }}>
+        <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "0 24px", display: "flex", alignItems: "center", justifyContent: "space-between", height: "60px" }}>
+          <Link href="/" style={{ display: "flex", alignItems: "center", gap: "10px", textDecoration: "none" }}>
+            <div style={{ width: "32px", height: "32px", background: "#0C9F88", borderRadius: "8px", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "16px", fontWeight: 800, color: "#fff" }}>H</div>
+            <span style={{ fontSize: "15px", fontWeight: 700, color: "#111111", letterSpacing: "-0.01em" }}>Helplytics AI</span>
+          </Link>
+          <nav style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+            {[
+              { label: "Home", href: "/" },
+              { label: "Explore", href: "/explore" },
+              { label: "Leaderboard", href: "/leaderboard" },
+              { label: "AI Center", href: "/ai" },
+            ].map(({ label, href }) => (
+              <Link key={label} href={href} style={{ fontSize: "13px", fontWeight: 500, color: "#6B6B6B", textDecoration: "none", padding: "6px 12px", borderRadius: "999px" }}>
+                {label}
+              </Link>
+            ))}
+            <span style={{ width: "1px", height: "18px", background: "#E8E2D9", margin: "0 4px" }} />
+            <Link href="/login" style={{ fontSize: "13px", fontWeight: 500, color: "#6B6B6B", textDecoration: "none", padding: "6px 12px" }}>
+              Live community signals
             </Link>
-
-            <nav style={navStyle}>
-              <Link href="#how-it-works" style={navLinkStyle}>
-                Features
-              </Link>
-              <Link href="/leaderboard" style={navLinkStyle}>
-                Leaderboard
-              </Link>
-              <Link href="/login" style={navLinkStyle}>
-                Login
-              </Link>
-              <Link href="/signup" style={navButtonStyle}>
-                Signup
-              </Link>
-            </nav>
-          </div>
+            <Link href="/signup" style={{ fontSize: "13px", fontWeight: 600, color: "#fff", background: "#0C9F88", textDecoration: "none", padding: "8px 18px", borderRadius: "999px" }}>
+              Join the platform
+            </Link>
+          </nav>
         </div>
       </header>
 
-      {/* Hero Section */}
-      <section style={heroSectionStyle}>
-        <div style={containerStyle}>
-          <div style={heroContentStyle}>
-            <h1 style={heroTitleStyle}>Ask for help. Offer what you know.</h1>
-            <p style={heroSubtitleStyle}>
-              A community where knowledge moves both ways.
+      {/* Hero */}
+      <section style={{ maxWidth: "1200px", margin: "0 auto", padding: "48px 24px 40px" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 420px", gap: "32px", alignItems: "start" }}>
+          {/* Left */}
+          <div>
+            <p style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "0.18em", color: "#0C9F88", textTransform: "uppercase", marginBottom: "18px" }}>
+              SMIT Grand Coding Night 2026
             </p>
-            <div style={heroCtaStyle}>
-              <Link href="/signup" style={primaryButtonStyle}>
-                Get started
+            <h1 style={{ fontSize: "clamp(2.4rem, 5vw, 3.5rem)", fontWeight: 900, lineHeight: 1.0, letterSpacing: "-0.04em", color: "#111111", margin: "0 0 20px" }}>
+              Find help faster.<br />Become help that<br />matters.
+            </h1>
+            <p style={{ fontSize: "14px", lineHeight: 1.7, color: "#6B6B6B", maxWidth: "460px", margin: "0 0 28px" }}>
+              Helplytics AI is a community-powered support network for students, mentors, creators, and builders. Ask for help, offer help, track impact, and let AI surface smarter matches across the platform.
+            </p>
+            <div style={{ display: "flex", gap: "12px", flexWrap: "wrap", marginBottom: "36px" }}>
+              <Link href="/login" style={{ fontSize: "14px", fontWeight: 600, color: "#fff", background: "#0C9F88", textDecoration: "none", padding: "12px 24px", borderRadius: "999px" }}>
+                Open product demo
               </Link>
-              <Link href="/login" style={secondaryButtonStyle}>
-                Explore community
+              <Link href="/signup" style={{ fontSize: "14px", fontWeight: 600, color: "#111111", background: "#fff", border: "1px solid #E8E2D9", textDecoration: "none", padding: "12px 24px", borderRadius: "999px" }}>
+                Post a request
               </Link>
             </div>
-          </div>
-        </div>
-      </section>
 
-      {/* Community Stats */}
-      <section style={sectionStyle}>
-        <div style={containerStyle}>
-          <div style={statsGridStyle}>
-            <div style={statCardStyle}>
-              <div style={statValueStyle}>{stats.totalMembers.toLocaleString()}</div>
-              <div style={statLabelStyle}>Community Members</div>
-            </div>
-            <div style={statCardStyle}>
-              <div style={statValueStyle}>{stats.openRequests.toLocaleString()}</div>
-              <div style={statLabelStyle}>Open Requests</div>
-            </div>
-            <div style={statCardStyle}>
-              <div style={statValueStyle}>{stats.solvedThisWeek.toLocaleString()}</div>
-              <div style={statLabelStyle}>Solved This Week</div>
-            </div>
-            <div style={statCardStyle}>
-              <div style={statValueStyle}>{stats.helpOffered.toLocaleString()}</div>
-              <div style={statLabelStyle}>Help Offered</div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* How It Works */}
-      <section id="how-it-works" style={sectionStyle}>
-        <div style={containerStyle}>
-          <h2 style={sectionTitleStyle}>How it works</h2>
-          <div style={stepsGridStyle}>
-            <div style={stepCardStyle}>
-              <div style={stepNumberStyle}>1</div>
-              <h3 style={stepTitleStyle}>Post your question</h3>
-              <p style={stepDescStyle}>
-                Share what you need help with. Add details, tags, and urgency to get the right match.
-              </p>
-            </div>
-            <div style={stepCardStyle}>
-              <div style={stepNumberStyle}>2</div>
-              <h3 style={stepTitleStyle}>Get matched with helpers</h3>
-              <p style={stepDescStyle}>
-                AI-powered matching connects you to community members with the right skills.
-              </p>
-            </div>
-            <div style={stepCardStyle}>
-              <div style={stepNumberStyle}>3</div>
-              <h3 style={stepTitleStyle}>Solve and pay it forward</h3>
-              <p style={stepDescStyle}>
-                Get the help you need, then help others to build your trust score.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Featured Helpers */}
-      <section style={sectionStyle}>
-        <div style={containerStyle}>
-          <h2 style={sectionTitleStyle}>Featured helpers</h2>
-          <p style={sectionSubtitleStyle}>Top community members by trust score</p>
-          <div style={helpersGridStyle}>
-            {featuredHelpers.map((helper) => (
-              <Link
-                key={helper.id}
-                href={`/profile/${helper.username ?? helper.id}`}
-                style={helperCardStyle}
-              >
-                <div style={helperAvatarStyle}>
-                  {helper.avatar_url ? (
-                    <Image
-                      src={helper.avatar_url}
-                      alt={helper.full_name ?? "User"}
-                      width={64}
-                      height={64}
-                      style={{ borderRadius: "50%", objectFit: "cover" }}
-                    />
-                  ) : (
-                    <div style={avatarPlaceholderStyle}>
-                      {(helper.full_name ?? helper.username ?? "U").charAt(0).toUpperCase()}
-                    </div>
-                  )}
+            {/* Stats row */}
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "16px", maxWidth: "420px" }}>
+              {[
+                { label: "MEMBERS", value: `${stats.totalMembers}+` },
+                { label: "REQUESTS", value: `${stats.openRequests}+` },
+                { label: "SOLVED", value: `${stats.solvedThisWeek}+` },
+              ].map(({ label, value }) => (
+                <div key={label} style={{ background: "#fff", border: "1px solid #E8E2D9", borderRadius: "14px", padding: "16px" }}>
+                  <p style={{ fontSize: "10px", fontWeight: 700, letterSpacing: "0.14em", color: "#A0A0A0", textTransform: "uppercase", marginBottom: "6px" }}>{label}</p>
+                  <p style={{ fontSize: "22px", fontWeight: 900, color: "#111111", letterSpacing: "-0.03em" }}>{value}</p>
+                  <p style={{ fontSize: "11px", color: "#6B6B6B", marginTop: "4px" }}>
+                    {label === "MEMBERS" ? "Students, mentors, and helpers in the loop." : label === "REQUESTS" ? "Support posts shared across learning journeys." : "Problems resolved through fast community action."}
+                  </p>
                 </div>
-                <div style={helperNameStyle}>{helper.full_name ?? helper.username}</div>
-                <div style={helperTrustStyle}>{helper.trust_score} trust</div>
-                {helper.badgeCount > 0 && (
-                  <div style={helperBadgesStyle}>{helper.badgeCount} badges</div>
+              ))}
+            </div>
+          </div>
+
+          {/* Right — dark ecosystem card */}
+          <div style={{ background: "#1A2E2C", borderRadius: "20px", padding: "32px", color: "#fff", position: "relative", overflow: "hidden" }}>
+            <div style={{ position: "absolute", top: "-20px", right: "-20px", width: "120px", height: "120px", background: "#F2B648", borderRadius: "50%", opacity: 0.9 }} />
+            <p style={{ fontSize: "10px", fontWeight: 700, letterSpacing: "0.18em", color: "#8ED9CC", textTransform: "uppercase", marginBottom: "16px", position: "relative" }}>
+              Live Product Feel
+            </p>
+            <h2 style={{ fontSize: "1.9rem", fontWeight: 900, lineHeight: 1.05, letterSpacing: "-0.03em", marginBottom: "14px", position: "relative" }}>
+              More than a form.<br />More like an ecosystem.
+            </h2>
+            <p style={{ fontSize: "13px", lineHeight: 1.6, color: "rgba(255,255,255,0.65)", marginBottom: "24px", position: "relative" }}>
+              A polished multi-page experience with AI summaries, trust scores, contribution signals, notifications, and leaderboard momentum built directly in Next.js and Supabase.
+            </p>
+            <div style={{ display: "flex", flexDirection: "column", gap: "10px", position: "relative" }}>
+              {[
+                { title: "AI request intelligence", desc: "Auto-categorization, urgency detection, tags, rewrite suggestions, and trend snapshots." },
+                { title: "Community trust graph", desc: "Badges, helper rankings, trust score boosts, and visible contribution history." },
+                { title: "100% open requests matched", desc: "Top trust score active across the sample mentor network." },
+              ].map(({ title, desc }) => (
+                <div key={title} style={{ background: "rgba(255,255,255,0.07)", borderRadius: "12px", padding: "14px 16px" }}>
+                  <p style={{ fontSize: "13px", fontWeight: 700, color: "#fff", marginBottom: "4px" }}>{title}</p>
+                  <p style={{ fontSize: "12px", color: "rgba(255,255,255,0.6)", lineHeight: 1.5 }}>{desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Core Flow */}
+      <section style={{ maxWidth: "1200px", margin: "0 auto", padding: "48px 24px" }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "28px", flexWrap: "wrap", gap: "12px" }}>
+          <div>
+            <p style={{ fontSize: "10px", fontWeight: 700, letterSpacing: "0.18em", color: "#0C9F88", textTransform: "uppercase", marginBottom: "8px" }}>Core Flow</p>
+            <h2 style={{ fontSize: "clamp(1.6rem, 3vw, 2.2rem)", fontWeight: 900, letterSpacing: "-0.03em", color: "#111111", margin: 0 }}>
+              From struggling alone to solving together
+            </h2>
+          </div>
+          <Link href="/signup" style={{ fontSize: "13px", fontWeight: 600, color: "#111111", background: "#fff", border: "1px solid #E8E2D9", textDecoration: "none", padding: "10px 18px", borderRadius: "999px", whiteSpace: "nowrap" }}>
+            Try onboarding AI
+          </Link>
+        </div>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "20px" }}>
+          {[
+            { title: "Ask for help clearly", desc: "Create structured requests with category, urgency, AI suggestions, and tags that attract the right people." },
+            { title: "Discover the right people", desc: "Use the explore feed, helper lists, notifications, and messaging to move quickly once a match happens." },
+            { title: "Track real contribution", desc: "Trust scores, badges, solved requests, and rankings help the community recognize meaningful support." },
+          ].map(({ title, desc }) => (
+            <div key={title} style={{ background: "#fff", border: "1px solid #E8E2D9", borderRadius: "16px", padding: "28px" }}>
+              <h3 style={{ fontSize: "16px", fontWeight: 700, color: "#111111", marginBottom: "10px" }}>{title}</h3>
+              <p style={{ fontSize: "13px", lineHeight: 1.7, color: "#6B6B6B", margin: 0 }}>{desc}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Featured Requests */}
+      <section style={{ maxWidth: "1200px", margin: "0 auto", padding: "0 24px 64px" }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "28px", flexWrap: "wrap", gap: "12px" }}>
+          <div>
+            <p style={{ fontSize: "10px", fontWeight: 700, letterSpacing: "0.18em", color: "#0C9F88", textTransform: "uppercase", marginBottom: "8px" }}>Featured Requests</p>
+            <h2 style={{ fontSize: "clamp(1.6rem, 3vw, 2.2rem)", fontWeight: 900, letterSpacing: "-0.03em", color: "#111111", margin: 0 }}>
+              Community problems currently in motion
+            </h2>
+          </div>
+          <Link href="/login" style={{ fontSize: "13px", fontWeight: 600, color: "#111111", background: "#fff", border: "1px solid #E8E2D9", textDecoration: "none", padding: "10px 18px", borderRadius: "999px", whiteSpace: "nowrap" }}>
+            View full feed
+          </Link>
+        </div>
+
+        {featuredRequests.length === 0 ? (
+          <div style={{ background: "#fff", border: "1px solid #E8E2D9", borderRadius: "16px", padding: "40px", textAlign: "center" }}>
+            <p style={{ color: "#6B6B6B", fontSize: "14px" }}>No open requests yet. Be the first to post.</p>
+          </div>
+        ) : (
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: "20px" }}>
+            {featuredRequests.map((req) => (
+              <div key={req.id} style={{ background: "#fff", border: "1px solid #E8E2D9", borderRadius: "16px", padding: "22px", display: "flex", flexDirection: "column", gap: "12px" }}>
+                {/* Tags */}
+                <div style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}>
+                  {req.category && (
+                    <span style={{ fontSize: "11px", fontWeight: 600, color: "#111111", background: "#F0EBE3", padding: "3px 10px", borderRadius: "999px" }}>{req.category}</span>
+                  )}
+                  <span style={{ fontSize: "11px", fontWeight: 600, color: "#fff", background: urgencyColors[req.urgency] ?? "#6B7280", padding: "3px 10px", borderRadius: "999px" }}>{req.urgency}</span>
+                  <span style={{ fontSize: "11px", fontWeight: 600, color: "#fff", background: statusColors[req.status] ?? "#6B7280", padding: "3px 10px", borderRadius: "999px" }}>{req.status.replace("_", " ")}</span>
+                </div>
+                {/* Title + desc */}
+                <div>
+                  <h3 style={{ fontSize: "15px", fontWeight: 700, color: "#111111", margin: "0 0 6px", lineHeight: 1.3 }}>{req.title}</h3>
+                  <p style={{ fontSize: "13px", color: "#6B6B6B", lineHeight: 1.5, margin: 0, display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>{req.description}</p>
+                </div>
+                {/* Skill tags */}
+                {req.tags && req.tags.length > 0 && (
+                  <div style={{ display: "flex", flexWrap: "wrap", gap: "5px" }}>
+                    {req.tags.slice(0, 4).map((tag: string) => (
+                      <span key={tag} style={{ fontSize: "11px", color: "#6B6B6B", background: "#F7F2EC", padding: "2px 8px", borderRadius: "999px" }}>{tag}</span>
+                    ))}
+                  </div>
                 )}
-              </Link>
+                {/* Footer */}
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: "auto" }}>
+                  <div>
+                    <p style={{ fontSize: "13px", fontWeight: 600, color: "#111111", margin: 0 }}>{req.author?.full_name ?? "Community member"}</p>
+                    <p style={{ fontSize: "12px", color: "#6B6B6B", margin: "2px 0 0" }}>{req.author?.location ?? "Community"} · {req.helperCount} helper{req.helperCount !== 1 ? "s" : ""} interested</p>
+                  </div>
+                  <Link href={`/login`} style={{ fontSize: "12px", fontWeight: 600, color: "#111111", textDecoration: "none", border: "1px solid #E8E2D9", padding: "6px 14px", borderRadius: "999px", background: "#fff", whiteSpace: "nowrap" }}>
+                    Open details
+                  </Link>
+                </div>
+              </div>
             ))}
           </div>
-        </div>
+        )}
       </section>
 
       {/* Footer */}
-      <footer style={footerStyle}>
-        <div style={containerStyle}>
-          <div style={footerInnerStyle}>
-            <span style={footerLogoStyle}>Helplytics</span>
-            <span style={footerYearStyle}>2026</span>
-            <a
-              href="https://github.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              style={footerLinkStyle}
-            >
-              GitHub
-            </a>
-          </div>
-        </div>
+      <footer style={{ borderTop: "1px solid #E8E2D9", padding: "20px 24px", textAlign: "center" }}>
+        <p style={{ fontSize: "12px", color: "#A0A0A0", margin: 0 }}>
+          Helplytics AI is built as a premium-feel, multi-page community support product using Next.js and Supabase.
+        </p>
       </footer>
     </div>
   );
 }
-
-// Styles using design tokens
-const containerStyle: React.CSSProperties = {
-  maxWidth: "1200px",
-  margin: "0 auto",
-  padding: "0 24px",
-};
-
-const topbarStyle: React.CSSProperties = {
-  background: "var(--color-surface)",
-  borderBottom: "1px solid var(--color-border)",
-  position: "sticky",
-  top: 0,
-  zIndex: 100,
-};
-
-const topbarInnerStyle: React.CSSProperties = {
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "space-between",
-  height: "64px",
-};
-
-const logoStyle: React.CSSProperties = {
-  fontSize: "22px",
-  fontWeight: 700,
-  color: "var(--color-brand)",
-  textDecoration: "none",
-  letterSpacing: "-0.02em",
-};
-
-const navStyle: React.CSSProperties = {
-  display: "flex",
-  alignItems: "center",
-  gap: "24px",
-};
-
-const navLinkStyle: React.CSSProperties = {
-  fontSize: "14px",
-  fontWeight: 500,
-  color: "var(--color-text-muted)",
-  textDecoration: "none",
-  transition: "color 0.15s",
-};
-
-const navButtonStyle: React.CSSProperties = {
-  fontSize: "14px",
-  fontWeight: 600,
-  color: "var(--color-brand-fg)",
-  background: "var(--color-brand)",
-  padding: "8px 16px",
-  borderRadius: "var(--radius-pill)",
-  textDecoration: "none",
-};
-
-const heroSectionStyle: React.CSSProperties = {
-  padding: "80px 0 64px",
-  background: `linear-gradient(180deg, rgba(12,159,136,0.06) 0%, var(--color-bg) 100%)`,
-};
-
-const heroContentStyle: React.CSSProperties = {
-  maxWidth: "640px",
-};
-
-const heroTitleStyle: React.CSSProperties = {
-  fontSize: "48px",
-  fontWeight: 700,
-  lineHeight: 1.15,
-  margin: "0 0 20px",
-  color: "var(--color-text)",
-  letterSpacing: "-0.02em",
-};
-
-const heroSubtitleStyle: React.CSSProperties = {
-  fontSize: "20px",
-  lineHeight: 1.5,
-  margin: "0 0 32px",
-  color: "var(--color-text-muted)",
-};
-
-const heroCtaStyle: React.CSSProperties = {
-  display: "flex",
-  gap: "16px",
-  flexWrap: "wrap",
-};
-
-const primaryButtonStyle: React.CSSProperties = {
-  display: "inline-flex",
-  alignItems: "center",
-  justifyContent: "center",
-  padding: "14px 28px",
-  fontSize: "15px",
-  fontWeight: 600,
-  color: "var(--color-brand-fg)",
-  background: "var(--color-brand)",
-  borderRadius: "var(--radius-pill)",
-  textDecoration: "none",
-};
-
-const secondaryButtonStyle: React.CSSProperties = {
-  display: "inline-flex",
-  alignItems: "center",
-  justifyContent: "center",
-  padding: "14px 28px",
-  fontSize: "15px",
-  fontWeight: 600,
-  color: "var(--color-text)",
-  background: "var(--color-surface)",
-  border: "1px solid var(--color-border)",
-  borderRadius: "var(--radius-pill)",
-  textDecoration: "none",
-};
-
-const sectionStyle: React.CSSProperties = {
-  padding: "64px 0",
-};
-
-const statsGridStyle: React.CSSProperties = {
-  display: "grid",
-  gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-  gap: "20px",
-};
-
-const statCardStyle: React.CSSProperties = {
-  background: "var(--color-surface)",
-  border: "1px solid var(--color-border)",
-  borderRadius: "var(--radius-lg)",
-  padding: "24px",
-  textAlign: "center",
-};
-
-const statValueStyle: React.CSSProperties = {
-  fontSize: "36px",
-  fontWeight: 700,
-  color: "var(--color-brand)",
-  marginBottom: "8px",
-};
-
-const statLabelStyle: React.CSSProperties = {
-  fontSize: "14px",
-  color: "var(--color-text-muted)",
-  fontWeight: 500,
-};
-
-const sectionTitleStyle: React.CSSProperties = {
-  fontSize: "28px",
-  fontWeight: 700,
-  margin: "0 0 16px",
-  color: "var(--color-text)",
-  textAlign: "center",
-};
-
-const sectionSubtitleStyle: React.CSSProperties = {
-  fontSize: "16px",
-  color: "var(--color-text-muted)",
-  margin: "0 0 32px",
-  textAlign: "center",
-};
-
-const stepsGridStyle: React.CSSProperties = {
-  display: "grid",
-  gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
-  gap: "24px",
-  marginTop: "40px",
-};
-
-const stepCardStyle: React.CSSProperties = {
-  background: "var(--color-surface)",
-  border: "1px solid var(--color-border)",
-  borderRadius: "var(--radius-lg)",
-  padding: "32px",
-  textAlign: "center",
-};
-
-const stepNumberStyle: React.CSSProperties = {
-  width: "40px",
-  height: "40px",
-  borderRadius: "50%",
-  background: "var(--color-brand)",
-  color: "var(--color-brand-fg)",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  fontSize: "18px",
-  fontWeight: 700,
-  margin: "0 auto 20px",
-};
-
-const stepTitleStyle: React.CSSProperties = {
-  fontSize: "18px",
-  fontWeight: 600,
-  margin: "0 0 12px",
-  color: "var(--color-text)",
-};
-
-const stepDescStyle: React.CSSProperties = {
-  fontSize: "14px",
-  lineHeight: 1.6,
-  color: "var(--color-text-muted)",
-  margin: 0,
-};
-
-const helpersGridStyle: React.CSSProperties = {
-  display: "grid",
-  gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-  gap: "20px",
-  marginTop: "40px",
-};
-
-const helperCardStyle: React.CSSProperties = {
-  background: "var(--color-surface)",
-  border: "1px solid var(--color-border)",
-  borderRadius: "var(--radius-lg)",
-  padding: "24px",
-  textAlign: "center",
-  textDecoration: "none",
-  transition: "box-shadow 0.15s",
-};
-
-const helperAvatarStyle: React.CSSProperties = {
-  width: "64px",
-  height: "64px",
-  margin: "0 auto 16px",
-  borderRadius: "50%",
-  overflow: "hidden",
-};
-
-const avatarPlaceholderStyle: React.CSSProperties = {
-  width: "64px",
-  height: "64px",
-  borderRadius: "50%",
-  background: "var(--color-surface2)",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  fontSize: "24px",
-  fontWeight: 600,
-  color: "var(--color-brand)",
-  margin: "0 auto 16px",
-};
-
-const helperNameStyle: React.CSSProperties = {
-  fontSize: "16px",
-  fontWeight: 600,
-  color: "var(--color-text)",
-  marginBottom: "4px",
-};
-
-const helperTrustStyle: React.CSSProperties = {
-  fontSize: "14px",
-  color: "var(--color-text-muted)",
-  marginBottom: "4px",
-};
-
-const helperBadgesStyle: React.CSSProperties = {
-  fontSize: "13px",
-  color: "var(--color-brand)",
-  fontWeight: 500,
-};
-
-const footerStyle: React.CSSProperties = {
-  marginTop: "auto",
-  padding: "24px 0",
-  borderTop: "1px solid var(--color-border)",
-};
-
-const footerInnerStyle: React.CSSProperties = {
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  gap: "16px",
-};
-
-const footerLogoStyle: React.CSSProperties = {
-  fontSize: "16px",
-  fontWeight: 700,
-  color: "var(--color-text)",
-};
-
-const footerYearStyle: React.CSSProperties = {
-  fontSize: "14px",
-  color: "var(--color-text-muted)",
-};
-
-const footerLinkStyle: React.CSSProperties = {
-  fontSize: "14px",
-  color: "var(--color-text-muted)",
-  textDecoration: "none",
-};

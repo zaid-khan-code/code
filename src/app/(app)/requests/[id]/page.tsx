@@ -54,12 +54,30 @@ export default async function RequestDetailPage({ params }: PageProps) {
   ]);
 
   const helperIds = Array.from(new Set((helperRows ?? []).map((row) => row.helper_id)));
-  const { data: helperProfiles } = helperIds.length
-    ? await admin
-        .from("profiles")
-        .select("id, full_name, username, avatar_url, trust_score")
-        .in("id", helperIds)
-    : { data: [] };
+  const [{ data: helperProfiles }, { data: helperSkillRows }] = await Promise.all([
+    helperIds.length
+      ? admin
+          .from("profiles")
+          .select("id, full_name, username, avatar_url, trust_score")
+          .in("id", helperIds)
+      : Promise.resolve({ data: [] }),
+    helperIds.length
+      ? admin
+          .from("user_skills")
+          .select("user_id, skills(name)")
+          .in("user_id", helperIds)
+          .eq("can_help", true)
+      : Promise.resolve({ data: [] }),
+  ]);
+
+  const helperSkillsMap = new Map<string, string[]>();
+  for (const row of helperSkillRows ?? []) {
+    const skillName = (row.skills as { name: string } | null)?.name;
+    if (!skillName) continue;
+    const existing = helperSkillsMap.get(row.user_id) ?? [];
+    existing.push(skillName);
+    helperSkillsMap.set(row.user_id, existing);
+  }
 
   const helperMap = new Map((helperProfiles ?? []).map((row) => [row.id, row]));
   const isAuthor = profile?.id === request.author_id;
@@ -98,7 +116,11 @@ export default async function RequestDetailPage({ params }: PageProps) {
             <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#8AA79E]">
               AI Summary
             </p>
-            <p className="mt-4 text-sm leading-7 text-[#4F4F4F]">
+            <div className="mt-3 flex items-center gap-2">
+              <div className="flex h-7 w-7 items-center justify-center rounded-full bg-[#0C9F88] text-xs font-bold text-white">H</div>
+              <span className="text-sm font-semibold text-[#111111]">Helplytics AI</span>
+            </div>
+            <p className="mt-3 text-sm leading-7 text-[#4F4F4F]">
               {request.ai_summary || request.description}
             </p>
 
@@ -191,9 +213,14 @@ export default async function RequestDetailPage({ params }: PageProps) {
                           <p className="text-sm font-semibold text-[#111111]">
                             {helper?.full_name ?? "Helper"}
                           </p>
-                          <p className="text-xs text-[#6B6B6B]">
-                            @{helper?.username ?? "community"} · Trust {helper?.trust_score ?? 0}%
-                          </p>
+                          {helperSkillsMap.get(row.helper_id)?.length ? (
+                            <p className="mt-0.5 text-xs text-[#6B6B6B]">
+                              {helperSkillsMap.get(row.helper_id)!.slice(0, 3).join(", ")}
+                            </p>
+                          ) : null}
+                          <span className="mt-1 inline-block rounded-full bg-[#EEF4EF] px-2 py-0.5 text-xs font-semibold text-[#0C9F88]">
+                            Trust {helper?.trust_score ?? 0}%
+                          </span>
                         </div>
                       </div>
                       <Badge variant={getBadgeVariant(row.status)}>{row.status}</Badge>
@@ -238,9 +265,9 @@ export default async function RequestDetailPage({ params }: PageProps) {
                           <p className="text-sm font-semibold text-[#111111]">
                             {candidate.full_name ?? "Suggested helper"}
                           </p>
-                          <p className="text-xs text-[#6B6B6B]">
-                            @{candidate.username ?? "community"} · Trust {candidate.trust_score}%
-                          </p>
+                          <span className="mt-1 inline-block rounded-full bg-[#EEF4EF] px-2 py-0.5 text-xs font-semibold text-[#0C9F88]">
+                            Trust {candidate.trust_score}%
+                          </span>
                         </div>
                       </div>
                     </div>

@@ -45,9 +45,34 @@ export default async function AICenterPage() {
     <div className="space-y-6">
       <HeroBanner
         label="AI Center"
-        title="Insights & Intelligence"
-        subtitle="Community patterns, skill gaps, and personalized recommendations"
+        title="See what the platform intelligence is noticing."
+        subtitle="AI-like insights summarize demand trends, helper readiness, urgency signals, and request recommendations."
       />
+
+      {/* 3 stat cards — Trend Pulse / Urgency Watch / Mentor Pool */}
+      <div className="grid gap-4 sm:grid-cols-3">
+        <Card className="rounded-[22px] p-6">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#8AA79E]">Trend Pulse</p>
+          <h2 className="mt-3 text-[1.6rem] font-black leading-tight tracking-[-0.04em] text-[#111111]">
+            {trends[0]?.category ?? "—"}
+          </h2>
+          <p className="mt-2 text-sm text-[#6B6B6B]">Most common support area based on active community requests.</p>
+        </Card>
+        <Card className="rounded-[22px] p-6">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#8AA79E]">Urgency Watch</p>
+          <h2 className="mt-3 text-[1.6rem] font-black leading-tight tracking-[-0.04em] text-[#111111]">
+            {(urgency.critical ?? 0) + (urgency.high ?? 0)}
+          </h2>
+          <p className="mt-2 text-sm text-[#6B6B6B]">Requests currently flagged high priority by the urgency detector.</p>
+        </Card>
+        <Card className="rounded-[22px] p-6">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#8AA79E]">Mentor Pool</p>
+          <h2 className="mt-3 text-[1.6rem] font-black leading-tight tracking-[-0.04em] text-[#111111]">
+            {suggested.length}
+          </h2>
+          <p className="mt-2 text-sm text-[#6B6B6B]">Trusted helpers with strong response history and contribution signals.</p>
+        </Card>
+      </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
         {/* Your activity summary */}
@@ -171,45 +196,40 @@ export default async function AICenterPage() {
       {/* AI-suggested requests for you */}
       <Card className="rounded-[22px] p-6">
         <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#8AA79E]">
-          Suggested for You
+          AI Recommendations
         </p>
-        <h2 className="mt-2 text-lg font-bold text-[#111111]">
-          Open requests matching your skills
+        <h2 className="mt-2 text-[1.7rem] font-black leading-tight tracking-[-0.04em] text-[#111111]">
+          Requests needing attention
         </h2>
         {suggested.length === 0 ? (
           <p className="mt-4 text-sm text-[#6B6B6B]">
             No matches yet. Add skills in your profile to get personalized suggestions.
           </p>
         ) : (
-          <div className="mt-4 space-y-3">
+          <div className="mt-5 divide-y divide-[#F0EBE3]">
             {suggested.map((req) => (
               <Link
                 key={req.id}
                 href={`/requests/${req.id}`}
-                className="block rounded-[14px] border border-[#F0EBE3] p-4 hover:border-[#0C9F88] transition-colors"
+                className="block py-5 first:pt-0 last:pb-0 no-underline hover:opacity-80 transition-opacity"
               >
-                <div className="flex items-start justify-between gap-3">
-                  <p className="font-medium text-[#111111] line-clamp-1">{req.title}</p>
+                <p className="font-semibold text-[#111111] leading-snug">{req.title}</p>
+                <p className="mt-1.5 text-sm text-[#6B6B6B] leading-6 line-clamp-2">
+                  AI summary: {req.ai_summary || req.description}
+                </p>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {req.category ? (
+                    <Badge variant="category">{req.category}</Badge>
+                  ) : null}
                   <Badge variant={req.urgency as "low" | "medium" | "high" | "critical"}>
                     {req.urgency}
                   </Badge>
-                </div>
-                <p className="mt-1 text-sm text-[#6B6B6B] line-clamp-2">{req.description}</p>
-                <div className="mt-2 flex flex-wrap gap-1">
-                  {(req.tags ?? []).slice(0, 4).map((tag: string) => (
-                    <span
-                      key={tag}
-                      className="rounded-full bg-[#F0EBE3] px-2 py-0.5 text-xs text-[#6B6B6B]"
-                    >
-                      {tag}
-                    </span>
-                  ))}
                 </div>
               </Link>
             ))}
           </div>
         )}
-        <div className="mt-4">
+        <div className="mt-4 border-t border-[#F0EBE3] pt-4">
           <Link
             href="/explore"
             className="text-sm font-medium text-[#0C9F88] hover:underline"

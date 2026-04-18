@@ -73,28 +73,19 @@ export default function RequestCard({
         </div>
       ) : null}
 
-      <div className="mt-4 flex items-center justify-between gap-3">
-        <div className="flex items-center gap-3">
-          <Avatar name={authorName} src={authorAvatarUrl} size="sm" />
-          <div>
-            <p className="text-sm font-semibold text-[#111111]">{authorName}</p>
-            <p className="text-xs text-[#6B6B6B]">
-              @{authorUsername}
-              {authorTrustScore !== undefined ? ` · Trust ${authorTrustScore}%` : ""}
-            </p>
-          </div>
+      <div className="mt-4 border-t border-[#F0EBE3] pt-4">
+        <p className="text-sm font-semibold text-[#111111]">{authorName}</p>
+        <div className="mt-1.5 flex items-center justify-between gap-2">
+          <p className="text-xs text-[#6B6B6B]">
+            {request.location || "Community"} · {helperCount} helper{helperCount !== 1 ? "s" : ""} interested
+          </p>
+          <Link
+            href={`/requests/${request.id}`}
+            className="shrink-0 text-sm font-semibold text-[#111111] underline-offset-4 hover:underline"
+          >
+            Open details
+          </Link>
         </div>
-        <Link
-          href={`/requests/${request.id}`}
-          className="text-sm font-semibold text-[#111111] underline-offset-4 hover:underline"
-        >
-          Open details
-        </Link>
-      </div>
-
-      <div className="mt-3 flex items-center justify-between border-t border-[#F0EBE3] pt-3 text-xs text-[#8B8B8B]">
-        <span>{request.location || "Remote / Community"}</span>
-        <span>{helperCount} helpers interested · {timeAgo(request.created_at)}</span>
       </div>
     </article>
   );

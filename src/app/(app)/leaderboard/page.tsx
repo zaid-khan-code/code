@@ -39,7 +39,9 @@ export default async function LeaderboardPage({
   const profileRows = profiles ?? [];
   const profileIds = profileRows.map((profile) => profile.id);
 
-  const [{ data: helperRows }, { data: weeklyEvents }] = await Promise.all([
+  const top3Ids = profileRows.slice(0, 3).map((p) => p.id);
+
+  const [{ data: helperRows }, { data: weeklyEvents }, { data: badgeRows }] = await Promise.all([
     profileIds.length > 0
       ? admin.from("request_helpers").select("helper_id").in("helper_id", profileIds)
       : Promise.resolve({ data: [] as never[] }),
@@ -50,11 +52,26 @@ export default async function LeaderboardPage({
           .in("user_id", profileIds)
           .gte("created_at", weekAgo)
       : Promise.resolve({ data: [] as never[] }),
+    top3Ids.length > 0
+      ? admin
+          .from("user_badges")
+          .select("user_id, badges(name)")
+          .in("user_id", top3Ids)
+      : Promise.resolve({ data: [] as never[] }),
   ]);
 
   const contributions = new Map<string, number>();
   for (const row of helperRows ?? []) {
     contributions.set(row.helper_id, (contributions.get(row.helper_id) ?? 0) + 1);
+  }
+
+  const badgeNamesMap = new Map<string, string[]>();
+  for (const row of badgeRows ?? []) {
+    const badgeName = (row.badges as { name: string } | null)?.name;
+    if (!badgeName) continue;
+    const existing = badgeNamesMap.get(row.user_id) ?? [];
+    existing.push(badgeName);
+    badgeNamesMap.set(row.user_id, existing);
   }
 
   const weeklyTrust = new Map<string, number>();
@@ -148,7 +165,7 @@ export default async function LeaderboardPage({
                     {row.full_name ?? row.username ?? "Community helper"}
                   </p>
                   <p className="mt-1 text-xs text-[#6B6B6B]">
-                    Trust {row.trust_score}% · {row.contributions} total contributions
+                    {badgeNamesMap.get(row.id)?.join(" • ") || `Trust ${row.trust_score}% · ${row.contributions} contributions`}
                   </p>
                   <div className="mt-4 h-2.5 rounded-full bg-[#E9E4DD]">
                     <div

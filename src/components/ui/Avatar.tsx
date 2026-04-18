@@ -28,7 +28,10 @@ function colorFromName(name: string): string {
 
 export default function Avatar({ name, src, size = "md" }: Props) {
   const px = sizePx[size];
-  const initial = name.trim().charAt(0).toUpperCase();
+  const parts = name.trim().split(/\s+/);
+  const initial = parts.length >= 2
+    ? parts[0].charAt(0).toUpperCase() + parts[parts.length - 1].charAt(0).toUpperCase()
+    : parts[0].charAt(0).toUpperCase();
   const bg = colorFromName(name);
 
   if (src) {

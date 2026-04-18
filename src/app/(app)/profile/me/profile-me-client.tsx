@@ -161,18 +161,14 @@ export default function ProfileMeClient({
           Skills and reputation
         </h2>
 
-        <div className="mt-8 grid gap-4 sm:grid-cols-2">
-          <div className="rounded-[18px] border border-[#F0EBE3] p-4">
+        <div className="mt-8 divide-y divide-[#F0EBE3] border-y border-[#F0EBE3]">
+          <div className="flex items-center justify-between py-4">
             <p className="text-sm text-[#6B6B6B]">Trust score</p>
-            <p className="mt-2 text-3xl font-black tracking-[-0.04em] text-[#111111]">
-              {profile.trust_score}%
-            </p>
+            <p className="text-sm font-semibold text-[#111111]">{profile.trust_score}%</p>
           </div>
-          <div className="rounded-[18px] border border-[#F0EBE3] p-4">
+          <div className="flex items-center justify-between py-4">
             <p className="text-sm text-[#6B6B6B]">Contributions</p>
-            <p className="mt-2 text-3xl font-black tracking-[-0.04em] text-[#111111]">
-              {contributionCount}
-            </p>
+            <p className="text-sm font-semibold text-[#111111]">{contributionCount}</p>
           </div>
         </div>
 
