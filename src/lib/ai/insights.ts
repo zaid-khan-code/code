@@ -31,7 +31,7 @@ export async function getSkillGaps(sb: SB) {
   if (!openRequests) return [];
 
   const tagDemand: Record<string, number> = {};
-  for (const { tags } of openRequests) {
+  for (const { tags } of openRequests as { tags: string[] | null }[]) {
     for (const tag of tags ?? []) {
       tagDemand[tag] = (tagDemand[tag] ?? 0) + 1;
     }
@@ -99,8 +99,8 @@ export async function getUserActivitySummary(sb: SB, userId: string) {
     .eq("user_id", userId)
     .gte("created_at", since);
 
-  const totalDelta = (events ?? []).reduce((sum, e) => sum + e.delta, 0);
-  const helps = (events ?? []).filter((e) => e.event_type === "request_solved_as_helper").length;
+  const totalDelta = (events as { delta: number }[] ?? []).reduce((sum, e) => sum + e.delta, 0);
+  const helps = (events as { event_type: string }[] ?? []).filter((e) => e.event_type === "request_solved_as_helper").length;
 
   return { trustGain: totalDelta, helpsGiven: helps };
 }

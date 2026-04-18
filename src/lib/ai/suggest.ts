@@ -5,7 +5,6 @@ import { withClaude } from "./claude";
 export async function suggestSkills(bio: string, interestNames: string[]): Promise<string[]> {
   const bioLower = bio.toLowerCase();
   const interestStr = interestNames.join(" ").toLowerCase();
-  const combined = `${bioLower} ${interestStr}`;
 
   const fallback = () => {
     const scores: Record<string, number> = {};
