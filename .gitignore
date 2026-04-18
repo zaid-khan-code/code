@@ -13,6 +13,19 @@
 # testing
 /coverage
 
+/.agent
+.agent
+.claude
+/.claude
+.qwen
+/.qwen
+/.agent*
+.agent*
+.claude*
+/.claude*
+.qwen*
+/.qwen*
+
 # next.js
 /.next/
 /out/
