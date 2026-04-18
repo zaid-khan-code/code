@@ -1,0 +1,32 @@
+export const tokens = {
+  color: {
+    bg:              "#F5F0EA",
+    surface:         "#FFFFFF",
+    surface2:        "#F0EBE3",
+    border:          "#E8E2D9",
+    text:            "#111111",
+    textMuted:       "#6B6B6B",
+    textDim:         "#A0A0A0",
+    brand:           "#0C9F88",
+    brandFg:         "#FFFFFF",
+    accent:          "#0C9F88",
+    warn:            "#F59E0B",
+    danger:          "#EF4444",
+    heroDark:        "#1A2E2C",
+    heroDarkFg:      "#FFFFFF",
+    urgencyLow:      "#0C9F88",
+    urgencyMedium:   "#F59E0B",
+    urgencyHigh:     "#F97316",
+    urgencyCritical: "#EF4444",
+  },
+  radius: { sm: "6px", md: "10px", lg: "14px", xl: "20px", pill: "999px" },
+  shadow: {
+    sm: "0 1px 2px rgba(0,0,0,.04)",
+    md: "0 4px 12px rgba(0,0,0,.06)",
+    lg: "0 12px 32px rgba(0,0,0,.08)",
+  },
+  font: {
+    sans: `"Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto`,
+    mono: `"JetBrains Mono", ui-monospace, SFMono-Regular, Menlo`,
+  },
+} as const;
