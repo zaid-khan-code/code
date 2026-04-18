@@ -1,18 +1,24 @@
-import { NextResponse, type NextRequest } from 'next/server';
-import { createServerClient } from '@supabase/ssr';
-import { ROLE_ROUTES, type Role } from '@/lib/auth/roles';
+import { NextResponse, type NextRequest } from "next/server";
+import { createServerClient } from "@supabase/ssr";
 
-async function getRole(supabase: ReturnType<typeof createServerClient>, userId: string): Promise<Role | null> {
-  const { data } = await supabase
-    .from('profiles')
-    .select('role')
-    .eq('id', userId)
-    .single();
-  return (data?.role as Role) ?? null;
+const AUTH_ROUTES = ["/login", "/signup"];
+const APP_ROUTES = [
+  "/dashboard",
+  "/explore",
+  "/requests",
+  "/messages",
+  "/leaderboard",
+  "/notifications",
+  "/profile",
+  "/ai",
+];
+
+function isRouteMatch(pathname: string, routes: string[]) {
+  return routes.some((route) => pathname === route || pathname.startsWith(`${route}/`));
 }
 
 export async function middleware(request: NextRequest) {
-  let supabaseResponse = NextResponse.next({ request });
+  let response = NextResponse.next({ request });
 
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -24,46 +30,101 @@ export async function middleware(request: NextRequest) {
         },
         setAll(cookiesToSet) {
           cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value));
-          supabaseResponse = NextResponse.next({ request });
-          cookiesToSet.forEach(({ name, value, options }) =>
-            supabaseResponse.cookies.set(name, value, options)
-          );
+          response = NextResponse.next({ request });
+          cookiesToSet.forEach(({ name, value, options }) => {
+            response.cookies.set(name, value, options);
+          });
         },
       },
     }
   );
 
-  const { data: { user } } = await supabase.auth.getUser();
-  const path = request.nextUrl.pathname;
+  const pathname = request.nextUrl.pathname;
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
-  // Auth pages: redirect authed users to their dashboard
-  if (path === '/login' || path === '/signup') {
-    if (user) {
-      const role = await getRole(supabase, user.id);
-      const dest = role ? ROLE_ROUTES[role] : '/user';
-      return NextResponse.redirect(new URL(dest, request.url));
-    }
-    return supabaseResponse;
+  let profile:
+    | {
+        role: "admin" | "user";
+        onboarded: boolean;
+      }
+    | null
+    | undefined;
+
+  if (user) {
+    const { data } = await supabase
+      .from("profiles")
+      .select("role, onboarded")
+      .eq("id", user.id)
+      .single();
+    profile = data;
   }
 
-  // Protected dashboard routes
-  const dashboardRoutes = Object.values(ROLE_ROUTES);
-  const matchedBase = dashboardRoutes.find((r) => path.startsWith(r));
+  if (AUTH_ROUTES.includes(pathname)) {
+    if (!user) return response;
 
-  if (matchedBase) {
-    if (!user) {
-      return NextResponse.redirect(new URL('/login', request.url));
+    if (profile?.role === "admin") {
+      return NextResponse.redirect(new URL("/admin", request.url));
     }
-    const role = await getRole(supabase, user.id);
-    const expectedPath = role ? ROLE_ROUTES[role] : '/user';
-    if (!path.startsWith(expectedPath)) {
-      return NextResponse.redirect(new URL(expectedPath, request.url));
-    }
+
+    return NextResponse.redirect(
+      new URL(profile?.onboarded ? "/dashboard" : "/onboarding", request.url)
+    );
   }
 
-  return supabaseResponse;
+  const requiresAuth =
+    pathname === "/onboarding" ||
+    pathname === "/admin" ||
+    pathname.startsWith("/admin/") ||
+    isRouteMatch(pathname, APP_ROUTES);
+
+  if (requiresAuth && !user) {
+    const loginUrl = new URL("/login", request.url);
+    loginUrl.searchParams.set("next", pathname);
+    return NextResponse.redirect(loginUrl);
+  }
+
+  if (!user || !profile) {
+    return response;
+  }
+
+  if (pathname === "/onboarding" && profile.role === "admin") {
+    return NextResponse.redirect(new URL("/admin", request.url));
+  }
+
+  if ((pathname === "/onboarding" || pathname.startsWith("/onboarding/")) && profile.onboarded && profile.role !== "admin") {
+    return NextResponse.redirect(new URL("/dashboard", request.url));
+  }
+
+  if ((pathname === "/admin" || pathname.startsWith("/admin/")) && profile.role !== "admin") {
+    return NextResponse.redirect(new URL("/dashboard", request.url));
+  }
+
+  if (
+    profile.role !== "admin" &&
+    !profile.onboarded &&
+    isRouteMatch(pathname, APP_ROUTES)
+  ) {
+    return NextResponse.redirect(new URL("/onboarding", request.url));
+  }
+
+  return response;
 }
 
 export const config = {
-  matcher: ['/admin/:path*', '/user/:path*', '/login', '/signup'],
+  matcher: [
+    "/login",
+    "/signup",
+    "/onboarding/:path*",
+    "/dashboard/:path*",
+    "/explore/:path*",
+    "/requests/:path*",
+    "/messages/:path*",
+    "/leaderboard/:path*",
+    "/notifications/:path*",
+    "/profile/:path*",
+    "/ai/:path*",
+    "/admin/:path*",
+  ],
 };

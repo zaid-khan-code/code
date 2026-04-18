@@ -1,346 +1,252 @@
-import React from "react";
 import Link from "next/link";
-import { notFound, redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
+import { notFound } from "next/navigation";
 import { requireOnboarded } from "@/lib/auth/guards";
-import { offerHelp, markRequestSolved, acceptHelper } from "./actions";
+import { createAdminClient } from "@/lib/supabase/admin";
 import Card from "@/components/ui/Card";
-import Button from "@/components/ui/Button";
 import Badge from "@/components/ui/Badge";
+import Button from "@/components/ui/Button";
 import Avatar from "@/components/ui/Avatar";
+import { acceptHelper, markRequestSolved, offerHelp } from "./actions";
+import { timeAgo } from "@/lib/format";
 
-interface PageProps {
+type PageProps = {
   params: Promise<{ id: string }>;
-}
+};
 
-function urgencyVariant(u: string): any {
-  const map: Record<string, any> = {
-    low: "low",
-    medium: "medium",
-    high: "high",
-    critical: "critical",
-  };
-  return map[u.toLowerCase()] ?? "default";
-}
-
-function statusVariant(s: string): any {
-  const map: Record<string, any> = {
-    solved: "solved",
-    open: "open",
-    in_progress: "in_progress",
-    closed: "closed",
-  };
-  return map[s.toLowerCase()] ?? "default";
-}
-
-function timeAgo(iso: string): string {
-  const diff = Date.now() - new Date(iso).getTime();
-  const m = Math.floor(diff / 60_000);
-  if (m < 1) return "just now";
-  if (m < 60) return `${m}m ago`;
-  const h = Math.floor(m / 60);
-  if (h < 24) return `${h}h ago`;
-  return `${Math.floor(h / 24)}d ago`;
+function getBadgeVariant(value: string) {
+  if (value === "solved") return "solved";
+  if (value === "in_progress") return "in_progress";
+  if (value === "closed") return "closed";
+  if (value === "open") return "open";
+  if (value === "critical") return "critical";
+  if (value === "high") return "high";
+  if (value === "medium") return "medium";
+  if (value === "low") return "low";
+  return "default";
 }
 
 export default async function RequestDetailPage({ params }: PageProps) {
-  const [{ profile }, { id }] = await Promise.all([
-    requireOnboarded(),
-    params,
-  ]);
+  const [{ id }, { profile }] = await Promise.all([params, requireOnboarded()]);
+  const admin = createAdminClient();
 
-  const sb = await createClient();
-
-  // Fetch request with author details
-  const { data: request } = await sb
+  const { data: request } = await admin
     .from("requests")
-    .select(
-      `id, title, description, category, urgency, status, tags, location, ai_summary, created_at, updated_at, author_id`
-    )
+    .select("*")
     .eq("id", id)
     .single();
 
   if (!request) notFound();
 
-  // Fetch author
-  const { data: author } = await sb
-    .from("profiles")
-    .select("id, full_name, username, avatar_url, trust_score, bio, location")
-    .eq("id", request.author_id)
-    .single();
+  const [{ data: author }, { data: helperRows }, { data: helperCandidates }] = await Promise.all([
+    admin.from("profiles").select("id, full_name, username, avatar_url, trust_score, location").eq("id", request.author_id).single(),
+    admin
+      .from("request_helpers")
+      .select("id, request_id, helper_id, status, note, created_at")
+      .eq("request_id", id)
+      .order("created_at", { ascending: false }),
+    admin
+      .from("profiles")
+      .select("id, full_name, username, avatar_url, trust_score")
+      .eq("user_mode", "can_help")
+      .neq("id", request.author_id)
+      .order("trust_score", { ascending: false })
+      .limit(6),
+  ]);
 
-  // Fetch helpers
-  const { data: helpers = [] } = await sb
-    .from("request_helpers")
-    .select(
-      `id, helper_id, status, note, created_at, helper:profiles!helper_id(full_name, username, avatar_url, trust_score)`
-    )
-    .eq("request_id", id)
-    .order("created_at", { ascending: false });
+  const helperIds = Array.from(new Set((helperRows ?? []).map((row) => row.helper_id)));
+  const { data: helperProfiles } = helperIds.length
+    ? await admin
+        .from("profiles")
+        .select("id, full_name, username, avatar_url, trust_score")
+        .in("id", helperIds)
+    : { data: [] };
 
+  const helperMap = new Map((helperProfiles ?? []).map((row) => [row.id, row]));
   const isAuthor = profile?.id === request.author_id;
-  const hasOffered = helpers.some(
-    (h) => h.helper_id === profile?.id && h.status === "offered"
-  );
-  const hasAccepted = helpers.some(
-    (h) => h.helper_id === profile?.id && h.status === "accepted"
-  );
+  const existingOffer = (helperRows ?? []).find((row) => row.helper_id === profile?.id);
 
-  // Fetch suggested helpers (users with matching skills)
-  const { data: suggestedHelpers = [] } = await sb
-    .from("profiles")
-    .select("id, full_name, username, avatar_url, trust_score")
-    .eq("user_mode", "can_help")
-    .neq("id", request.author_id)
-    .order("trust_score", { ascending: false })
-    .limit(3);
-
-  // Filter out already helping users
-  const helpingIds = new Set(helpers.map((h) => h.helper_id));
-  const filteredSuggested = suggestedHelpers.filter(
-    (s) => !helpingIds.has(s.id)
+  const visibleHelperCandidates = (helperCandidates ?? []).filter(
+    (candidate) => !helperIds.includes(candidate.id)
   );
 
   return (
-    <div className="max-w-4xl mx-auto">
-      {/* Breadcrumb */}
-      <div className="mb-4">
-        <Link
-          href="/explore"
-          className="text-sm text-[#6B6B6B] hover:text-[#111111]"
-        >
-          ← Back to Explore
-        </Link>
+    <div className="space-y-6">
+      <Link href="/explore" className="inline-flex text-sm font-medium text-[#6B6B6B] hover:text-[#111111]">
+        Back to feed
+      </Link>
+
+      <div className="rounded-[24px] border border-[#213532] bg-[#1A2E2C] px-7 py-7 text-white shadow-[0_18px_40px_rgba(26,46,44,0.12)] sm:px-10 sm:py-9">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#8ED9CC]">
+          Request Detail
+        </p>
+        <div className="mt-4 flex flex-wrap gap-2">
+          {request.category ? <Badge variant="category">{request.category}</Badge> : null}
+          <Badge variant={getBadgeVariant(request.urgency)}>{request.urgency}</Badge>
+          <Badge variant={getBadgeVariant(request.status)}>{request.status.replace("_", " ")}</Badge>
+        </div>
+        <h1 className="mt-4 max-w-[840px] text-[2.15rem] font-black leading-[0.96] tracking-[-0.045em] sm:text-[3rem]">
+          {request.title}
+        </h1>
+        <p className="mt-4 max-w-[700px] text-sm leading-6 text-white/74">
+          {request.description}
+        </p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Main column */}
-        <div className="lg:col-span-2 space-y-4">
-          <Card>
-            {/* Badges */}
-            <div className="flex flex-wrap gap-2 mb-4">
-              <Badge variant={urgencyVariant(request.urgency)}>
-                {request.urgency}
-              </Badge>
-              <Badge variant={statusVariant(request.status)}>
-                {request.status.replace("_", " ")}
-              </Badge>
-              {request.category && (
-                <Badge variant="category">{request.category}</Badge>
-              )}
-              {request.tags.map((tag) => (
-                <Badge key={tag} variant="tag">{tag}</Badge>
-              ))}
+      <div className="grid gap-6 lg:grid-cols-[minmax(0,1.3fr)_360px]">
+        <div className="space-y-6">
+          <Card className="rounded-[22px] p-6">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#8AA79E]">
+              AI Summary
+            </p>
+            <p className="mt-4 text-sm leading-7 text-[#4F4F4F]">
+              {request.ai_summary || request.description}
+            </p>
+
+            {request.tags.length > 0 ? (
+              <div className="mt-5 flex flex-wrap gap-2">
+                {request.tags.map((tag: string) => (
+                  <Badge key={tag} variant="tag">
+                    {tag}
+                  </Badge>
+                ))}
+              </div>
+            ) : null}
+          </Card>
+
+          <Card className="rounded-[22px] p-6">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#8AA79E]">
+              Actions
+            </p>
+            <div className="mt-4 flex flex-wrap gap-3">
+              {!isAuthor && request.status === "open" && !existingOffer ? (
+                <form action={offerHelp}>
+                  <input type="hidden" name="request_id" value={request.id} />
+                  <input type="hidden" name="request_title" value={request.title} />
+                  <Button type="submit">I can help</Button>
+                </form>
+              ) : null}
+
+              {!isAuthor && existingOffer ? (
+                <Button variant="secondary" type="button">
+                  Offer sent
+                </Button>
+              ) : null}
+
+              {isAuthor && request.status !== "solved" ? (
+                <form action={markRequestSolved}>
+                  <input type="hidden" name="request_id" value={request.id} />
+                  <Button type="submit" variant="secondary">
+                    Mark as solved
+                  </Button>
+                </form>
+              ) : null}
             </div>
+          </Card>
+        </div>
 
-            {/* Title */}
-            <h1 className="text-xl font-semibold text-[#111111] mb-2">
-              {request.title}
-            </h1>
-
-            {/* Author row */}
-            <div className="flex items-center gap-3 mb-6 pb-4 border-b border-[#E8E2D9]">
+        <div className="space-y-6">
+          <Card className="rounded-[22px] p-6">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#8AA79E]">
+              Requester
+            </p>
+            <div className="mt-4 flex items-center gap-3">
               <Avatar
-                name={author?.full_name ?? "Unknown"}
+                name={author?.full_name ?? author?.username ?? "User"}
                 src={author?.avatar_url}
                 size="md"
               />
               <div>
-                <p className="font-medium text-[#111111]">
-                  {author?.full_name}
+                <p className="text-sm font-semibold text-[#111111]">
+                  {author?.full_name ?? "Community member"}
                 </p>
-                <p className="text-sm text-[#6B6B6B]">
-                  @{author?.username} · {author?.trust_score}% trust ·{" "}
-                  {timeAgo(request.created_at)}
+                <p className="text-xs text-[#6B6B6B]">
+                  @{author?.username ?? "member"} · {author?.location || "Community"} · {author?.trust_score ?? 0}% trust
                 </p>
               </div>
             </div>
-
-            {/* AI Summary */}
-            {request.ai_summary && (
-              <div className="bg-[#F5F0EA] rounded-[10px] p-4 mb-4">
-                <p className="text-xs font-medium text-[#6B6B6B] mb-1">
-                  AI Summary
-                </p>
-                <p className="text-sm text-[#111111]">{request.ai_summary}</p>
-              </div>
-            )}
-
-            {/* Description */}
-            <div className="prose prose-sm max-w-none text-[#111111]">
-              <pre className="whitespace-pre-wrap font-sans text-sm leading-relaxed">
-                {request.description}
-              </pre>
-            </div>
-
-            {/* Location */}
-            {request.location && (
-              <p className="text-sm text-[#6B6B6B] mt-4">
-                📍 {request.location}
-              </p>
-            )}
           </Card>
 
-          {/* Action bar */}
-          <Card>
-            <div className="flex items-center gap-3">
-              {!isAuthor && request.status === "open" && !hasOffered && (
-                <form action={offerHelp}>
-                  <input type="hidden" name="request_id" value={request.id} />
-                  <Button type="submit">I can help</Button>
-                </form>
-              )}
+          <Card className="rounded-[22px] p-6">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#8AA79E]">
+              Helpers
+            </p>
+            <h2 className="mt-3 text-xl font-extrabold tracking-[-0.03em] text-[#111111]">
+              People ready to support
+            </h2>
 
-              {!isAuthor && hasOffered && (
-                <div className="flex items-center gap-2">
-                  <span className="text-sm text-[#0C9F88]">✓ Offer sent</span>
-                  <Link href={`/messages?request_id=${request.id}`}>
-                    <Button variant="secondary">Message author</Button>
-                  </Link>
-                </div>
-              )}
+            <div className="mt-5 space-y-4">
+              {(helperRows ?? []).map((row) => {
+                const helper = helperMap.get(row.helper_id);
 
-              {isAuthor && request.status !== "solved" && (
-                <div className="flex items-center gap-2">
-                  <form action={markRequestSolved}>
-                    <input
-                      type="hidden"
-                      name="request_id"
-                      value={request.id}
-                    />
-                    <Button type="submit">Mark as solved</Button>
-                  </form>
-                  <Link href={`/requests/${request.id}/edit`}>
-                    <Button variant="secondary">Edit</Button>
-                  </Link>
-                </div>
-              )}
-
-              {request.status === "solved" && (
-                <Badge variant="solved">✓ Solved</Badge>
-              )}
-            </div>
-          </Card>
-
-          {/* Helpers section */}
-          <Card>
-            <h3 className="font-semibold text-[#111111] mb-4">
-              {helpers.length} Helper{helpers.length !== 1 ? "s" : ""}
-            </h3>
-
-            {helpers.length === 0 ? (
-              <p className="text-sm text-[#6B6B6B]">
-                No helpers yet. Be the first to offer help!
-              </p>
-            ) : (
-              <div className="space-y-4">
-                {helpers.map((h) => {
-                  const helperProfile = Array.isArray(h.helper)
-                    ? h.helper[0]
-                    : h.helper;
-                  return (
-                    <div
-                      key={h.id}
-                      className="flex items-start gap-3 p-3 bg-[#F5F0EA] rounded-[10px]"
-                    >
-                      <Avatar
-                        name={helperProfile?.full_name ?? "Unknown"}
-                        src={helperProfile?.avatar_url}
-                        size="sm"
-                      />
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2">
-                          <span className="font-medium text-sm">
-                            {helperProfile?.full_name}
-                          </span>
-                          <span className="text-xs text-[#6B6B6B]">
-                            @{helperProfile?.username} ·{" "}
-                            {helperProfile?.trust_score}% trust
-                          </span>
-                          <Badge variant={h.status as any}>{h.status}</Badge>
-                        </div>
-                        {h.note && (
-                          <p className="text-sm text-[#6B6B6B] mt-1">
-                            "{h.note}"
+                return (
+                  <div key={row.id} className="rounded-[18px] border border-[#F0EBE3] p-4">
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="flex items-center gap-3">
+                        <Avatar
+                          name={helper?.full_name ?? helper?.username ?? "Helper"}
+                          src={helper?.avatar_url}
+                          size="sm"
+                        />
+                        <div>
+                          <p className="text-sm font-semibold text-[#111111]">
+                            {helper?.full_name ?? "Helper"}
                           </p>
-                        )}
+                          <p className="text-xs text-[#6B6B6B]">
+                            @{helper?.username ?? "community"} · Trust {helper?.trust_score ?? 0}%
+                          </p>
+                        </div>
                       </div>
-                      {isAuthor && h.status === "offered" && (
-                        <form action={acceptHelper}>
-                          <input
-                            type="hidden"
-                            name="helper_id"
-                            value={h.id}
-                          />
-                          <Button size="sm">Accept</Button>
-                        </form>
-                      )}
-                      {<Link
-                        href={`/messages?user_id=${h.helper_id}&request_id=${request.id}`}
-                      >
-                        <Button variant="ghost" size="sm">
-                          Message
-                        </Button>
-                      </Link>}
+                      <Badge variant={getBadgeVariant(row.status)}>{row.status}</Badge>
                     </div>
-                  );
-                })}
-              </div>
-            )}
-          </Card>
-        </div>
-
-        {/* Sidebar */}
-        <div className="space-y-4">
-          {/* Suggested helpers */}
-          {filteredSuggested.length > 0 && (
-            <Card>
-              <h3 className="font-semibold text-[#111111] mb-4">
-                Suggested Helpers
-              </h3>
-              <div className="space-y-3">
-                {filteredSuggested.map((u) => (
-                  <div key={u.id} className="flex items-center gap-2">
-                    <Avatar
-                      name={u.full_name}
-                      src={u.avatar_url}
-                      size="sm"
-                    />
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium truncate">
-                        {u.full_name}
-                      </p>
-                      <p className="text-xs text-[#6B6B6B]">
-                        {u.trust_score}% trust
-                      </p>
+                    {row.note ? (
+                      <p className="mt-3 text-sm leading-6 text-[#5F5F5F]">{row.note}</p>
+                    ) : null}
+                    <div className="mt-4 flex items-center justify-between">
+                      <span className="text-xs text-[#8B8B8B]">{timeAgo(row.created_at)}</span>
+                      {isAuthor && row.status === "offered" ? (
+                        <form action={acceptHelper}>
+                          <input type="hidden" name="helper_id" value={row.id} />
+                          <input type="hidden" name="request_title" value={request.title} />
+                          <Button type="submit" size="sm">
+                            Accept
+                          </Button>
+                        </form>
+                      ) : (
+                        <Link
+                          href={`/messages?user_id=${row.helper_id}&request_id=${request.id}`}
+                          className="text-sm font-semibold text-[#111111] underline-offset-4 hover:underline"
+                        >
+                          Message
+                        </Link>
+                      )}
                     </div>
                   </div>
-                ))}
-              </div>
-            </Card>
-          )}
+                );
+              })}
 
-          {/* AI suggestions */}
-          <Card>
-            <h3 className="font-semibold text-[#111111] mb-4">
-              Response Templates
-            </h3>
-            <div className="space-y-2">
-              {[
-                "Happy to help. Can you share what you've already tried?",
-                "I think I can assist. Is the deadline firm?",
-                "I've worked on similar before — shoot me a message with the details.",
-              ].map((template, i) => (
-                <button
-                  key={i}
-                  className="w-full text-left p-3 text-sm text-[#6B6B6B] bg-[#F5F0EA] rounded-[10px] hover:bg-[#E8E2D9] transition-colors"
-                  onClick={() => {
-                    navigator.clipboard.writeText(template);
-                  }}
-                >
-                  {template}
-                </button>
-              ))}
+              {(helperRows ?? []).length === 0 ? (
+                <>
+                  {visibleHelperCandidates.slice(0, 2).map((candidate) => (
+                    <div key={candidate.id} className="rounded-[18px] border border-[#F0EBE3] p-4">
+                      <div className="flex items-center gap-3">
+                        <Avatar
+                          name={candidate.full_name ?? candidate.username ?? "Helper"}
+                          src={candidate.avatar_url}
+                          size="sm"
+                        />
+                        <div>
+                          <p className="text-sm font-semibold text-[#111111]">
+                            {candidate.full_name ?? "Suggested helper"}
+                          </p>
+                          <p className="text-xs text-[#6B6B6B]">
+                            @{candidate.username ?? "community"} · Trust {candidate.trust_score}%
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </>
+              ) : null}
             </div>
           </Card>
         </div>

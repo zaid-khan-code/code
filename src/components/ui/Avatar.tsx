@@ -38,6 +38,7 @@ export default function Avatar({ name, src, size = "md" }: Props) {
         alt={name}
         width={px}
         height={px}
+        unoptimized
         className="rounded-full object-cover"
         style={{ width: px, height: px }}
       />

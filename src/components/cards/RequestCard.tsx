@@ -1,12 +1,7 @@
-import React from "react";
 import Link from "next/link";
 import Badge from "@/components/ui/Badge";
 import Avatar from "@/components/ui/Avatar";
-
-type BadgeVariant =
-  | "solved" | "open" | "in_progress" | "closed"
-  | "low" | "medium" | "high" | "critical"
-  | "category" | "tag" | "default";
+import { timeAgo } from "@/lib/format";
 
 type Request = {
   id: string;
@@ -29,34 +24,20 @@ type Props = {
   helperCount?: number;
 };
 
-function urgencyVariant(u: string): BadgeVariant {
-  const map: Record<string, BadgeVariant> = {
-    low: "low",
-    medium: "medium",
-    high: "high",
-    critical: "critical",
-  };
-  return map[u.toLowerCase()] ?? "default";
+function getUrgencyVariant(urgency: string) {
+  if (urgency === "critical") return "critical";
+  if (urgency === "high") return "high";
+  if (urgency === "medium") return "medium";
+  if (urgency === "low") return "low";
+  return "default";
 }
 
-function statusVariant(s: string): BadgeVariant {
-  const map: Record<string, BadgeVariant> = {
-    solved: "solved",
-    open: "open",
-    in_progress: "in_progress",
-    closed: "closed",
-  };
-  return map[s.toLowerCase()] ?? "default";
-}
-
-function timeAgo(iso: string): string {
-  const diff = Date.now() - new Date(iso).getTime();
-  const m = Math.floor(diff / 60_000);
-  if (m < 1) return "just now";
-  if (m < 60) return `${m}m ago`;
-  const h = Math.floor(m / 60);
-  if (h < 24) return `${h}h ago`;
-  return `${Math.floor(h / 24)}d ago`;
+function getStatusVariant(status: string) {
+  if (status === "solved") return "solved";
+  if (status === "in_progress") return "in_progress";
+  if (status === "closed") return "closed";
+  if (status === "open") return "open";
+  return "default";
 }
 
 export default function RequestCard({
@@ -65,77 +46,55 @@ export default function RequestCard({
   authorUsername,
   authorAvatarUrl,
   authorTrustScore,
-  helperCount,
+  helperCount = 0,
 }: Props) {
-  const visibleTags = request.tags.slice(0, 4);
-  const extraTags = request.tags.length - visibleTags.length;
-
   return (
-    <article className="bg-white rounded-[14px] border border-[#E8E2D9] p-5 shadow-[0_1px_2px_rgba(0,0,0,.04)] hover:border-[#0C9F88] transition-colors flex flex-col gap-3">
-      {/* Badges row */}
-      <div className="flex flex-wrap items-center gap-1.5">
-        <Badge variant={urgencyVariant(request.urgency)}>
-          {request.urgency}
-        </Badge>
-        <Badge variant={statusVariant(request.status)}>
-          {request.status.replace("_", " ")}
-        </Badge>
-        {request.category && (
-          <Badge variant="category">{request.category}</Badge>
-        )}
-        {visibleTags.map((tag) => (
-          <Badge key={tag} variant="tag">{tag}</Badge>
-        ))}
-        {extraTags > 0 && (
-          <Badge variant="tag">+{extraTags}</Badge>
-        )}
+    <article className="rounded-[22px] border border-[#E8E2D9] bg-white p-5 shadow-[0_12px_28px_rgba(17,17,17,0.04)]">
+      <div className="mb-3 flex flex-wrap items-center gap-2">
+        {request.category ? <Badge variant="category">{request.category}</Badge> : null}
+        <Badge variant={getUrgencyVariant(request.urgency)}>{request.urgency}</Badge>
+        <Badge variant={getStatusVariant(request.status)}>{request.status.replace("_", " ")}</Badge>
       </div>
 
-      {/* Title + desc */}
-      <div>
-        <h3 className="text-sm font-semibold text-[#111111] leading-snug mb-1">
-          {request.title}
-        </h3>
-        <p className="text-sm text-[#6B6B6B] line-clamp-2 leading-relaxed">
-          {request.description}
-        </p>
-      </div>
+      <h3 className="text-[1.15rem] font-extrabold leading-tight tracking-[-0.03em] text-[#111111]">
+        {request.title}
+      </h3>
+      <p className="mt-2 line-clamp-2 text-sm leading-6 text-[#6B6B6B]">
+        {request.description}
+      </p>
 
-      {/* Author row */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <Avatar
-            name={authorName}
-            src={authorAvatarUrl}
-            size="sm"
-          />
-          <div>
-            <span className="text-xs font-medium text-[#111111]">{authorName}</span>
-            <span className="text-xs text-[#A0A0A0] ml-1">@{authorUsername}</span>
-            {authorTrustScore !== undefined && (
-              <span className="text-xs text-[#0C9F88] ml-1">{authorTrustScore}%</span>
-            )}
-          </div>
+      {request.tags.length > 0 ? (
+        <div className="mt-4 flex flex-wrap gap-2">
+          {request.tags.slice(0, 4).map((tag) => (
+            <Badge key={tag} variant="tag">
+              {tag}
+            </Badge>
+          ))}
         </div>
-        <span className="text-xs text-[#A0A0A0]">{timeAgo(request.created_at)}</span>
-      </div>
+      ) : null}
 
-      {/* Footer */}
-      <div className="flex items-center justify-between pt-1 border-t border-[#E8E2D9]">
-        <div className="flex items-center gap-3 text-xs text-[#6B6B6B]">
-          {request.location && (
-            <span>📍 {request.location}</span>
-          )}
-          {helperCount !== undefined && helperCount > 0 && (
-            <span>🤝 {helperCount} helper{helperCount !== 1 ? "s" : ""}</span>
-          )}
+      <div className="mt-4 flex items-center justify-between gap-3">
+        <div className="flex items-center gap-3">
+          <Avatar name={authorName} src={authorAvatarUrl} size="sm" />
+          <div>
+            <p className="text-sm font-semibold text-[#111111]">{authorName}</p>
+            <p className="text-xs text-[#6B6B6B]">
+              @{authorUsername}
+              {authorTrustScore !== undefined ? ` · Trust ${authorTrustScore}%` : ""}
+            </p>
+          </div>
         </div>
         <Link
           href={`/requests/${request.id}`}
-          className="text-xs font-medium text-[#0C9F88] hover:text-[#0a8a77] no-underline transition-colors"
+          className="text-sm font-semibold text-[#111111] underline-offset-4 hover:underline"
         >
-          Open details →
+          Open details
         </Link>
+      </div>
+
+      <div className="mt-3 flex items-center justify-between border-t border-[#F0EBE3] pt-3 text-xs text-[#8B8B8B]">
+        <span>{request.location || "Remote / Community"}</span>
+        <span>{helperCount} helpers interested · {timeAgo(request.created_at)}</span>
       </div>
     </article>
   );

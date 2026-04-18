@@ -1,10 +1,8 @@
 'use server';
 
-import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
 import { createClient } from '@/lib/supabase/server';
 import { requireOnboarded } from '@/lib/auth/guards';
-import { createAdminClient } from '@/lib/supabase/admin';
 import { notify } from '@/lib/notifications/emit';
 import { createRequestSchema } from '@/lib/zod/schemas';
 import { TRUST_EVENTS } from '@/lib/trust/score';
@@ -13,7 +11,6 @@ import { detectUrgencyHeuristic } from '@/lib/ai/urgency';
 import { suggestTags } from '@/lib/ai/tags';
 
 export async function createRequest(
-  _prev: { error: string | null; requestId?: string },
   formData: FormData
 ): Promise<{ error: string | null; requestId?: string }> {
   const title = formData.get('title') as string;
@@ -45,15 +42,15 @@ export async function createRequest(
 
   // Re-compute AI suggestions server-side
   const text = `${parsed.data.title} ${parsed.data.description}`;
-  const { category: aiCat, confidence: catConfidence } = categorizeHeuristic(text);
+  const { category: aiCat } = categorizeHeuristic(text);
   const { urgency: aiUrgency, score: urgencyScore } = detectUrgencyHeuristic(text);
 
   // Get all skills for tag suggestion
-  const { data: skillsList = [] } = await sb
+  const { data: skillRows } = await sb
     .from('skills')
     .select('name');
-  const skillNames = skillsList.map((s) => s.name);
-  const aiTags = suggestTags(text, skillNames);
+  const skillNames = (skillRows ?? []).map((s) => s.name);
+  const aiTags = await suggestTags(text, skillNames);
 
   // Merge client tags with AI suggestions
   const mergedTags = [...new Set([...parsed.data.tags, ...aiTags])].slice(0, 10);
@@ -66,7 +63,7 @@ export async function createRequest(
       title: parsed.data.title,
       description: parsed.data.description,
       category: parsed.data.category || aiCat,
-      urgency: parsed.data.urgency || aiUrgency,
+      urgency: parsed.data.urgency ?? aiUrgency,
       tags: mergedTags,
       location: parsed.data.location,
       ai_category: aiCat,
@@ -87,33 +84,36 @@ export async function createRequest(
     p_ref: request.id,
   });
 
-  // Notify matching helpers (users with can_help=true on matching tags)
-  const { data: matchingUsers = [] } = await sb
-    .from('user_skills')
-    .select('user_id')
-    .eq('can_help', true)
-    .in(
-      'skill_id',
-      mergedTags
-        .map((t) => skillNames.find((s) => s.toLowerCase() === t.toLowerCase()))
-        .filter(Boolean)
-        .map((t) => t!)
-    )
-    .neq('user_id', profile?.id)
-    .limit(50);
+  const matchedSkillIds = (skillRows ?? [])
+    .filter((row) => mergedTags.some((tag) => tag.toLowerCase() === row.name.toLowerCase()))
+    .map((row) => row.id);
 
-  // Get unique user IDs
-  const notifiedUsers = new Set<string>();
-  for (const u of matchingUsers) {
-    if (!notifiedUsers.has(u.user_id)) {
-      notifiedUsers.add(u.user_id);
-      await notify(u.user_id, 'new_helper', {
-        request_id: request.id,
-        request_title: parsed.data.title,
-      });
+  const helperIds = new Set<string>();
+  if (matchedSkillIds.length > 0) {
+    const { data: helperRows } = await sb
+      .from('user_skills')
+      .select('user_id')
+      .eq('can_help', true)
+      .in('skill_id', matchedSkillIds);
+
+    for (const row of helperRows ?? []) {
+      if (row.user_id !== profile?.id) {
+        helperIds.add(row.user_id);
+      }
     }
   }
 
+  const notifiedUsers = Array.from(helperIds).slice(0, 50);
+
+  for (const userId of notifiedUsers) {
+    await notify(userId, 'new_helper', {
+      request_id: request.id,
+      request_title: parsed.data.title,
+    });
+  }
+
   revalidatePath('/explore');
+  revalidatePath('/dashboard');
+  revalidatePath(`/requests/${request.id}`);
   return { error: null, requestId: request.id };
 }

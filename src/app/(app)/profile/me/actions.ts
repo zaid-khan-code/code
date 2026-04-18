@@ -8,9 +8,8 @@ import { requireOnboarded } from '@/lib/auth/guards';
 import { updateProfileSchema } from '@/lib/zod/schemas';
 
 export async function updateProfile(
-  _prev: { error: string | null; success?: boolean },
   formData: FormData
-): Promise<{ error: string | null; success?: boolean }> {
+): Promise<{ error: string | null; success: boolean }> {
   const parsed = updateProfileSchema.safeParse({
     full_name: formData.get('full_name') || undefined,
     username: formData.get('username') || undefined,
@@ -21,21 +20,21 @@ export async function updateProfile(
   });
 
   if (!parsed.success) {
-    return { error: parsed.error.issues[0].message };
+    return { error: parsed.error.issues[0].message, success: false };
   }
 
   const { profile } = await requireOnboarded();
   const sb = await createClient();
 
-  // Check username uniqueness if changing
   if (parsed.data.username && parsed.data.username !== profile?.username) {
     const { data: existing } = await sb
       .from('profiles')
       .select('id')
       .eq('username', parsed.data.username)
-      .single();
+      .maybeSingle();
+
     if (existing) {
-      return { error: 'Username already taken' };
+      return { error: 'Username already taken', success: false };
     }
   }
 
@@ -48,7 +47,7 @@ export async function updateProfile(
     .eq('id', profile?.id);
 
   if (error) {
-    return { error: error.message };
+    return { error: error.message, success: false };
   }
 
   revalidatePath('/profile/me');
@@ -58,10 +57,8 @@ export async function updateProfile(
 
 export async function deleteAccount(): Promise<void> {
   const { user } = await requireOnboarded();
-  const admin = await createAdminClient();
+  const admin = createAdminClient();
 
-  // Delete user data (cascades handle related records)
   await admin.auth.admin.deleteUser(user.id);
-
   redirect('/');
 }

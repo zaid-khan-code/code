@@ -22,7 +22,7 @@ export async function submitStep1(formData: FormData) {
   };
 
   const parsed = onboardingStep1Schema.safeParse(raw);
-  if (!parsed.success) return { error: parsed.error.errors[0]?.message ?? "Invalid input" };
+  if (!parsed.success) return { error: parsed.error.issues[0]?.message ?? "Invalid input" };
 
   const { data: existing } = await sb.from("profiles").select("id").eq("username", parsed.data.username).single();
   if (existing) return { error: "Username already taken" };
@@ -86,7 +86,7 @@ export async function submitStep4(formData: FormData) {
   const bio = formData.get("bio")?.toString() ?? undefined;
 
   const parsed = onboardingStep4Schema.safeParse({ interest_ids: interestIds, bio });
-  if (!parsed.success) return { error: parsed.error.errors[0]?.message ?? "Invalid input" };
+  if (!parsed.success) return { error: parsed.error.issues[0]?.message ?? "Invalid input" };
 
   const admin = createAdminClient();
   await admin.from("user_interests").delete().eq("user_id", user.id);

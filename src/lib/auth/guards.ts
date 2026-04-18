@@ -1,5 +1,8 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import type { Tables } from "@/lib/supabase/types";
+
+export type AppProfile = Tables<"profiles">;
 
 export async function requireUser() {
   const sb = await createClient();
@@ -11,7 +14,11 @@ export async function requireUser() {
 export async function requireOnboarded() {
   const user = await requireUser();
   const sb = await createClient();
-  const { data: p } = await sb.from("profiles").select("onboarded,role,username,full_name,trust_score,avatar_url").eq("id", user.id).single();
+  const { data: p } = await sb
+    .from("profiles")
+    .select("*")
+    .eq("id", user.id)
+    .single();
   if (!p?.onboarded && p?.role !== "admin") redirect("/onboarding");
   return { user, profile: p };
 }

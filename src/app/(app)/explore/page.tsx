@@ -1,74 +1,55 @@
-import React from "react";
 import Link from "next/link";
-import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
 import { requireOnboarded } from "@/lib/auth/guards";
-import RequestCard from "@/components/cards/RequestCard";
+import { createAdminClient } from "@/lib/supabase/admin";
+import HeroBanner from "@/components/ui/HeroBanner";
 import Button from "@/components/ui/Button";
-import FeedFilters from "./_components/FeedFilters";
+import RequestCard from "@/components/cards/RequestCard";
 
-export const revalidate = 60;
-
-type SearchParams = {
+type SearchParams = Promise<{
   category?: string;
   urgency?: string;
   skills?: string;
   location?: string;
   status?: string;
-  sort?: string;
-  cursor?: string;
-};
-
-const PAGE_SIZE = 20;
+}>;
 
 export default async function ExplorePage({
   searchParams,
 }: {
-  searchParams: Promise<SearchParams>;
+  searchParams: SearchParams;
 }) {
-  const [{ profile }, params] = await Promise.all([
-    requireOnboarded(),
-    searchParams,
+  await requireOnboarded();
+
+  const params = await searchParams;
+  const admin = createAdminClient();
+
+  const [{ data: categoryRows }, { data: skillRows }] = await Promise.all([
+    admin.from("requests").select("category").not("category", "is", null),
+    admin.from("skills").select("id, name").order("name"),
   ]);
 
-  const sb = await createClient();
+  const categories = Array.from(
+    new Set((categoryRows ?? []).map((row) => row.category).filter(Boolean) as string[])
+  ).sort();
 
-  // Get distinct categories for filter
-  const { data: allCategories = [] } = await sb
+  let query = admin
     .from("requests")
-    .select("category")
-    .not("category", "is", null)
-    .order("category");
-  const categories = [...new Set(allCategories?.map((c) => c.category).filter((c): c is string => c !== null))];
-
-  // Get all skills for filter
-  const { data: skillsList = [] } = await sb
-    .from("skills")
-    .select("id, name")
-    .order("name");
-
-  // Build query
-  let query = sb.from("requests").select(
-    `id, title, description, category, urgency, status, tags, location, created_at, author_id`,
-    { count: "exact" }
-  );
-
-  // Apply filters
-  if (params.status && params.status !== "all") {
-    query = query.eq("status", params.status);
-  } else {
-    query = query.eq("status", "open");
-  }
+    .select("id, author_id, title, description, category, urgency, status, tags, location, created_at", {
+      count: "exact",
+    })
+    .order("created_at", { ascending: false })
+    .limit(24);
 
   if (params.category && params.category !== "all") {
     query = query.eq("category", params.category);
   }
 
-  if (params.urgency) {
-    const urgencies = params.urgency.split(",");
-    if (urgencies.length > 0) {
-      query = query.in("urgency", urgencies);
-    }
+  if (params.urgency && params.urgency !== "all") {
+    query = query.eq("urgency", params.urgency as "low" | "medium" | "high" | "critical");
+  }
+
+  if (params.status && params.status !== "all") {
+    query = query.eq("status", params.status as "open" | "in_progress" | "solved" | "closed");
   }
 
   if (params.location) {
@@ -76,132 +57,147 @@ export default async function ExplorePage({
   }
 
   if (params.skills) {
-    const skillIds = params.skills.split(",");
-    // Find requests where tags overlap with skill names
-    const { data: skillNames } = await sb
-      .from("skills")
-      .select("name")
-      .in("id", skillIds);
-    const names = skillNames?.map((s) => s.name) ?? [];
-    if (names.length > 0) {
-      // This is a simplified approach - requests where any tag matches any skill name
-      names.forEach((name) => {
-        query = query.contains("tags", [name]);
-      });
-    }
+    query = query.contains("tags", [params.skills]);
   }
 
-  // Apply sort
-  const sort = params.sort ?? "newest";
-  if (sort === "newest") {
-    query = query.order("created_at", { ascending: false });
-  } else if (sort === "urgent") {
-    // Custom urgency ordering: critical > high > medium > low
-    query = query
-      .order("urgency", { ascending: false })
-      .order("created_at", { ascending: false });
-  } else if (sort === "offers") {
-    // Requires joining with request_helpers - simplified to newest for now
-    query = query.order("created_at", { ascending: false });
-  }
+  const { data: requests, count } = await query;
+  const requestRows = requests ?? [];
+  const authorIds = Array.from(new Set(requestRows.map((row) => row.author_id)));
+  const requestIds = requestRows.map((row) => row.id);
 
-  // Apply cursor pagination
-  if (params.cursor) {
-    query = query.lt("created_at", params.cursor);
-  }
-
-  query = query.limit(PAGE_SIZE + 1);
-
-  const { data: rawRequests, count } = await query;
-  const requests = rawRequests ?? [];
-
-  const hasMore = requests.length > PAGE_SIZE;
-  const nextCursor = hasMore ? requests[PAGE_SIZE - 1]?.created_at : null;
-  const visibleRequests = requests.slice(0, PAGE_SIZE);
-
-  // Fetch authors and helper counts for visible requests
-  const authorIds = visibleRequests.map((r) => r.author_id);
-  const requestIds = visibleRequests.map((r) => r.id);
-
-  const [{ data: authors = [] }, { data: helpers = [] }] = await Promise.all([
-    sb
-      .from("profiles")
-      .select("id, full_name, username, avatar_url, trust_score")
-      .in("id", authorIds),
-    sb
-      .from("request_helpers")
-      .select("request_id, id")
-      .in("request_id", requestIds)
-      .eq("status", "offered"),
+  const [{ data: authorRows }, { data: helperRows }] = await Promise.all([
+    authorIds.length > 0
+      ? admin
+          .from("profiles")
+          .select("id, full_name, username, avatar_url, trust_score")
+          .in("id", authorIds)
+      : Promise.resolve({ data: [] as never[] }),
+    requestIds.length > 0
+      ? admin
+          .from("request_helpers")
+          .select("request_id")
+          .in("request_id", requestIds)
+          .eq("status", "offered")
+      : Promise.resolve({ data: [] as never[] }),
   ]);
 
-  const authorMap = new Map((authors ?? []).map((a) => [a.id, a]));
+  const authorMap = new Map((authorRows ?? []).map((row) => [row.id, row]));
   const helperCounts = new Map<string, number>();
-  helpers.forEach((h) => {
-    helperCounts.set(h.request_id, (helperCounts.get(h.request_id) ?? 0) + 1);
-  });
+
+  for (const row of helperRows ?? []) {
+    helperCounts.set(row.request_id, (helperCounts.get(row.request_id) ?? 0) + 1);
+  }
 
   return (
-    <div className="max-w-4xl mx-auto">
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-semibold text-[#111111]">Explore</h1>
-        <Link href="/requests/new">
-          <Button>+ New Request</Button>
-        </Link>
-      </div>
-
-      <FeedFilters
-        categories={categories
-          .map((c) => c.category)
-          .filter((c): c is string => c !== null)}
-        skills={skillsList}
-        currentParams={params}
+    <div className="space-y-6">
+      <HeroBanner
+        label="Explore / Feed"
+        title="Browse help requests with filterable community context."
+        subtitle="Filter by category, urgency, skills, and location to surface the best matches."
       />
 
-      <div className="space-y-4 mt-6">
-        {visibleRequests.length === 0 ? (
-          <div className="text-center py-12">
-            <p className="text-[#6B6B6B] mb-4">
-              No requests match your filters.
-            </p>
-            <Link href="/explore">
-              <Button variant="secondary">Clear filters</Button>
-            </Link>
-          </div>
-        ) : (
-          visibleRequests.map((r) => {
-            const author = authorMap.get(r.author_id);
-            return (
-              <RequestCard
-                key={r.id}
-                request={r}
-                authorName={author?.full_name ?? "Unknown"}
-                authorUsername={author?.username ?? "unknown"}
-                authorAvatarUrl={author?.avatar_url}
-                authorTrustScore={author?.trust_score}
-                helperCount={helperCounts.get(r.id) ?? 0}
+      <div className="grid gap-6 lg:grid-cols-[300px_minmax(0,1fr)]">
+        <form
+          method="get"
+          className="rounded-[22px] border border-[#E8E2D9] bg-white p-6 shadow-[0_12px_28px_rgba(17,17,17,0.04)]"
+        >
+          <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#8AA79E]">
+            Filters
+          </p>
+          <h2 className="mt-3 text-[2rem] font-black leading-[0.95] tracking-[-0.04em] text-[#111111]">
+            Refine the feed
+          </h2>
+
+          <div className="mt-8 space-y-5">
+            <label className="block">
+              <span className="mb-2 block text-sm font-medium text-[#6B6B6B]">Category</span>
+              <select
+                name="category"
+                defaultValue={params.category ?? "all"}
+                className="w-full rounded-[14px] border border-[#E8E2D9] bg-white px-4 py-3 text-sm text-[#111111] outline-none focus:border-[#0C9F88]"
+              >
+                <option value="all">All categories</option>
+                {categories.map((category) => (
+                  <option key={category} value={category}>
+                    {category}
+                  </option>
+                ))}
+              </select>
+            </label>
+
+            <label className="block">
+              <span className="mb-2 block text-sm font-medium text-[#6B6B6B]">Urgency</span>
+              <select
+                name="urgency"
+                defaultValue={params.urgency ?? "all"}
+                className="w-full rounded-[14px] border border-[#E8E2D9] bg-white px-4 py-3 text-sm text-[#111111] outline-none focus:border-[#0C9F88]"
+              >
+                <option value="all">All urgency levels</option>
+                <option value="low">Low</option>
+                <option value="medium">Medium</option>
+                <option value="high">High</option>
+                <option value="critical">Critical</option>
+              </select>
+            </label>
+
+            <label className="block">
+              <span className="mb-2 block text-sm font-medium text-[#6B6B6B]">Skills</span>
+              <input
+                name="skills"
+                defaultValue={params.skills ?? ""}
+                placeholder="React, Figma, Git/GitHub"
+                className="w-full rounded-[14px] border border-[#E8E2D9] bg-white px-4 py-3 text-sm text-[#111111] outline-none placeholder:text-[#A0A0A0] focus:border-[#0C9F88]"
               />
-            );
-          })
-        )}
-      </div>
+            </label>
 
-      {hasMore && (
-        <div className="mt-8 text-center">
-          <Link
-            href={{
-              pathname: "/explore",
-              query: { ...params, cursor: nextCursor },
-            }}
-          >
-            <Button variant="secondary">Load more</Button>
-          </Link>
+            <label className="block">
+              <span className="mb-2 block text-sm font-medium text-[#6B6B6B]">Location</span>
+              <input
+                name="location"
+                defaultValue={params.location ?? ""}
+                placeholder="Karachi, Lahore, Remote"
+                className="w-full rounded-[14px] border border-[#E8E2D9] bg-white px-4 py-3 text-sm text-[#111111] outline-none placeholder:text-[#A0A0A0] focus:border-[#0C9F88]"
+              />
+            </label>
+
+            <div className="flex gap-3 pt-2">
+              <Button type="submit">Apply filters</Button>
+              <Link href="/explore" className="inline-flex items-center text-sm font-medium text-[#6B6B6B]">
+                Clear
+              </Link>
+            </div>
+
+            <div className="rounded-[18px] bg-[#F7F2EC] p-4 text-xs leading-5 text-[#6B6B6B]">
+              {skillRows?.length ?? 0} skills in the community catalog · {count ?? 0} requests visible
+            </div>
+          </div>
+        </form>
+
+        <div className="space-y-4">
+          {requestRows.length === 0 ? (
+            <div className="rounded-[22px] border border-[#E8E2D9] bg-white p-10 text-center shadow-[0_12px_28px_rgba(17,17,17,0.04)]">
+              <p className="text-lg font-semibold text-[#111111]">No requests match the current filters.</p>
+              <p className="mt-2 text-sm text-[#6B6B6B]">Try widening the category or clearing the skills/location filters.</p>
+            </div>
+          ) : (
+            requestRows.map((request) => {
+              const author = authorMap.get(request.author_id);
+
+              return (
+                <RequestCard
+                  key={request.id}
+                  request={request}
+                  authorName={author?.full_name ?? "Community member"}
+                  authorUsername={author?.username ?? "member"}
+                  authorAvatarUrl={author?.avatar_url}
+                  authorTrustScore={author?.trust_score ?? 0}
+                  helperCount={helperCounts.get(request.id) ?? 0}
+                />
+              );
+            })
+          )}
         </div>
-      )}
-
-      <p className="text-xs text-[#A0A0A0] text-center mt-6">
-        {count !== null ? `${count} total requests` : "Loading..."}
-      </p>
+      </div>
     </div>
   );
 }

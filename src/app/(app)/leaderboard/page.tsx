@@ -1,150 +1,165 @@
-import { createClient } from "@/lib/supabase/server";
+import Link from "next/link";
 import { requireOnboarded } from "@/lib/auth/guards";
+import { createAdminClient } from "@/lib/supabase/admin";
+import HeroBanner from "@/components/ui/HeroBanner";
 import Card from "@/components/ui/Card";
 import Avatar from "@/components/ui/Avatar";
-import Link from "next/link";
 
-interface LeaderboardUser {
+type SearchParams = Promise<{ tab?: string }>;
+
+type LeaderboardRow = {
   id: string;
   username: string | null;
   full_name: string | null;
   avatar_url: string | null;
   location: string | null;
   trust_score: number;
-  badge_count: number;
-}
+  contributions: number;
+};
 
-interface Props {
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
-}
-
-export default async function LeaderboardPage({ searchParams }: Props) {
-  const { user } = await requireOnboarded();
-  const sb = await createClient();
+export default async function LeaderboardPage({
+  searchParams,
+}: {
+  searchParams: SearchParams;
+}) {
+  await requireOnboarded();
   const params = await searchParams;
-  const tab = (params.tab as string) ?? "all";
+  const admin = createAdminClient();
+  const tab = params.tab === "weekly" ? "weekly" : "all";
 
-  let users: LeaderboardUser[] = [];
+  const { data: profiles } = await admin
+    .from("profiles")
+    .select("id, username, full_name, avatar_url, location, trust_score")
+    .eq("onboarded", true)
+    .order("trust_score", { ascending: false })
+    .limit(50);
 
-  if (tab === "weekly") {
-    const since = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
-    const { data } = await sb.rpc("get_weekly_leaderboard", { since });
-    users = (data as LeaderboardUser[] | null) ?? [];
-  } else {
-    const { data } = await sb
-      .from("profiles")
-      .select(`
-        id,
-        username,
-        full_name,
-        avatar_url,
-        location,
-        trust_score,
-        user_badges(count)
-      `)
-      .eq("onboarded", true)
-      .order("trust_score", { ascending: false })
-      .limit(50);
+  const profileRows = profiles ?? [];
+  const profileIds = profileRows.map((profile) => profile.id);
 
-    users = (data?.map((u) => ({
-        ...u,
-        badge_count: (u as unknown as { user_badges: [{ count: number }] }).user_badges[0]?.count ?? 0,
-      })) ?? []) as LeaderboardUser[];
+  const [{ data: helperRows }, { data: weeklyEvents }] = await Promise.all([
+    profileIds.length > 0
+      ? admin.from("request_helpers").select("helper_id").in("helper_id", profileIds)
+      : Promise.resolve({ data: [] as never[] }),
+    profileIds.length > 0
+      ? admin
+          .from("trust_events")
+          .select("user_id, delta, created_at")
+          .in("user_id", profileIds)
+          .gte("created_at", new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString())
+      : Promise.resolve({ data: [] as never[] }),
+  ]);
+
+  const contributions = new Map<string, number>();
+  for (const row of helperRows ?? []) {
+    contributions.set(row.helper_id, (contributions.get(row.helper_id) ?? 0) + 1);
   }
 
-  return (
-    <div className="max-w-4xl mx-auto space-y-6">
-      <div className="text-center">
-        <h1 className="text-3xl font-bold text-[#111111]">Leaderboard</h1>
-        <p className="text-[#6B6B6B] mt-2">Top community helpers by trust score</p>
-      </div>
+  const weeklyTrust = new Map<string, number>();
+  for (const row of weeklyEvents ?? []) {
+    weeklyTrust.set(row.user_id, (weeklyTrust.get(row.user_id) ?? 0) + row.delta);
+  }
 
-      <div className="flex justify-center gap-2">
+  const rows: LeaderboardRow[] = profileRows.map((profile) => ({
+    ...profile,
+    trust_score: tab === "weekly" ? weeklyTrust.get(profile.id) ?? 0 : profile.trust_score,
+    contributions: contributions.get(profile.id) ?? 0,
+  }));
+
+  rows.sort((a, b) => b.trust_score - a.trust_score || b.contributions - a.contributions);
+
+  return (
+    <div className="space-y-6">
+      <HeroBanner
+        label="Leaderboard"
+        title="Recognize the people who keep the community moving."
+        subtitle="Trust score, contribution count, and visible progress create momentum for reliable helpers."
+      />
+
+      <div className="flex flex-wrap gap-3">
         <Link
           href="/leaderboard?tab=all"
-          className={`px-4 py-2 rounded-[999px] text-sm font-medium transition-colors ${
-            tab === "all"
-              ? "bg-[#0C9F88] text-white"
-              : "bg-white text-[#6B6B6B] hover:bg-[#F0EBE3]"
-          }`}
+          className={[
+            "rounded-full px-4 py-2 text-sm font-medium no-underline",
+            tab === "all" ? "bg-[#EEF4EF] text-[#111111]" : "bg-white text-[#6B6B6B]",
+          ].join(" ")}
         >
-          All Time
+          All time
         </Link>
         <Link
           href="/leaderboard?tab=weekly"
-          className={`px-4 py-2 rounded-[999px] text-sm font-medium transition-colors ${
-            tab === "weekly"
-              ? "bg-[#0C9F88] text-white"
-              : "bg-white text-[#6B6B6B] hover:bg-[#F0EBE3]"
-          }`}
+          className={[
+            "rounded-full px-4 py-2 text-sm font-medium no-underline",
+            tab === "weekly" ? "bg-[#EEF4EF] text-[#111111]" : "bg-white text-[#6B6B6B]",
+          ].join(" ")}
         >
-          This Week
+          This week
         </Link>
       </div>
 
-      <Card className="overflow-hidden p-0">
-        <div className="grid grid-cols-[60px_1fr_100px_100px] gap-4 px-6 py-3 bg-[#F0EBE3] text-sm font-medium text-[#6B6B6B]">
-          <div>Rank</div>
-          <div>User</div>
-          <div className="text-right">Trust</div>
-          <div className="text-right">Badges</div>
-        </div>
+      <div className="grid gap-6 lg:grid-cols-[minmax(0,1.1fr)_420px]">
+        <Card className="rounded-[22px] p-6">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#8AA79E]">
+            Top Helpers
+          </p>
+          <h2 className="mt-3 text-[2rem] font-black leading-[0.95] tracking-[-0.04em] text-[#111111]">
+            Rankings
+          </h2>
 
-        <div className="divide-y divide-[#E8E2D9]">
-          {users.length === 0 ? (
-            <div className="p-12 text-center text-[#6B6B6B]">No users found</div>
-          ) : (
-            users.map((u, index) => {
-              const rank = index + 1;
-              const isTop3 = rank <= 3;
-              const isMe = u.id === user.id;
+          <div className="mt-6 space-y-4">
+            {rows.slice(0, 10).map((row, index) => (
+              <Link
+                key={row.id}
+                href={`/profile/${row.username ?? row.id}`}
+                className="flex items-center gap-4 rounded-[18px] border border-[#F0EBE3] p-4 no-underline transition-transform hover:-translate-y-0.5"
+              >
+                <Avatar name={row.full_name ?? row.username ?? "User"} src={row.avatar_url} size="sm" />
+                <div className="min-w-0 flex-1">
+                  <p className="text-sm font-semibold text-[#111111]">
+                    #{index + 1} {row.full_name ?? row.username ?? "Community helper"}
+                  </p>
+                  <p className="truncate text-xs text-[#6B6B6B]">
+                    {row.location || "Community"} · {row.contributions} contributions
+                  </p>
+                </div>
+                <p className="text-sm font-bold text-[#111111]">{row.trust_score}%</p>
+              </Link>
+            ))}
+          </div>
+        </Card>
+
+        <Card className="rounded-[22px] p-6">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#8AA79E]">
+            Badge System
+          </p>
+          <h2 className="mt-3 text-[2rem] font-black leading-[0.95] tracking-[-0.04em] text-[#111111]">
+            Trust and achievement
+          </h2>
+
+          <div className="mt-6 space-y-5">
+            {rows.slice(0, 3).map((row) => {
+              const width = Math.max(12, Math.min(100, row.trust_score));
 
               return (
-                <Link
-                  key={u.id}
-                  href={`/profile/${u.username ?? u.id}`}
-                  className={`grid grid-cols-[60px_1fr_100px_100px] gap-4 px-6 py-4 items-center transition-colors no-underline ${
-                    isMe ? "bg-[#D1FAF4]/30" : "hover:bg-[#F5F0EA]"
-                  } ${isTop3 ? "bg-gradient-to-r from-[#FEF3C7]/30 to-transparent" : ""}`}
-                >
-                  <div className="flex items-center justify-center">
-                    {rank === 1 && <span className="text-2xl"></span>}
-                    {rank === 2 && <span className="text-2xl"></span>}
-                    {rank === 3 && <span className="text-2xl"></span>}
-                    {rank > 3 && <span className="font-medium text-[#6B6B6B]">#{rank}</span>}
-                  </div>
-
-                  <div className="flex items-center gap-3">
-                    <Avatar
-                      name={u.full_name ?? u.username ?? "U"}
-                      src={u.avatar_url}
-                      size={isTop3 ? "lg" : "md"}
+                <div key={row.id} className="rounded-[18px] border border-[#F0EBE3] p-4">
+                  <p className="text-sm font-semibold text-[#111111]">
+                    {row.full_name ?? row.username ?? "Community helper"}
+                  </p>
+                  <p className="mt-1 text-xs text-[#6B6B6B]">
+                    Trust {row.trust_score}% · {row.contributions} total contributions
+                  </p>
+                  <div className="mt-4 h-2.5 rounded-full bg-[#E9E4DD]">
+                    <div
+                      className="h-full rounded-full bg-gradient-to-r from-[#F2B648] via-[#98A944] to-[#0C9F88]"
+                      style={{ width: `${width}%` }}
                     />
-                    <div>
-                      <div className="font-medium text-[#111111]">
-                        {u.full_name ?? u.username}
-                        {isMe && <span className="ml-2 text-xs text-[#0C9F88]">(you)</span>}
-                      </div>
-                      <div className="text-sm text-[#6B6B6B]">
-                        @{u.username}
-                        {u.location && ` · ${u.location}`}
-                      </div>
-                    </div>
                   </div>
-
-                  <div className="text-right font-semibold text-[#0C9F88]">
-                    {u.trust_score}
-                  </div>
-
-                  <div className="text-right text-[#6B6B6B]">
-                    {u.badge_count}
-                  </div>
-                </Link>
+                </div>
               );
-            })
-          )}
-        </div>
-      </Card>
+            })}
+          </div>
+        </Card>
+      </div>
     </div>
   );
 }

@@ -14,6 +14,7 @@ export async function signUp(
     email: formData.get('email'),
     password: formData.get('password'),
     full_name: formData.get('full_name'),
+    user_mode: formData.get('user_mode'),
   });
 
   if (!parsed.success) {
@@ -25,7 +26,10 @@ export async function signUp(
     email: parsed.data.email,
     password: parsed.data.password,
     options: {
-      data: { full_name: parsed.data.full_name },
+      data: {
+        full_name: parsed.data.full_name || null,
+        user_mode: parsed.data.user_mode ?? "both",
+      },
     },
   });
 
@@ -39,7 +43,14 @@ export async function signUp(
     p_delta: TRUST_EVENTS.signup,
   });
 
-  redirect('/onboarding');
+  if (parsed.data.user_mode) {
+    await supabase
+      .from("profiles")
+      .update({ user_mode: parsed.data.user_mode })
+      .eq("id", data.user.id);
+  }
+
+  redirect(parsed.data.user_mode ? `/onboarding?mode=${parsed.data.user_mode}` : '/onboarding');
 }
 
 export async function signIn(

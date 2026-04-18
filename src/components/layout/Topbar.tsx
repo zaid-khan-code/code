@@ -1,78 +1,74 @@
+"use client";
+
 import React from "react";
 import Link from "next/link";
-import Avatar from "@/components/ui/Avatar";
+import { usePathname } from "next/navigation";
+import NotifBell from "@/components/layout/NotifBell";
 
 type Props = {
-  navLinks: { href: string; label: string }[];
-  activeHref?: string;
+  navLinks: { href: string; label: string; match?: string[] }[];
   ctaLabel?: string;
   ctaHref?: string;
-  user?: {
-    full_name: string | null;
-    username: string | null;
-    avatar_url: string | null;
-  } | null;
+  showNotifications?: boolean;
 };
 
 export default function Topbar({
   navLinks,
-  activeHref,
   ctaLabel,
   ctaHref,
-  user,
+  showNotifications = false,
 }: Props) {
+  const pathname = usePathname();
+
   return (
-    <header className="w-full bg-white border-b border-[#E8E2D9] px-6 h-14 flex items-center justify-between gap-4">
-      {/* Logo */}
-      <Link href="/" className="flex items-center gap-2 shrink-0 no-underline">
-        <span
-          className="flex items-center justify-center rounded-[8px] text-white font-bold text-sm"
-          style={{ width: 32, height: 32, backgroundColor: "#0C9F88" }}
-          aria-hidden="true"
-        >
-          H
-        </span>
-        <span className="font-semibold text-[#111111] text-sm">Helplytics AI</span>
-      </Link>
+    <header className="sticky top-0 z-40 border-b border-[#E8E2D9]/80 bg-[#F5F0EA]/95 backdrop-blur">
+      <div className="mx-auto flex w-full max-w-[1180px] items-center justify-between gap-4 px-4 py-4">
+        <Link href="/" className="flex shrink-0 items-center gap-3 no-underline">
+          <span className="flex h-10 w-10 items-center justify-center rounded-[14px] bg-[#0C9F88] text-sm font-bold text-white">
+            H
+          </span>
+          <span className="text-base font-extrabold tracking-[-0.03em] text-[#111111]">
+            HelpHub AI
+          </span>
+        </Link>
 
-      {/* Nav */}
-      <nav className="flex items-center gap-1">
-        {navLinks.map((link) => {
-          const active = link.href === activeHref;
-          return (
+        <nav className="flex min-w-0 flex-1 items-center justify-end gap-1 overflow-x-auto">
+          {navLinks.map((link) => {
+            const active =
+              pathname === link.href ||
+              pathname.startsWith(`${link.href}/`) ||
+              (link.match ?? []).some(
+                (match) => pathname === match || pathname.startsWith(`${match}/`)
+              );
+
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                className={[
+                  "rounded-full px-3 py-2 text-sm font-medium transition-colors no-underline",
+                  active
+                    ? "bg-[#EEF4EF] text-[#111111]"
+                    : "text-[#6B6B6B] hover:bg-[#F0EBE3] hover:text-[#111111]",
+                ].join(" ")}
+              >
+                {link.label}
+              </Link>
+            );
+          })}
+        </nav>
+
+        <div className="flex shrink-0 items-center gap-2">
+          {showNotifications ? <NotifBell /> : null}
+          {ctaLabel && ctaHref ? (
             <Link
-              key={link.href}
-              href={link.href}
-              className={[
-                "px-3 py-1.5 rounded-[999px] text-sm font-medium transition-colors no-underline",
-                active
-                  ? "bg-[#F0EBE3] text-[#111111]"
-                  : "text-[#6B6B6B] hover:text-[#111111] hover:bg-[#F5F0EA]",
-              ].join(" ")}
+              href={ctaHref}
+              className="inline-flex items-center justify-center rounded-full bg-[#0C9F88] px-4 py-2 text-sm font-semibold text-white shadow-[0_12px_32px_rgba(12,159,136,0.22)] transition-colors hover:bg-[#0a8a77] no-underline"
             >
-              {link.label}
+              {ctaLabel}
             </Link>
-          );
-        })}
-      </nav>
-
-      {/* Right side */}
-      <div className="flex items-center gap-3 shrink-0">
-        {user && (
-          <Avatar
-            name={user.full_name ?? user.username ?? "U"}
-            src={user.avatar_url}
-            size="sm"
-          />
-        )}
-        {ctaLabel && ctaHref && (
-          <Link
-            href={ctaHref}
-            className="inline-flex items-center justify-center rounded-[999px] bg-[#0C9F88] text-white text-sm font-medium px-4 py-1.5 hover:bg-[#0a8a77] transition-colors no-underline"
-          >
-            {ctaLabel}
-          </Link>
-        )}
+          ) : null}
+        </div>
       </div>
     </header>
   );

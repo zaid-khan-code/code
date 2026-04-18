@@ -1,111 +1,89 @@
 'use server';
 
-import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
+import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import { requireOnboarded } from '@/lib/auth/guards';
-import { createAdminClient } from '@/lib/supabase/admin';
 import { notify } from '@/lib/notifications/emit';
-import { offerHelpSchema, updateRequestStatusSchema } from '@/lib/zod/schemas';
 import { TRUST_EVENTS } from '@/lib/trust/score';
+import { offerHelpSchema } from '@/lib/zod/schemas';
 
-export async function offerHelp(
-  _prev: { error: string | null },
-  formData: FormData
-): Promise<{ error: string | null }> {
+export async function offerHelp(formData: FormData): Promise<void> {
   const parsed = offerHelpSchema.safeParse({
     request_id: formData.get('request_id'),
     note: formData.get('note') || undefined,
   });
 
   if (!parsed.success) {
-    return { error: parsed.error.issues[0].message };
+    return;
   }
 
   const { profile } = await requireOnboarded();
   const sb = await createClient();
 
-  // Check request exists and is open
   const { data: request } = await sb
     .from('requests')
     .select('id, author_id, status')
     .eq('id', parsed.data.request_id)
     .single();
 
-  if (!request) return { error: 'Request not found' };
-  if (request.status !== 'open') return { error: 'Request is not open' };
-  if (request.author_id === profile?.id) {
-    return { error: 'Cannot help on your own request' };
+  if (!request || request.status !== 'open' || request.author_id === profile?.id) {
+    return;
   }
 
-  // Check not already offered
   const { data: existing } = await sb
     .from('request_helpers')
     .select('id')
     .eq('request_id', parsed.data.request_id)
     .eq('helper_id', profile?.id)
-    .single();
+    .maybeSingle();
 
-  if (existing) return { error: 'Already offered to help' };
+  if (!existing) {
+    await sb.from('request_helpers').insert({
+      request_id: parsed.data.request_id,
+      helper_id: profile?.id,
+      note: parsed.data.note || null,
+    });
 
-  // Insert helper offer
-  const { error } = await sb.from('request_helpers').insert({
-    request_id: parsed.data.request_id,
-    helper_id: profile?.id,
-    note: parsed.data.note || null,
-  });
+    await sb.rpc('trust_emit', {
+      p_user: profile?.id,
+      p_type: 'offered_help',
+      p_delta: TRUST_EVENTS.offered_help,
+      p_ref: parsed.data.request_id,
+    });
 
-  if (error) return { error: error.message };
-
-  // Emit trust event
-  await sb.rpc('trust_emit', {
-    p_user: profile?.id,
-    p_type: 'offered_help',
-    p_delta: TRUST_EVENTS.offered_help,
-    p_ref: parsed.data.request_id,
-  });
-
-  // Notify request author
-  await notify(request.author_id, 'new_helper', {
-    request_id: parsed.data.request_id,
-    helper_name: profile?.full_name,
-  });
+    await notify(request.author_id, 'new_helper', {
+      request_id: parsed.data.request_id,
+      helper_name: profile?.full_name ?? profile?.username ?? 'Community helper',
+      request_title: formData.get('request_title')?.toString() ?? undefined,
+    });
+  }
 
   revalidatePath(`/requests/${parsed.data.request_id}`);
-  return { error: null };
+  revalidatePath('/explore');
 }
 
-export async function markRequestSolved(
-  _prev: { error: string | null },
-  formData: FormData
-): Promise<{ error: string | null }> {
-  const requestId = formData.get('request_id') as string;
-  if (!requestId) return { error: 'Request ID required' };
+export async function markRequestSolved(formData: FormData): Promise<void> {
+  const requestId = formData.get('request_id')?.toString();
+  if (!requestId) return;
 
   const { profile } = await requireOnboarded();
   const sb = await createClient();
 
-  // Verify ownership
   const { data: request } = await sb
     .from('requests')
     .select('id, author_id')
     .eq('id', requestId)
     .single();
 
-  if (!request) return { error: 'Request not found' };
-  if (request.author_id !== profile?.id && profile?.role !== 'admin') {
-    return { error: 'Not authorized' };
-  }
+  if (!request) return;
+  if (request.author_id !== profile?.id && profile?.role !== 'admin') return;
 
-  // Update status
-  const { error } = await sb
+  await sb
     .from('requests')
     .update({ status: 'solved', solved_at: new Date().toISOString() })
     .eq('id', requestId);
 
-  if (error) return { error: error.message };
-
-  // Emit trust event for author
   await sb.rpc('trust_emit', {
     p_user: request.author_id,
     p_type: 'request_solved_as_author',
@@ -113,105 +91,92 @@ export async function markRequestSolved(
     p_ref: requestId,
   });
 
-  // Emit trust events for accepted helpers
   const { data: helpers } = await sb
     .from('request_helpers')
     .select('helper_id')
     .eq('request_id', requestId)
     .eq('status', 'accepted');
 
-  for (const h of helpers || []) {
+  for (const helper of helpers ?? []) {
     await sb.rpc('trust_emit', {
-      p_user: h.helper_id,
+      p_user: helper.helper_id,
       p_type: 'request_solved_as_helper',
       p_delta: TRUST_EVENTS.request_solved_as_helper,
       p_ref: requestId,
     });
   }
 
+  await sb
+    .from('request_helpers')
+    .update({ status: 'completed' })
+    .eq('request_id', requestId)
+    .eq('status', 'accepted');
+
   revalidatePath(`/requests/${requestId}`);
-  return { error: null };
+  revalidatePath('/explore');
+  revalidatePath('/leaderboard');
 }
 
-export async function acceptHelper(
-  _prev: { error: string | null },
-  formData: FormData
-): Promise<{ error: string | null }> {
-  const helperId = formData.get('helper_id') as string;
-  if (!helperId) return { error: 'Helper ID required' };
+export async function acceptHelper(formData: FormData): Promise<void> {
+  const helperRowId = formData.get('helper_id')?.toString();
+  if (!helperRowId) return;
 
   const { profile } = await requireOnboarded();
   const sb = await createClient();
 
-  // Get helper record
-  const { data: helper } = await sb
+  const { data: helperRow } = await sb
     .from('request_helpers')
     .select('id, request_id, helper_id, status')
-    .eq('id', helperId)
+    .eq('id', helperRowId)
     .single();
 
-  if (!helper) return { error: 'Helper offer not found' };
+  if (!helperRow || helperRow.status !== 'offered') return;
 
-  // Verify request ownership
   const { data: request } = await sb
     .from('requests')
-    .select('id, author_id, status')
-    .eq('id', helper.request_id)
+    .select('id, author_id')
+    .eq('id', helperRow.request_id)
     .single();
 
-  if (!request) return { error: 'Request not found' };
-  if (request.author_id !== profile?.id) {
-    return { error: 'Not authorized' };
-  }
+  if (!request || request.author_id !== profile?.id) return;
 
-  // Update helper status
-  const { error } = await sb
-    .from('request_helpers')
-    .update({ status: 'accepted' })
-    .eq('id', helperId);
+  await sb.from('request_helpers').update({ status: 'accepted' }).eq('id', helperRowId);
+  await sb.from('requests').update({ status: 'in_progress' }).eq('id', helperRow.request_id);
 
-  if (error) return { error: error.message };
-
-  // Update request status
-  await sb
-    .from('requests')
-    .update({ status: 'in_progress' })
-    .eq('id', helper.request_id);
-
-  // Emit trust event for helper
   await sb.rpc('trust_emit', {
-    p_user: helper.helper_id,
+    p_user: helperRow.helper_id,
     p_type: 'help_accepted',
     p_delta: TRUST_EVENTS.help_accepted,
-    p_ref: helper.request_id,
+    p_ref: helperRow.request_id,
   });
 
-  // Notify helper
-  await notify(helper.helper_id, 'status_change', {
-    request_id: helper.request_id,
-    status: 'accepted',
+  await notify(helperRow.helper_id, 'status_change', {
+    request_id: helperRow.request_id,
+    request_title: formData.get('request_title')?.toString() ?? undefined,
+    new_status: 'in progress',
   });
 
-  revalidatePath(`/requests/${helper.request_id}`);
-  return { error: null };
+  revalidatePath(`/requests/${helperRow.request_id}`);
 }
 
 export async function deleteRequest(requestId: string): Promise<void> {
   const { profile } = await requireOnboarded();
-  const admin = await createAdminClient();
+  const sb = await createClient();
 
-  // Verify ownership or admin
-  const { data: request } = await admin
+  const { data: request } = await sb
     .from('requests')
     .select('id, author_id')
     .eq('id', requestId)
     .single();
 
-  if (!request) return;
+  if (!request) {
+    redirect('/explore');
+  }
+
   if (request.author_id !== profile?.id && profile?.role !== 'admin') {
     redirect(`/requests/${requestId}`);
   }
 
-  await admin.from('requests').delete().eq('id', requestId);
+  await sb.from('requests').delete().eq('id', requestId);
   redirect('/explore');
 }

@@ -1,30 +1,31 @@
-import React from "react";
 import { requireOnboarded } from "@/lib/auth/guards";
-import Sidebar from "@/components/layout/Sidebar";
-import { headers } from "next/headers";
+import Topbar from "@/components/layout/Topbar";
 
 export default async function AppLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const { profile } = await requireOnboarded();
-
-  const headersList = await headers();
-  const pathname = headersList.get("x-pathname") ?? "";
+  await requireOnboarded();
 
   return (
-    <div className="flex min-h-screen">
-      <Sidebar
-        activeHref={pathname}
-        user={{
-          full_name: profile?.full_name ?? null,
-          username: profile?.username ?? null,
-          avatar_url: profile?.avatar_url ?? null,
-        }}
+    <div className="min-h-screen">
+      <Topbar
+        navLinks={[
+          { href: "/dashboard", label: "Dashboard" },
+          { href: "/explore", label: "Explore" },
+          { href: "/leaderboard", label: "Leaderboard" },
+          { href: "/messages", label: "Messages" },
+          { href: "/notifications", label: "Notifications" },
+          { href: "/ai", label: "AI Center" },
+          { href: "/profile/me", label: "Profile", match: ["/profile"] },
+        ]}
+        ctaLabel="Create Request"
+        ctaHref="/requests/new"
+        showNotifications
       />
-      <main className="flex-1 overflow-auto p-6">
-        {children}
+      <main className="px-4 py-6 sm:px-6 sm:py-8">
+        <div className="mx-auto w-full max-w-[1180px]">{children}</div>
       </main>
     </div>
   );

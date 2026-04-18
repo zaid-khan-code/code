@@ -12,6 +12,6 @@ export async function POST(req: NextRequest) {
   const parsed = aiSummarizeSchema.safeParse(body);
   if (!parsed.success) return NextResponse.json({ error: parsed.error.issues[0].message }, { status: 400 });
 
-  const result = await summarize(parsed.data.text, parsed.data.mode);
-  return NextResponse.json({ result });
+  const text = await summarize(parsed.data.text, parsed.data.mode);
+  return NextResponse.json({ text });
 }

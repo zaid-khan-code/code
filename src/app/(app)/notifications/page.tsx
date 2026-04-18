@@ -1,149 +1,128 @@
-import { createClient } from "@/lib/supabase/server";
-import { requireOnboarded } from "@/lib/auth/guards";
+import HeroBanner from "@/components/ui/HeroBanner";
 import Card from "@/components/ui/Card";
-import Badge from "@/components/ui/Badge";
-import { markNotificationRead, markAllNotificationsRead } from "./actions";
-import Link from "next/link";
+import { requireOnboarded } from "@/lib/auth/guards";
+import { createClient } from "@/lib/supabase/server";
+import { formatDayHeading, timeAgo } from "@/lib/format";
+import { markAllNotificationsRead, markNotificationRead } from "./actions";
 
-interface NotificationPayload {
-  title?: string;
-  username?: string;
-  full_name?: string;
-  badge_name?: string;
-  request_id?: string;
-}
+type NotificationPayload = Record<string, unknown>;
 
-function groupByDay(notifications: { created_at: string }[]) {
-  const groups: Record<string, typeof notifications> = {};
-  for (const n of notifications) {
-    const date = new Date(n.created_at).toLocaleDateString("en-US", {
-      weekday: "long",
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
-    if (!groups[date]) groups[date] = [];
-    groups[date].push(n);
-  }
-  return groups;
-}
-
-function getNotificationText(type: string, payload: NotificationPayload) {
+function formatNotification(type: string, payload: NotificationPayload) {
   switch (type) {
     case "new_helper":
-      return `${payload.full_name ?? payload.username} offered to help on your request: ${payload.title}`;
+      return `${payload.helper_name ?? "Someone"} offered help on "${payload.request_title ?? payload.title ?? "your request"}"`;
     case "request_solved":
-      return `Your request "${payload.title}" was marked solved`;
+      return `"${payload.request_title ?? payload.title ?? "Request"}" was marked as solved`;
     case "new_message":
-      return `${payload.full_name ?? payload.username} sent you a message`;
+      return `You received a new message`;
     case "badge_earned":
-      return `You earned the ${payload.badge_name} badge`;
+      return `You earned the ${payload.badge_name ?? "community"} badge`;
     case "status_change":
-      return `Request "${payload.title}" changed status`;
-    case "request_commented":
-      return `New comment on "${payload.title}"`;
-    case "system":
-      return payload.title ?? "System notification";
+      return `"${payload.request_title ?? payload.title ?? "Request"}" changed to ${payload.new_status ?? payload.status ?? "a new status"}`;
     default:
-      return "New notification";
+      return String(payload.title ?? payload.message ?? "Platform update");
   }
-}
-
-function getNotificationLink(type: string, payload: NotificationPayload, id: string) {
-  if (payload.request_id) return `/requests/${payload.request_id}`;
-  if (type === "new_message") return `/messages`;
-  if (type === "badge_earned") return `/profile/me`;
-  return `/notifications`;
 }
 
 export default async function NotificationsPage() {
   const { user } = await requireOnboarded();
   const sb = await createClient();
 
-  const { data: notifications } = await sb
+  const { data } = await sb
     .from("notifications")
     .select("*")
     .eq("user_id", user.id)
     .order("created_at", { ascending: false })
     .limit(100);
 
-  const unreadCount = notifications?.filter((n) => !n.read).length ?? 0;
-  const grouped = groupByDay(notifications ?? []);
+  const notifications = data ?? [];
+  const unreadCount = notifications.filter((item) => !item.read).length;
+  const groups = new Map<string, typeof notifications>();
+
+  for (const item of notifications) {
+    const key = formatDayHeading(item.created_at);
+    groups.set(key, [...(groups.get(key) ?? []), item]);
+  }
 
   return (
-    <div className="max-w-3xl mx-auto space-y-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold text-[#111111]">Notifications</h1>
-        {unreadCount > 0 && (
-          <form action={markAllNotificationsRead}>
-            <button
-              type="submit"
-              className="px-4 py-2 text-sm font-medium text-[#0C9F88] hover:bg-[#F0EBE3] rounded-[999px] transition-colors"
-            >
-              Mark all read ({unreadCount})
-            </button>
-          </form>
-        )}
-      </div>
+    <div className="space-y-6">
+      <HeroBanner
+        label="Notifications"
+        title="Stay updated on requests, helpers, and trust signals."
+        subtitle="Your live feed keeps request progress, helper activity, and platform events in one place."
+      />
 
-      {notifications?.length === 0 ? (
-        <Card className="p-12 text-center text-[#6B6B6B]">
-          No notifications yet
-        </Card>
-      ) : (
-        <div className="space-y-6">
-          {Object.entries(grouped).map(([date, items]) => (
-            <div key={date}>
-              <div className="sticky top-0 bg-[#F5F0EA] py-2 px-4 -mx-4">
-                <h2 className="text-sm font-medium text-[#6B6B6B]">{date}</h2>
-              </div>
-              <div className="space-y-2 mt-2">
-                {items.map((n) => {
-                  const payload = (n.payload ?? {}) as NotificationPayload;
-                  const link = getNotificationLink(n.type, payload, n.id);
-                  return (
-                    <Card
-                      key={n.id}
-                      className={`p-4 flex items-start gap-4 ${
-                        !n.read ? "border-l-4 border-l-[#0C9F88]" : ""
-                      }`}
-                    >
-                      <div className="flex-1 min-w-0">
-                        <Link
-                          href={link}
-                          className="block text-[#111111] no-underline hover:underline"
-                        >
-                          {getNotificationText(n.type, payload)}
-                        </Link>
-                        <div className="text-sm text-[#A0A0A0] mt-1">
-                          {new Date(n.created_at).toLocaleTimeString([], {
-                            hour: "2-digit",
-                            minute: "2-digit",
-                          })}
-                        </div>
-                      </div>
-                      {!n.read && (
+      <Card className="rounded-[22px] p-6">
+        <div className="flex items-center justify-between gap-4">
+          <div>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#8AA79E]">
+              Live Updates
+            </p>
+            <h2 className="mt-3 text-[2rem] font-black leading-[0.95] tracking-[-0.04em] text-[#111111]">
+              Notification feed
+            </h2>
+          </div>
+
+          {unreadCount > 0 ? (
+            <form action={markAllNotificationsRead}>
+              <button
+                type="submit"
+                className="rounded-full bg-[#EEF4EF] px-4 py-2 text-sm font-medium text-[#111111]"
+              >
+                Mark all read
+              </button>
+            </form>
+          ) : null}
+        </div>
+
+        <div className="mt-6 space-y-8">
+          {Array.from(groups.entries()).map(([heading, items]) => (
+            <div key={heading}>
+              <p className="mb-3 text-xs font-semibold uppercase tracking-[0.18em] text-[#8B8B8B]">
+                {heading}
+              </p>
+              <div className="space-y-3">
+                {items.map((item) => (
+                  <div
+                    key={item.id}
+                    className="flex items-start justify-between gap-4 rounded-[18px] border border-[#F0EBE3] p-4"
+                  >
+                    <div className="min-w-0 flex-1">
+                      <p className="text-sm font-semibold text-[#111111]">
+                        {formatNotification(item.type, (item.payload ?? {}) as NotificationPayload)}
+                      </p>
+                      <p className="mt-2 text-xs text-[#6B6B6B]">
+                        {item.type.replace("_", " ")} · {timeAgo(item.created_at)}
+                      </p>
+                    </div>
+
+                    <div className="flex items-center gap-3">
+                      {!item.read ? (
                         <form action={markNotificationRead}>
-                          <input type="hidden" name="id" value={n.id} />
-                          <button
-                            type="submit"
-                            className="text-xs text-[#0C9F88] hover:underline"
-                          >
+                          <input type="hidden" name="id" value={item.id} />
+                          <button type="submit" className="text-xs font-medium text-[#111111]">
                             Mark read
                           </button>
                         </form>
-                      )}
-                      <Badge variant={n.type as any}>
-                        {n.type.replace("_", " ")}
-                      </Badge>
-                    </Card>
-                  );
-                })}
+                      ) : null}
+                      <span
+                        className={[
+                          "rounded-full px-3 py-1 text-xs font-medium",
+                          item.read
+                            ? "bg-[#F4F1EC] text-[#6B6B6B]"
+                            : "bg-[#EEF4EF] text-[#111111]",
+                        ].join(" ")}
+                      >
+                        {item.read ? "Read" : "Unread"}
+                      </span>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
           ))}
         </div>
-      )}
+      </Card>
     </div>
   );
 }

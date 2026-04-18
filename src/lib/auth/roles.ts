@@ -3,7 +3,7 @@ export type Role = typeof ROLES[number];
 
 export const ROLE_ROUTES: Record<Role, string> = {
   admin: '/admin',
-  user: '/user',
+  user: '/dashboard',
 };
 
 export const DEFAULT_ROLE: Role = 'user';
