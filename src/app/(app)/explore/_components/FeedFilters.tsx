@@ -32,7 +32,6 @@ const SORT_OPTIONS = [
 
 export default function FeedFilters({
   categories,
-  skills,
   currentParams,
 }: FeedFiltersProps) {
   const router = useRouter();

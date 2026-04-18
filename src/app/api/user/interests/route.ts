@@ -22,14 +22,14 @@ export async function GET() {
   }
 
   const interestIds = (data ?? []).map((row) => row.interest_id);
-  const { data: interests } = interestIds.length
+  const { data: interestCatalog } = interestIds.length
     ? await sb.from("interests").select("id, name").in("id", interestIds)
     : { data: [] };
 
   const interests = (data ?? []).map((row) => ({
-    id: interests?.find((interest) => interest.id === row.interest_id)?.id ?? row.interest_id,
+    id: interestCatalog?.find((interest) => interest.id === row.interest_id)?.id ?? row.interest_id,
     name:
-      interests?.find((interest) => interest.id === row.interest_id)?.name ??
+      interestCatalog?.find((interest) => interest.id === row.interest_id)?.name ??
       "Unknown",
   }));
 

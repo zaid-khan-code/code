@@ -28,11 +28,11 @@ export async function GET() {
   }
 
   const skillIds = (data ?? []).map((row) => row.skill_id);
-  const { data: skills } = skillIds.length
+  const { data: skillCatalog } = skillIds.length
     ? await sb.from("skills").select("id, name, category").in("id", skillIds)
     : { data: [] };
 
-  const skillMap = new Map((skills ?? []).map((skill) => [skill.id, skill]));
+  const skillMap = new Map((skillCatalog ?? []).map((skill) => [skill.id, skill]));
   const skills = (data ?? []).map((row) => ({
     id: skillMap.get(row.skill_id)?.id ?? row.skill_id,
     name: skillMap.get(row.skill_id)?.name ?? "Unknown",

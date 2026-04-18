@@ -6,6 +6,8 @@ import Card from "@/components/ui/Card";
 export default async function AdminOverviewPage() {
   await requireAdmin();
   const sb = createAdminClient();
+  // eslint-disable-next-line react-hooks/purity
+  const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
 
   const [
     totalUsers,
@@ -19,20 +21,28 @@ export default async function AdminOverviewPage() {
     sb
       .from("profiles")
       .select("id", { count: "exact", head: true })
-      .gte("created_at", new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString()),
+      .gte("created_at", weekAgo),
     sb.from("requests").select("id", { count: "exact", head: true }).eq("status", "open"),
     sb.from("requests").select("id", { count: "exact", head: true }).eq("status", "solved"),
     Promise.resolve({ count: 0 }),
-    sb.rpc("helplytics_avg_solve_time").then(r => r.data?.[0]?.avg_hours ?? null),
+    sb.from("requests").select("created_at, solved_at").eq("status", "solved").not("solved_at", "is", null).limit(100),
   ]);
+
+  const solvedRows = avgSolveTime.data ?? [];
+  const avgHours = solvedRows.length > 0
+    ? solvedRows.reduce((sum, r) => {
+        const ms = new Date(r.solved_at!).getTime() - new Date(r.created_at).getTime();
+        return sum + ms / 3600000;
+      }, 0) / solvedRows.length
+    : null;
 
   const stats = [
     { label: "Total users", value: totalUsers.count ?? 0 },
     { label: "DAU last 7d", value: dau7d.count ?? 0, sublabel: "new signups" },
     { label: "Open requests", value: openRequests.count ?? 0 },
     { label: "Solved requests", value: solvedRequests.count ?? 0 },
-    { label: "Flagged items", value: flaggedCount, sublabel: "manual review" },
-    { label: "Avg solve time", value: avgSolveTime ? `${Number(avgSolveTime).toFixed(1)}h` : "--", sublabel: "hours" },
+    { label: "Flagged items", value: flaggedCount.count ?? 0, sublabel: "manual review" },
+    { label: "Avg solve time", value: avgHours != null ? `${avgHours.toFixed(1)}h` : "--", sublabel: "hours" },
   ];
 
   return (

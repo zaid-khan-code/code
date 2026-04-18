@@ -32,12 +32,12 @@ export default async function ProfileMePage() {
           }
         : null;
     })
-    .filter(Boolean);
+    .filter((s): s is NonNullable<typeof s> => s != null);
 
   const badgeMap = new Map((allBadges ?? []).map((badge) => [badge.id, badge]));
   const earnedBadges = (userBadgeRows ?? [])
     .map((row) => badgeMap.get(row.badge_id))
-    .filter(Boolean);
+    .filter((b): b is NonNullable<typeof b> => b != null);
 
   return (
     <div className="space-y-6">

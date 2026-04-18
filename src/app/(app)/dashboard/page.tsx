@@ -2,8 +2,6 @@ import { requireOnboarded } from "@/lib/auth/guards";
 import { createClient } from "@/lib/supabase/server";
 import { getUserActivitySummary, getSuggestedRequestsForUser } from "@/lib/ai/insights";
 import Stat from "@/components/ui/Stat";
-import Badge from "@/components/ui/Badge";
-import RequestCard from "@/components/cards/RequestCard";
 import Link from "next/link";
 
 export default async function DashboardPage() {
@@ -31,7 +29,7 @@ export default async function DashboardPage() {
     <div className="space-y-6">
       <header>
         <h1 className="text-2xl font-semibold text-[#111111]">Welcome back, {profile.full_name?.split(" ")[0] ?? "there"}</h1>
-        <p className="text-sm text-[#6B6B6B]">Here's what's happening in your community</p>
+        <p className="text-sm text-[#6B6B6B]">Here&apos;s what&apos;s happening in your community</p>
       </header>
 
       <section className="grid grid-cols-2 lg:grid-cols-4 gap-4">

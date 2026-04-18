@@ -26,6 +26,8 @@ export default async function LeaderboardPage({
   const params = await searchParams;
   const admin = createAdminClient();
   const tab = params.tab === "weekly" ? "weekly" : "all";
+  // eslint-disable-next-line react-hooks/purity
+  const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
 
   const { data: profiles } = await admin
     .from("profiles")
@@ -46,7 +48,7 @@ export default async function LeaderboardPage({
           .from("trust_events")
           .select("user_id, delta, created_at")
           .in("user_id", profileIds)
-          .gte("created_at", new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString())
+          .gte("created_at", weekAgo)
       : Promise.resolve({ data: [] as never[] }),
   ]);
 

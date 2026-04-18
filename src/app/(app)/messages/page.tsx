@@ -3,10 +3,10 @@ import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import HeroBanner from "@/components/ui/HeroBanner";
 import Card from "@/components/ui/Card";
-import Avatar from "@/components/ui/Avatar";
 import Link from "next/link";
 import { formatTime } from "@/lib/format";
 import { startConversation } from "./actions";
+import Button from "@/components/ui/Button";
 
 type SearchParams = Promise<{
   user_id?: string;

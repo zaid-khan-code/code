@@ -51,7 +51,7 @@ export default async function ProfilePage({ params }: PageProps) {
   const badgeMap = new Map((badgeRows ?? []).map((badge) => [badge.id, badge]));
   const badges = (userBadgeRows ?? [])
     .map((row) => badgeMap.get(row.badge_id))
-    .filter(Boolean);
+    .filter((b): b is NonNullable<typeof b> => b != null);
 
   return (
     <div className="space-y-6">

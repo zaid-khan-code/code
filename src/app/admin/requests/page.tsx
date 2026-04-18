@@ -22,7 +22,7 @@ export default async function AdminRequestsPage({
     .select("*, author:profiles!author_id(id, username, full_name)", { count: "exact" });
 
   if (params.status) {
-    query = query.eq("status", params.status);
+    query = query.eq("status", params.status as "open" | "in_progress" | "solved" | "closed");
   }
 
   const { data, count, error } = await query
@@ -94,7 +94,7 @@ export default async function AdminRequestsPage({
                   {r.id.slice(0, 8)}</td>
                 <td className="py-3 px-4 max-w-xs truncate text-[#111111]">{r.title}</td>
                 <td className="py-3 px-4 text-[#6B6B6B]">
-                  {(r.author as any)?.username ?? "--"}
+                  {(r.author as { username?: string | null } | null)?.username ?? "--"}
                 </td>
                 <td className="py-3 px-4">
                   <Badge variant={r.status}>{r.status}</Badge>

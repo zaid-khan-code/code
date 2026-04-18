@@ -48,7 +48,7 @@ export async function createRequest(
   // Get all skills for tag suggestion
   const { data: skillRows } = await sb
     .from('skills')
-    .select('name');
+    .select('id, name');
   const skillNames = (skillRows ?? []).map((s) => s.name);
   const aiTags = await suggestTags(text, skillNames);
 

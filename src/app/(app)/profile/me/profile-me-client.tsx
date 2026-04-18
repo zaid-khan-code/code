@@ -253,7 +253,7 @@ export default function ProfileMeClient({
               <span className="mb-2 block text-sm font-medium text-[#6B6B6B]">Mode</span>
               <select
                 value={formState.user_mode}
-                onChange={(event) => setFormState((state) => ({ ...state, user_mode: event.target.value }))}
+                onChange={(event) => setFormState((state) => ({ ...state, user_mode: event.target.value as "need_help" | "can_help" | "both" }))}
                 className="w-full rounded-[14px] border border-[#E8E2D9] px-4 py-3 text-sm text-[#111111] outline-none focus:border-[#0C9F88]"
               >
                 <option value="need_help">Need help</option>

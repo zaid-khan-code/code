@@ -66,7 +66,7 @@ export async function rerunAiOnRequest(input: unknown) {
   const skillNames = skills?.map((s) => s.name) ?? [];
 
   const [cat, urg, tags] = await Promise.all([
-    categorize(`${req.title} ${req.description}`),
+    categorize(req.title, req.description),
     detectUrgency(`${req.title} ${req.description}`),
     suggestTags(`${req.title} ${req.description}`, skillNames),
   ]);

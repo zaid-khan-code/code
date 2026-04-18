@@ -21,7 +21,7 @@ export default async function AdminUsersPage({
   let query = sb.from("profiles").select("*", { count: "exact" });
 
   if (params.role) {
-    query = query.eq("role", params.role);
+    query = query.eq("role", params.role as "user" | "admin");
   }
 
   const { data, count } = await query

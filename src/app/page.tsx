@@ -1,11 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { createClient } from "@/lib/supabase/server";
-import { Database } from "@/lib/supabase/types";
-
 export const revalidate = 60;
-
-type Profile = Database["public"]["Tables"]["profiles"]["Row"];
 
 async function getCommunityStats() {
   const supabase = await createClient();
