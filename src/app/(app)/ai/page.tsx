@@ -1,0 +1,223 @@
+import { requireOnboarded } from "@/lib/auth/guards";
+import { createAdminClient } from "@/lib/supabase/admin";
+import {
+  getCategoryTrends,
+  getSkillGaps,
+  getUrgencyStats,
+  getSuggestedRequestsForUser,
+  getUserActivitySummary,
+} from "@/lib/ai/insights";
+import HeroBanner from "@/components/ui/HeroBanner";
+import Card from "@/components/ui/Card";
+import Badge from "@/components/ui/Badge";
+import Link from "next/link";
+
+const TIPS = [
+  "Start with what you've already tried before asking for help.",
+  "Share the exact error message — copy-paste beats paraphrasing.",
+  "Break big problems into smaller steps before posting.",
+  "Acknowledge the helper's time with a quick update when solved.",
+  "Tag your request with specific skills to find the right helpers faster.",
+  "Include your OS, version, or environment when asking technical questions.",
+  "A short code snippet is worth a thousand words.",
+];
+
+function todayTip() {
+  const d = new Date();
+  return TIPS[d.getDate() % TIPS.length];
+}
+
+export default async function AICenterPage() {
+  const { user, profile } = await requireOnboarded();
+  const sb = createAdminClient();
+
+  const [trends, gaps, urgency, suggested, activity] = await Promise.all([
+    getCategoryTrends(sb),
+    getSkillGaps(sb),
+    getUrgencyStats(sb),
+    getSuggestedRequestsForUser(sb, user.id),
+    getUserActivitySummary(sb, user.id),
+  ]);
+
+  const maxTrendCount = Math.max(...trends.map((t) => t.count), 1);
+
+  return (
+    <div className="space-y-6">
+      <HeroBanner
+        label="AI Center"
+        title="Insights & Intelligence"
+        subtitle="Community patterns, skill gaps, and personalized recommendations"
+      />
+
+      <div className="grid gap-6 lg:grid-cols-2">
+        {/* Your activity summary */}
+        <Card className="rounded-[22px] p-6">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#8AA79E]">
+            Your Activity (30 days)
+          </p>
+          <h2 className="mt-3 text-xl font-bold text-[#111111]">
+            {activity.helpsGiven > 0
+              ? `You helped ${activity.helpsGiven} ${activity.helpsGiven === 1 ? "person" : "people"} this month.`
+              : "No solved helps logged yet."}
+          </h2>
+          <p className="mt-2 text-sm text-[#6B6B6B]">
+            Trust gained this month:{" "}
+            <span className="font-semibold text-[#0C9F88]">+{activity.trustGain}</span>
+          </p>
+          <div className="mt-4 rounded-[14px] border border-[#F0EBE3] p-4 text-sm text-[#6B6B6B]">
+            Current trust score:{" "}
+            <span className="font-bold text-[#111111]">{profile.trust_score}</span>
+          </div>
+        </Card>
+
+        {/* Response quality tip */}
+        <Card className="rounded-[22px] p-6">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#8AA79E]">
+            Tip of the Day
+          </p>
+          <p className="mt-4 text-base leading-relaxed text-[#111111]">
+            &ldquo;{todayTip()}&rdquo;
+          </p>
+          <div className="mt-4 flex items-center gap-2">
+            <Badge variant="open">AI tip</Badge>
+            <span className="text-xs text-[#6B6B6B]">Rotates daily</span>
+          </div>
+        </Card>
+      </div>
+
+      {/* Category trends bar chart */}
+      <Card className="rounded-[22px] p-6">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#8AA79E]">
+          Category Trends
+        </p>
+        <h2 className="mt-2 text-lg font-bold text-[#111111]">Requests by category (last 30 days)</h2>
+        {trends.length === 0 ? (
+          <p className="mt-4 text-sm text-[#6B6B6B]">No data yet.</p>
+        ) : (
+          <div className="mt-6 space-y-3">
+            {trends.map(({ category, count }) => (
+              <div key={category} className="flex items-center gap-3">
+                <span className="w-28 shrink-0 text-sm text-[#6B6B6B]">{category}</span>
+                <div className="flex-1 rounded-full bg-[#F0EBE3] overflow-hidden h-3">
+                  <div
+                    className="h-3 rounded-full bg-[#0C9F88]"
+                    style={{ width: `${(count / maxTrendCount) * 100}%` }}
+                  />
+                </div>
+                <span className="w-8 shrink-0 text-right text-sm font-semibold text-[#111111]">
+                  {count}
+                </span>
+              </div>
+            ))}
+          </div>
+        )}
+      </Card>
+
+      {/* Urgency stats */}
+      <Card className="rounded-[22px] p-6">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#8AA79E]">
+          Urgency Overview
+        </p>
+        <h2 className="mt-2 text-lg font-bold text-[#111111]">Open requests by urgency</h2>
+        <div className="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-4">
+          {(["critical", "high", "medium", "low"] as const).map((level) => (
+            <div key={level} className="rounded-[14px] border border-[#F0EBE3] p-4 text-center">
+              <p className="text-2xl font-black tracking-tight text-[#111111]">
+                {urgency[level]}
+              </p>
+              <div className="mt-2">
+                <Badge variant={level}>{level}</Badge>
+              </div>
+            </div>
+          ))}
+        </div>
+      </Card>
+
+      {/* Skill gaps */}
+      <Card className="rounded-[22px] p-6">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#8AA79E]">
+          Skill Gaps
+        </p>
+        <h2 className="mt-2 text-lg font-bold text-[#111111]">
+          Top skills with most open requests and fewest helpers
+        </h2>
+        {gaps.length === 0 ? (
+          <p className="mt-4 text-sm text-[#6B6B6B]">No skill gaps detected.</p>
+        ) : (
+          <div className="mt-4 space-y-3">
+            {gaps.map(({ tag, demand, helpers }) => (
+              <div
+                key={tag}
+                className="flex items-center justify-between rounded-[14px] border border-[#F0EBE3] p-4"
+              >
+                <div>
+                  <p className="font-medium text-[#111111]">{tag}</p>
+                  <p className="text-xs text-[#6B6B6B]">{demand} open requests · {helpers} helpers</p>
+                </div>
+                <Badge variant="critical">gap</Badge>
+              </div>
+            ))}
+          </div>
+        )}
+        <p className="mt-4 text-xs text-[#6B6B6B]">
+          Consider adding these to your skills in{" "}
+          <Link href="/profile/me" className="underline text-[#0C9F88]">
+            your profile
+          </Link>
+          .
+        </p>
+      </Card>
+
+      {/* AI-suggested requests for you */}
+      <Card className="rounded-[22px] p-6">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#8AA79E]">
+          Suggested for You
+        </p>
+        <h2 className="mt-2 text-lg font-bold text-[#111111]">
+          Open requests matching your skills
+        </h2>
+        {suggested.length === 0 ? (
+          <p className="mt-4 text-sm text-[#6B6B6B]">
+            No matches yet. Add skills in your profile to get personalized suggestions.
+          </p>
+        ) : (
+          <div className="mt-4 space-y-3">
+            {suggested.map((req) => (
+              <Link
+                key={req.id}
+                href={`/requests/${req.id}`}
+                className="block rounded-[14px] border border-[#F0EBE3] p-4 hover:border-[#0C9F88] transition-colors"
+              >
+                <div className="flex items-start justify-between gap-3">
+                  <p className="font-medium text-[#111111] line-clamp-1">{req.title}</p>
+                  <Badge variant={req.urgency as "low" | "medium" | "high" | "critical"}>
+                    {req.urgency}
+                  </Badge>
+                </div>
+                <p className="mt-1 text-sm text-[#6B6B6B] line-clamp-2">{req.description}</p>
+                <div className="mt-2 flex flex-wrap gap-1">
+                  {(req.tags ?? []).slice(0, 4).map((tag: string) => (
+                    <span
+                      key={tag}
+                      className="rounded-full bg-[#F0EBE3] px-2 py-0.5 text-xs text-[#6B6B6B]"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </Link>
+            ))}
+          </div>
+        )}
+        <div className="mt-4">
+          <Link
+            href="/explore"
+            className="text-sm font-medium text-[#0C9F88] hover:underline"
+          >
+            Browse all open requests →
+          </Link>
+        </div>
+      </Card>
+    </div>
+  );
+}
