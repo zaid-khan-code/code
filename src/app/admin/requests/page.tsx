@@ -35,9 +35,9 @@ export default async function AdminRequestsPage({
     <div className="space-y-6">
       <div className="flex items-center justify-between flex-wrap gap-4">
         <div>
-          <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#8AA79E]">Admin</p>
-          <h1 className="text-[2rem] font-black leading-[0.95] tracking-[-0.04em] text-[#111111]">Requests</h1>
-          <p className="mt-1 text-sm text-[#6B6B6B]">Manage all help requests</p>
+          <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#6c7a71]">Admin</p>
+          <h1 className="text-[2rem] font-black leading-[0.95] tracking-[-0.04em] text-[#1b1c1a]">Requests</h1>
+          <p className="mt-1 text-sm text-[#54615d]">Manage all help requests</p>
         </div>
         <div className="flex gap-2 flex-wrap">
           {["open", "in_progress", "solved", "closed"].map((s) => (
@@ -46,8 +46,8 @@ export default async function AdminRequestsPage({
               href={`?status=${s}`}
               className={`px-4 py-2 text-sm font-medium rounded-full border transition-colors ${
                 params.status === s
-                  ? "bg-[#0C9F88] text-white border-[#0C9F88]"
-                  : "bg-white text-[#6B6B6B] border-[#E8E2D9] hover:border-[#0C9F88]"
+                  ? "bg-[#006c49] text-white border-[#006c49]"
+                  : "bg-white text-[#54615d] border-[#d7e6e0] hover:border-[#006c49]"
               }`}
             >
               {s.replace("_", " ")}
@@ -56,7 +56,7 @@ export default async function AdminRequestsPage({
           {params.status && (
             <a
               href="?"
-              className="px-4 py-2 text-sm font-medium rounded-full border bg-white text-[#6B6B6B] border-[#E8E2D9] hover:border-[#EF4444] transition-colors"
+              className="px-4 py-2 text-sm font-medium rounded-full border bg-white text-[#54615d] border-[#d7e6e0] hover:border-[#EF4444] transition-colors"
             >
               Clear
             </a>
@@ -68,14 +68,14 @@ export default async function AdminRequestsPage({
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-[#E8E2D9] bg-[#FAFAFA]">
-                <th className="text-left py-4 px-4 font-semibold text-[#6B6B6B]">ID</th>
-                <th className="text-left py-4 px-4 font-semibold text-[#6B6B6B]">Title</th>
-                <th className="text-left py-4 px-4 font-semibold text-[#6B6B6B]">Author</th>
-                <th className="text-left py-4 px-4 font-semibold text-[#6B6B6B]">Status</th>
-                <th className="text-left py-4 px-4 font-semibold text-[#6B6B6B]">Urgency</th>
-                <th className="text-left py-4 px-4 font-semibold text-[#6B6B6B]">Created</th>
-                <th className="text-left py-4 px-4 font-semibold text-[#6B6B6B]">Actions</th>
+              <tr className="border-b border-[#d7e6e0] bg-[#FAFAFA]">
+                <th className="text-left py-4 px-4 font-semibold text-[#54615d]">ID</th>
+                <th className="text-left py-4 px-4 font-semibold text-[#54615d]">Title</th>
+                <th className="text-left py-4 px-4 font-semibold text-[#54615d]">Author</th>
+                <th className="text-left py-4 px-4 font-semibold text-[#54615d]">Status</th>
+                <th className="text-left py-4 px-4 font-semibold text-[#54615d]">Urgency</th>
+                <th className="text-left py-4 px-4 font-semibold text-[#54615d]">Created</th>
+                <th className="text-left py-4 px-4 font-semibold text-[#54615d]">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -86,16 +86,16 @@ export default async function AdminRequestsPage({
               )}
               {!error && (!data || data.length === 0) && (
                 <tr>
-                  <td colSpan={7} className="py-8 text-center text-[#6B6B6B]">No requests found</td>
+                  <td colSpan={7} className="py-8 text-center text-[#54615d]">No requests found</td>
                 </tr>
               )}
               {data?.map((r) => (
-                <tr key={r.id} className="border-b border-[#E8E2D9] last:border-0 hover:bg-[#FAFAFA] transition-colors">
+                <tr key={r.id} className="border-b border-[#d7e6e0] last:border-0 hover:bg-[#FAFAFA] transition-colors">
                   <td className="py-4 px-4 font-mono text-xs text-[#A0A0A0]">
                     {r.id.slice(0, 8)}
                   </td>
-                  <td className="py-4 px-4 max-w-xs truncate text-[#111111] font-medium">{r.title}</td>
-                  <td className="py-4 px-4 text-[#6B6B6B]">
+                  <td className="py-4 px-4 max-w-xs truncate text-[#1b1c1a] font-medium">{r.title}</td>
+                  <td className="py-4 px-4 text-[#54615d]">
                     {(r.author as { username?: string | null } | null)?.username ?? "—"}
                   </td>
                   <td className="py-4 px-4">
@@ -104,7 +104,7 @@ export default async function AdminRequestsPage({
                   <td className="py-4 px-4">
                     <Badge variant={r.urgency}>{r.urgency}</Badge>
                   </td>
-                  <td className="py-4 px-4 text-[#6B6B6B]">
+                  <td className="py-4 px-4 text-[#54615d]">
                     {new Date(r.created_at).toLocaleDateString()}
                   </td>
                   <td className="py-4 px-4">
@@ -134,18 +134,18 @@ export default async function AdminRequestsPage({
           {page > 1 && (
             <a
               href={`?page=${page - 1}${params.status ? `&status=${params.status}` : ""}`}
-              className="px-4 py-2 text-sm font-medium rounded-full border border-[#E8E2D9] text-[#6B6B6B] hover:border-[#0C9F88] hover:text-[#111111] transition-colors"
+              className="px-4 py-2 text-sm font-medium rounded-full border border-[#d7e6e0] text-[#54615d] hover:border-[#006c49] hover:text-[#1b1c1a] transition-colors"
             >
               Previous
             </a>
           )}
-          <span className="px-4 py-2 text-sm text-[#6B6B6B]">
+          <span className="px-4 py-2 text-sm text-[#54615d]">
             Page {page} of {totalPages}
           </span>
           {page < totalPages && (
             <a
               href={`?page=${page + 1}${params.status ? `&status=${params.status}` : ""}`}
-              className="px-4 py-2 text-sm font-medium rounded-full border border-[#E8E2D9] text-[#6B6B6B] hover:border-[#0C9F88] hover:text-[#111111] transition-colors"
+              className="px-4 py-2 text-sm font-medium rounded-full border border-[#d7e6e0] text-[#54615d] hover:border-[#006c49] hover:text-[#1b1c1a] transition-colors"
             >
               Next
             </a>

@@ -66,8 +66,8 @@ export default async function DashboardPage() {
         {stats.map((stat) => (
           <Link key={stat.label} href={stat.href} className="no-underline">
             <Card className="rounded-[24px] p-5 text-center">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#8AA79E]">{stat.label}</p>
-              <p className="mt-3 text-3xl font-black tracking-[-0.04em] text-[#171717]">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#6c7a71]">{stat.label}</p>
+              <p className="mt-3 text-3xl font-black tracking-[-0.04em] text-[#1b1c1a]">
                 {stat.value}
                 {stat.suffix ? <span className="text-xl">{stat.suffix}</span> : null}
               </p>
@@ -79,15 +79,15 @@ export default async function DashboardPage() {
       <div className="grid gap-6 lg:grid-cols-[1fr_380px]">
         <section className="space-y-4">
           <div className="flex items-center justify-between">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#8AA79E]">Recent Requests</p>
-            <Link href="/explore" className="text-sm font-semibold text-[#109F88] hover:underline">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#6c7a71]">Recent Requests</p>
+            <Link href="/explore" className="text-sm font-semibold text-[#006c49] hover:underline">
               View all
             </Link>
           </div>
           <div className="space-y-4">
             {recentRequests?.length === 0 ? (
               <Card className="rounded-[24px] p-8 text-center">
-                <p className="text-sm text-[#655F57]">No requests yet.</p>
+                <p className="text-sm text-[#54615d]">No requests yet.</p>
               </Card>
             ) : null}
             {recentRequests?.map((request) => {
@@ -108,30 +108,30 @@ export default async function DashboardPage() {
         </section>
 
         <section className="space-y-6">
-          <Card className="rounded-[24px] border-[#109F88]/20 bg-gradient-to-br from-[#109F88]/10 via-white to-[#F6F0E7] p-6">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#109F88]">AI Insights</p>
-            <h3 className="mt-3 text-xl font-black tracking-[-0.03em] text-[#171717]">Your impact</h3>
+          <Card className="rounded-[24px] border-[#006c49]/20 bg-gradient-to-br from-[#006c49]/10 via-white to-[#fbf9f5] p-6">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#006c49]">AI Insights</p>
+            <h3 className="mt-3 text-xl font-black tracking-[-0.03em] text-[#1b1c1a]">Your impact</h3>
             <div className="mt-5 space-y-3 text-sm">
-              <div className="flex justify-between border-b border-[#109F88]/10 pb-3">
-                <span className="text-[#655F57]">Trust gained (30d)</span>
-                <span className="font-semibold text-[#109F88]">+{activity.trustGain}</span>
+              <div className="flex justify-between border-b border-[#006c49]/10 pb-3">
+                <span className="text-[#54615d]">Trust gained (30d)</span>
+                <span className="font-semibold text-[#006c49]">+{activity.trustGain}</span>
               </div>
-              <div className="flex justify-between border-b border-[#109F88]/10 pb-3">
-                <span className="text-[#655F57]">People helped</span>
-                <span className="font-semibold text-[#171717]">{activity.helpsGiven}</span>
+              <div className="flex justify-between border-b border-[#006c49]/10 pb-3">
+                <span className="text-[#54615d]">People helped</span>
+                <span className="font-semibold text-[#1b1c1a]">{activity.helpsGiven}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-[#655F57]">Matching requests</span>
-                <span className="font-semibold text-[#171717]">{suggested.length}</span>
+                <span className="text-[#54615d]">Matching requests</span>
+                <span className="font-semibold text-[#1b1c1a]">{suggested.length}</span>
               </div>
             </div>
-            <Link href="/explore" className="mt-5 inline-block text-sm font-semibold text-[#109F88] hover:underline">
+            <Link href="/explore" className="mt-5 inline-block text-sm font-semibold text-[#006c49] hover:underline">
               View matching requests &rarr;
             </Link>
           </Card>
 
           <Card className="rounded-[24px] p-6">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#8AA79E]">Quick Actions</p>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#6c7a71]">Quick Actions</p>
             <div className="mt-5 grid grid-cols-2 gap-3">
               <QuickAction href="/requests/new" label="New Request" />
               <QuickAction href="/explore" label="Explore" />
@@ -141,21 +141,21 @@ export default async function DashboardPage() {
           </Card>
 
           <Card className="rounded-[24px] p-6">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#8AA79E]">Notifications</p>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#6c7a71]">Notifications</p>
             <div className="mt-5 space-y-3">
               {notifications?.length === 0 ? (
-                <p className="text-sm text-[#655F57]">No new notifications.</p>
+                <p className="text-sm text-[#54615d]">No new notifications.</p>
               ) : null}
               {notifications?.map((notification) => (
-                <div key={notification.id} className="flex items-start gap-3 rounded-[16px] border border-[#E7DED2] p-3">
-                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#EAF8F5] text-[10px] font-bold text-[#245D51]">
+                <div key={notification.id} className="flex items-start gap-3 rounded-[16px] border border-[#d7e6e0] p-3">
+                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#d7e6e0] text-[10px] font-bold text-[#006c49]">
                     {getNotifIcon(notification.type)}
                   </div>
                   <div className="min-w-0 flex-1">
-                    <p className="text-sm text-[#171717]">{formatNotif(notification)}</p>
-                    <p className="text-xs text-[#9B948B]">{timeAgo(notification.created_at)}</p>
+                    <p className="text-sm text-[#1b1c1a]">{formatNotif(notification)}</p>
+                    <p className="text-xs text-[#6c7a71]">{timeAgo(notification.created_at)}</p>
                   </div>
-                  {!notification.read ? <div className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-[#109F88]" /> : null}
+                  {!notification.read ? <div className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-[#006c49]" /> : null}
                 </div>
               ))}
             </div>
@@ -170,7 +170,7 @@ function QuickAction({ href, label }: { href: string; label: string }) {
   return (
     <Link
       href={href}
-      className="flex items-center justify-center rounded-[16px] bg-[#F2ECE4] px-4 py-3 text-sm font-semibold text-[#171717] transition-colors hover:bg-[#E7DED2]"
+      className="flex items-center justify-center rounded-[16px] bg-[#efeeea] px-4 py-3 text-sm font-semibold text-[#1b1c1a] transition-colors hover:bg-[#d7e6e0]"
     >
       {label}
     </Link>

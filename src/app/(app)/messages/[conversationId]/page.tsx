@@ -82,7 +82,7 @@ export default async function ConversationPage({ params }: PageProps) {
                     "block rounded-[18px] border p-4 no-underline transition-colors",
                     active
                       ? "border-[#CFE5DF] bg-[#F6FBF8]"
-                      : "border-[#F0EBE3] hover:border-[#D8D1C7]",
+                      : "border-[#efeeea] hover:border-[#D8D1C7]",
                   ].join(" ")}
                 >
                   <div className="flex items-center gap-3">
@@ -92,10 +92,10 @@ export default async function ConversationPage({ params }: PageProps) {
                       size="sm"
                     />
                     <div className="min-w-0">
-                      <p className="truncate text-sm font-semibold text-[#111111]">
+                      <p className="truncate text-sm font-semibold text-[#1b1c1a]">
                         {profile?.full_name ?? profile?.username ?? "Community member"}
                       </p>
-                      <p className="text-xs text-[#6B6B6B]">@{profile?.username ?? "member"}</p>
+                      <p className="text-xs text-[#54615d]">@{profile?.username ?? "member"}</p>
                     </div>
                   </div>
                 </Link>
@@ -105,7 +105,7 @@ export default async function ConversationPage({ params }: PageProps) {
         </Card>
 
         <Card className="rounded-[22px] p-0 overflow-hidden">
-          <div className="border-b border-[#F0EBE3] px-6 py-4">
+          <div className="border-b border-[#efeeea] px-6 py-4">
             <div className="flex items-center gap-3">
               <Avatar
                 name={otherUser?.full_name ?? otherUser?.username ?? "Member"}
@@ -113,17 +113,17 @@ export default async function ConversationPage({ params }: PageProps) {
                 size="md"
               />
               <div>
-                <p className="text-sm font-semibold text-[#111111]">
+                <p className="text-sm font-semibold text-[#1b1c1a]">
                   {otherUser?.full_name ?? otherUser?.username ?? "Community member"}
                 </p>
-                <p className="text-xs text-[#6B6B6B]">@{otherUser?.username ?? "member"}</p>
+                <p className="text-xs text-[#54615d]">@{otherUser?.username ?? "member"}</p>
               </div>
             </div>
           </div>
 
           <div className="space-y-3 px-6 py-5">
             {(messages ?? []).length === 0 ? (
-              <p className="text-sm text-[#6B6B6B]">Start the conversation.</p>
+              <p className="text-sm text-[#54615d]">Start the conversation.</p>
             ) : (
               (messages ?? []).map((message) => {
                 const isMe = message.sender_id === user.id;
@@ -137,8 +137,8 @@ export default async function ConversationPage({ params }: PageProps) {
                       className={[
                         "max-w-[75%] rounded-[18px] px-4 py-3 text-sm leading-6",
                         isMe
-                          ? "rounded-br-[8px] bg-[#0C9F88] text-white"
-                          : "rounded-bl-[8px] bg-[#F5F1EA] text-[#111111]",
+                          ? "rounded-br-[8px] bg-[#006c49] text-white"
+                          : "rounded-bl-[8px] bg-[#F5F1EA] text-[#1b1c1a]",
                       ].join(" ")}
                     >
                       <p>{message.body}</p>
@@ -157,14 +157,14 @@ export default async function ConversationPage({ params }: PageProps) {
             )}
           </div>
 
-          <form action={sendMessage} className="border-t border-[#F0EBE3] px-6 py-4">
+          <form action={sendMessage} className="border-t border-[#efeeea] px-6 py-4">
             <input type="hidden" name="conversationId" value={conversationId} />
             <div className="flex gap-3">
               <textarea
                 name="body"
                 rows={3}
                 placeholder="Share support details, files, or next steps."
-                className="min-h-[92px] flex-1 rounded-[14px] border border-[#E8E2D9] px-4 py-3 text-sm leading-6 text-[#111111] outline-none placeholder:text-[#A0A0A0] focus:border-[#0C9F88]"
+                className="min-h-[92px] flex-1 rounded-[14px] border border-[#d7e6e0] px-4 py-3 text-sm leading-6 text-[#1b1c1a] outline-none placeholder:text-[#A0A0A0] focus:border-[#006c49]"
               />
               <Button type="submit">Send</Button>
             </div>

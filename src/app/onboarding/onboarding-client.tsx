@@ -97,16 +97,16 @@ export default function OnboardingClient() {
   }
 
   return (
-    <div className="min-h-screen bg-[#F5F0EA] flex items-center justify-center p-4">
-      <div className="w-full max-w-2xl bg-white rounded-[14px] border border-[#E8E2D9] p-8 shadow-[0_4px_12px_rgba(0,0,0,.06)]">
+    <div className="min-h-screen bg-[#fbf9f5] flex items-center justify-center p-4">
+      <div className="w-full max-w-2xl bg-white rounded-[14px] border border-[#d7e6e0] p-8 shadow-[0_4px_12px_rgba(0,0,0,.06)]">
         <div className="mb-8">
-          <h1 className="text-2xl font-semibold text-[#111111] mb-2">Welcome to HelpHub AI</h1>
-          <p className="text-sm text-[#6B6B6B]">Step {currentStep} of 4</p>
+          <h1 className="text-2xl font-semibold text-[#1b1c1a] mb-2">Welcome to HelpHub AI</h1>
+          <p className="text-sm text-[#54615d]">Step {currentStep} of 4</p>
           <div className="flex gap-2 mt-4">
             {[1, 2, 3, 4].map(s => (
               <div
                 key={s}
-                className={`h-2 flex-1 rounded-full ${s <= currentStep ? "bg-[#0C9F88]" : "bg-[#E8E2D9]"}`}
+                className={`h-2 flex-1 rounded-full ${s <= currentStep ? "bg-[#006c49]" : "bg-[#d7e6e0]"}`}
               />
             ))}
           </div>
@@ -129,7 +129,7 @@ export default function OnboardingClient() {
 
         {currentStep === 2 && (
           <div className="space-y-4">
-            <p className="text-sm text-[#6B6B6B] mb-4">How do you want to use HelpHub AI?</p>
+            <p className="text-sm text-[#54615d] mb-4">How do you want to use HelpHub AI?</p>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               {[
                 { id: "need_help", label: "Get Help", desc: "I need help with things" },
@@ -141,12 +141,12 @@ export default function OnboardingClient() {
                   onClick={() => setUserMode(opt.id)}
                   className={`p-4 rounded-[14px] border text-left transition-all ${
                     userMode === opt.id
-                      ? "border-[#0C9F88] bg-[#D1FAF4]"
-                      : "border-[#E8E2D9] hover:border-[#0C9F88]"
+                      ? "border-[#006c49] bg-[#D1FAF4]"
+                      : "border-[#d7e6e0] hover:border-[#006c49]"
                   }`}
                 >
-                  <div className="font-medium text-[#111111]">{opt.label}</div>
-                  <div className="text-xs text-[#6B6B6B]">{opt.desc}</div>
+                  <div className="font-medium text-[#1b1c1a]">{opt.label}</div>
+                  <div className="text-xs text-[#54615d]">{opt.desc}</div>
                 </button>
               ))}
             </div>
@@ -158,7 +158,7 @@ export default function OnboardingClient() {
 
         {currentStep === 3 && (
           <div className="space-y-4">
-            <p className="text-sm text-[#6B6B6B] mb-2">Select skills and indicate how you can help</p>
+            <p className="text-sm text-[#54615d] mb-2">Select skills and indicate how you can help</p>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 max-h-[400px] overflow-y-auto p-2">
               {skills.map(skill => {
                 const selected = userSkills.find(s => s.skill_id === skill.id);
@@ -167,11 +167,11 @@ export default function OnboardingClient() {
                     key={skill.id}
                     onClick={() => toggleSkill(skill.id)}
                     className={`p-3 rounded-[10px] border cursor-pointer transition-all ${
-                      selected ? "border-[#0C9F88] bg-[#D1FAF4]" : "border-[#E8E2D9] hover:border-[#0C9F88]"
+                      selected ? "border-[#006c49] bg-[#D1FAF4]" : "border-[#d7e6e0] hover:border-[#006c49]"
                     }`}
                   >
-                    <div className="font-medium text-sm text-[#111111]">{skill.name}</div>
-                    <div className="text-xs text-[#6B6B6B]">{skill.category}</div>
+                    <div className="font-medium text-sm text-[#1b1c1a]">{skill.name}</div>
+                    <div className="text-xs text-[#54615d]">{skill.category}</div>
                     {selected && (
                       <div className="flex gap-2 mt-2" onClick={e => e.stopPropagation()}>
                         <label className="flex items-center gap-1 text-xs">
@@ -205,7 +205,7 @@ export default function OnboardingClient() {
         {currentStep === 4 && (
           <form action={handleStep4} className="space-y-4">
             <div>
-              <p className="text-sm font-medium text-[#111111] mb-2">Interests (select at least 3)</p>
+              <p className="text-sm font-medium text-[#1b1c1a] mb-2">Interests (select at least 3)</p>
               <div className="flex flex-wrap gap-2">
                 {interests.map(interest => (
                   <button
@@ -214,8 +214,8 @@ export default function OnboardingClient() {
                     onClick={() => toggleInterest(interest.id)}
                     className={`px-3 py-1.5 rounded-full text-sm transition-all ${
                       selectedInterests.includes(interest.id)
-                        ? "bg-[#0C9F88] text-white"
-                        : "bg-[#F0EBE3] text-[#6B6B6B] hover:bg-[#E8E2D9]"
+                        ? "bg-[#006c49] text-white"
+                        : "bg-[#efeeea] text-[#54615d] hover:bg-[#d7e6e0]"
                     }`}
                   >
                     {interest.name}
@@ -227,7 +227,7 @@ export default function OnboardingClient() {
               name="bio"
               placeholder="Tell us about yourself (optional)"
               rows={4}
-              className="w-full rounded-[10px] border border-[#E8E2D9] px-3 py-2 text-sm outline-none focus:border-[#0C9F88] focus:ring-1 focus:ring-[#0C9F88]"
+              className="w-full rounded-[10px] border border-[#d7e6e0] px-3 py-2 text-sm outline-none focus:border-[#006c49] focus:ring-1 focus:ring-[#006c49]"
             />
             <Button type="submit" disabled={isPending} className="w-full">
               {isPending ? "Finishing..." : "Finish"}

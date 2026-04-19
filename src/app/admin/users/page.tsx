@@ -34,9 +34,9 @@ export default async function AdminUsersPage({
     <div className="space-y-6">
       <div className="flex items-center justify-between flex-wrap gap-4">
         <div>
-          <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#8AA79E]">Admin</p>
-          <h1 className="text-[2rem] font-black leading-[0.95] tracking-[-0.04em] text-[#111111]">Users</h1>
-          <p className="mt-1 text-sm text-[#6B6B6B]">Manage community members</p>
+          <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#6c7a71]">Admin</p>
+          <h1 className="text-[2rem] font-black leading-[0.95] tracking-[-0.04em] text-[#1b1c1a]">Users</h1>
+          <p className="mt-1 text-sm text-[#54615d]">Manage community members</p>
         </div>
         <div className="flex gap-2">
           {["admin", "user"].map((r) => (
@@ -45,8 +45,8 @@ export default async function AdminUsersPage({
               href={`?role=${r}`}
               className={`px-4 py-2 text-sm font-medium rounded-full border transition-colors ${
                 params.role === r
-                  ? "bg-[#0C9F88] text-white border-[#0C9F88]"
-                  : "bg-white text-[#6B6B6B] border-[#E8E2D9] hover:border-[#0C9F88]"
+                  ? "bg-[#006c49] text-white border-[#006c49]"
+                  : "bg-white text-[#54615d] border-[#d7e6e0] hover:border-[#006c49]"
               }`}
             >
               {r}
@@ -55,7 +55,7 @@ export default async function AdminUsersPage({
           {params.role && (
             <a
               href="?"
-              className="px-4 py-2 text-sm font-medium rounded-full border bg-white text-[#6B6B6B] border-[#E8E2D9] hover:border-[#EF4444] transition-colors"
+              className="px-4 py-2 text-sm font-medium rounded-full border bg-white text-[#54615d] border-[#d7e6e0] hover:border-[#EF4444] transition-colors"
             >
               Clear
             </a>
@@ -67,24 +67,24 @@ export default async function AdminUsersPage({
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-[#E8E2D9] bg-[#FAFAFA]">
-                <th className="text-left py-4 px-4 font-semibold text-[#6B6B6B]">User</th>
-                <th className="text-left py-4 px-4 font-semibold text-[#6B6B6B]">Username</th>
-                <th className="text-left py-4 px-4 font-semibold text-[#6B6B6B]">Role</th>
-                <th className="text-left py-4 px-4 font-semibold text-[#6B6B6B]">Trust</th>
-                <th className="text-left py-4 px-4 font-semibold text-[#6B6B6B]">Onboarded</th>
-                <th className="text-left py-4 px-4 font-semibold text-[#6B6B6B]">Joined</th>
-                <th className="text-left py-4 px-4 font-semibold text-[#6B6B6B]">Actions</th>
+              <tr className="border-b border-[#d7e6e0] bg-[#FAFAFA]">
+                <th className="text-left py-4 px-4 font-semibold text-[#54615d]">User</th>
+                <th className="text-left py-4 px-4 font-semibold text-[#54615d]">Username</th>
+                <th className="text-left py-4 px-4 font-semibold text-[#54615d]">Role</th>
+                <th className="text-left py-4 px-4 font-semibold text-[#54615d]">Trust</th>
+                <th className="text-left py-4 px-4 font-semibold text-[#54615d]">Onboarded</th>
+                <th className="text-left py-4 px-4 font-semibold text-[#54615d]">Joined</th>
+                <th className="text-left py-4 px-4 font-semibold text-[#54615d]">Actions</th>
               </tr>
             </thead>
             <tbody>
               {!data || data.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="py-8 text-center text-[#6B6B6B]">No users found</td>
+                  <td colSpan={7} className="py-8 text-center text-[#54615d]">No users found</td>
                 </tr>
               ) : (
                 data.map((u) => (
-                  <tr key={u.id} className="border-b border-[#E8E2D9] last:border-0 hover:bg-[#FAFAFA] transition-colors">
+                  <tr key={u.id} className="border-b border-[#d7e6e0] last:border-0 hover:bg-[#FAFAFA] transition-colors">
                     <td className="py-4 px-4">
                       <div className="flex items-center gap-3">
                         <Avatar
@@ -92,22 +92,22 @@ export default async function AdminUsersPage({
                           src={u.avatar_url ?? null}
                           size="sm"
                         />
-                        <span className="font-medium text-[#111111]">{u.full_name ?? "—"}</span>
+                        <span className="font-medium text-[#1b1c1a]">{u.full_name ?? "—"}</span>
                       </div>
                     </td>
-                    <td className="py-4 px-4 text-[#6B6B6B]">{u.username ?? "—"}</td>
+                    <td className="py-4 px-4 text-[#54615d]">{u.username ?? "—"}</td>
                     <td className="py-4 px-4">
                       <Badge variant={u.role === "admin" ? "critical" : "default"}>{u.role}</Badge>
                     </td>
-                    <td className="py-4 px-4 text-[#6B6B6B]">{u.trust_score}%</td>
+                    <td className="py-4 px-4 text-[#54615d]">{u.trust_score}%</td>
                     <td className="py-4 px-4">
                       {u.onboarded ? (
-                        <span className="text-[#0C9F88] font-medium">Yes</span>
+                        <span className="text-[#006c49] font-medium">Yes</span>
                       ) : (
                         <span className="text-[#EF4444] font-medium">No</span>
                       )}
                     </td>
-                    <td className="py-4 px-4 text-[#6B6B6B]">
+                    <td className="py-4 px-4 text-[#54615d]">
                       {new Date(u.created_at).toLocaleDateString()}
                     </td>
                     <td className="py-4 px-4">
@@ -157,18 +157,18 @@ export default async function AdminUsersPage({
           {page > 1 && (
             <a
               href={`?page=${page - 1}${params.role ? `&role=${params.role}` : ""}`}
-              className="px-4 py-2 text-sm font-medium rounded-full border border-[#E8E2D9] text-[#6B6B6B] hover:border-[#0C9F88] hover:text-[#111111] transition-colors"
+              className="px-4 py-2 text-sm font-medium rounded-full border border-[#d7e6e0] text-[#54615d] hover:border-[#006c49] hover:text-[#1b1c1a] transition-colors"
             >
               Previous
             </a>
           )}
-          <span className="px-4 py-2 text-sm text-[#6B6B6B]">
+          <span className="px-4 py-2 text-sm text-[#54615d]">
             Page {page} of {totalPages}
           </span>
           {page < totalPages && (
             <a
               href={`?page=${page + 1}${params.role ? `&role=${params.role}` : ""}`}
-              className="px-4 py-2 text-sm font-medium rounded-full border border-[#E8E2D9] text-[#6B6B6B] hover:border-[#0C9F88] hover:text-[#111111] transition-colors"
+              className="px-4 py-2 text-sm font-medium rounded-full border border-[#d7e6e0] text-[#54615d] hover:border-[#006c49] hover:text-[#1b1c1a] transition-colors"
             >
               Next
             </a>

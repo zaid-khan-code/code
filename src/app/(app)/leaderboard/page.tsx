@@ -109,8 +109,8 @@ export default async function LeaderboardPage({
           className={[
             "rounded-full px-4 py-2 text-sm font-medium no-underline transition-colors",
             tab === "all"
-              ? "bg-[#EEF4EF] text-[#171717]"
-              : "border border-[#E7DED2] bg-white text-[#655F57] hover:border-[#109F88]",
+              ? "bg-[#d7e6e0] text-[#1b1c1a]"
+              : "border border-[#d7e6e0] bg-white text-[#54615d] hover:border-[#006c49]",
           ].join(" ")}
         >
           All time
@@ -120,8 +120,8 @@ export default async function LeaderboardPage({
           className={[
             "rounded-full px-4 py-2 text-sm font-medium no-underline transition-colors",
             tab === "weekly"
-              ? "bg-[#EEF4EF] text-[#171717]"
-              : "border border-[#E7DED2] bg-white text-[#655F57] hover:border-[#109F88]",
+              ? "bg-[#d7e6e0] text-[#1b1c1a]"
+              : "border border-[#d7e6e0] bg-white text-[#54615d] hover:border-[#006c49]",
           ].join(" ")}
         >
           This week
@@ -130,8 +130,8 @@ export default async function LeaderboardPage({
 
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1.1fr)_420px]">
         <Card className="rounded-[24px] p-6">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#8AA79E]">Top Helpers</p>
-          <h2 className="mt-3 text-[2rem] font-black leading-[0.95] tracking-[-0.04em] text-[#171717]">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#6c7a71]">Top Helpers</p>
+          <h2 className="mt-3 text-[2rem] font-black leading-[0.95] tracking-[-0.04em] text-[#1b1c1a]">
             Rankings
           </h2>
 
@@ -140,26 +140,26 @@ export default async function LeaderboardPage({
               <Link
                 key={row.id}
                 href={`/profile/${row.username ?? row.id}`}
-                className="flex items-center gap-4 rounded-[18px] border border-[#F2ECE4] p-4 no-underline transition-all hover:-translate-y-0.5 hover:border-[#109F88]"
+                className="flex items-center gap-4 rounded-[18px] border border-[#efeeea] p-4 no-underline transition-all hover:-translate-y-0.5 hover:border-[#006c49]"
               >
                 <Avatar name={row.full_name ?? row.username ?? "User"} src={row.avatar_url} size="sm" />
                 <div className="min-w-0 flex-1">
-                  <p className="text-sm font-semibold text-[#171717]">
+                  <p className="text-sm font-semibold text-[#1b1c1a]">
                     #{index + 1} {row.full_name ?? row.username ?? "Community helper"}
                   </p>
-                  <p className="truncate text-xs text-[#655F57]">
+                  <p className="truncate text-xs text-[#54615d]">
                     {skillNamesMap.get(row.id)?.slice(0, 3).join(", ") || row.location || "Community"} &middot; {row.contributions} contributions
                   </p>
                 </div>
-                <p className="text-sm font-bold text-[#109F88]">{row.trust_score}%</p>
+                <p className="text-sm font-bold text-[#006c49]">{row.trust_score}%</p>
               </Link>
             ))}
           </div>
         </Card>
 
         <Card className="rounded-[24px] p-6">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#8AA79E]">Badge System</p>
-          <h2 className="mt-3 text-[2rem] font-black leading-[0.95] tracking-[-0.04em] text-[#171717]">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#6c7a71]">Badge System</p>
+          <h2 className="mt-3 text-[2rem] font-black leading-[0.95] tracking-[-0.04em] text-[#1b1c1a]">
             Trust and achievement
           </h2>
 
@@ -168,19 +168,19 @@ export default async function LeaderboardPage({
               const width = Math.max(12, Math.min(100, row.trust_score));
 
               return (
-                <div key={row.id} className="rounded-[18px] border border-[#F2ECE4] p-4">
+                <div key={row.id} className="rounded-[18px] border border-[#efeeea] p-4">
                   <div className="flex items-center justify-between">
-                    <p className="text-sm font-semibold text-[#171717]">
+                    <p className="text-sm font-semibold text-[#1b1c1a]">
                       {row.full_name ?? row.username ?? "Community helper"}
                     </p>
-                    <span className="text-xs font-bold text-[#109F88]">{row.trust_score}%</span>
+                    <span className="text-xs font-bold text-[#006c49]">{row.trust_score}%</span>
                   </div>
-                  <p className="mt-1 text-xs text-[#655F57]">
+                  <p className="mt-1 text-xs text-[#54615d]">
                     {badgeNamesMap.get(row.id)?.join(" / ") || `${row.contributions} contributions`}
                   </p>
                   <div className="mt-4 h-2 rounded-full bg-[#E9E4DD]">
                     <div
-                      className="h-full rounded-full bg-gradient-to-r from-[#F2B648] via-[#98A944] to-[#109F88]"
+                      className="h-full rounded-full bg-gradient-to-r from-[#F2B648] via-[#98A944] to-[#006c49]"
                       style={{ width: `${width}%` }}
                     />
                   </div>

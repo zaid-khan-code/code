@@ -154,27 +154,27 @@ export default function ProfileMeClient({
   return (
     <div className="grid gap-6 lg:grid-cols-[minmax(0,1.2fr)_420px]">
       <Card className="rounded-[22px] p-6">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#8AA79E]">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#6c7a71]">
           Public Profile
         </p>
-        <h2 className="mt-3 text-[2rem] font-black leading-[0.95] tracking-[-0.04em] text-[#111111]">
+        <h2 className="mt-3 text-[2rem] font-black leading-[0.95] tracking-[-0.04em] text-[#1b1c1a]">
           Skills and reputation
         </h2>
 
-        <div className="mt-8 divide-y divide-[#F0EBE3] border-y border-[#F0EBE3]">
+        <div className="mt-8 divide-y divide-[#efeeea] border-y border-[#efeeea]">
           <div className="flex items-center justify-between py-4">
-            <p className="text-sm text-[#6B6B6B]">Trust score</p>
-            <p className="text-sm font-semibold text-[#111111]">{profile.trust_score}%</p>
+            <p className="text-sm text-[#54615d]">Trust score</p>
+            <p className="text-sm font-semibold text-[#1b1c1a]">{profile.trust_score}%</p>
           </div>
           <div className="flex items-center justify-between py-4">
-            <p className="text-sm text-[#6B6B6B]">Contributions</p>
-            <p className="text-sm font-semibold text-[#111111]">{contributionCount}</p>
+            <p className="text-sm text-[#54615d]">Contributions</p>
+            <p className="text-sm font-semibold text-[#1b1c1a]">{contributionCount}</p>
           </div>
         </div>
 
         <div className="mt-8 space-y-6">
           <div>
-            <p className="text-sm font-semibold text-[#111111]">Skills</p>
+            <p className="text-sm font-semibold text-[#1b1c1a]">Skills</p>
             <div className="mt-3 flex flex-wrap gap-2">
               {selectedSkills.map((skill) => (
                 <Badge key={skill.id} variant="tag">
@@ -185,7 +185,7 @@ export default function ProfileMeClient({
           </div>
 
           <div>
-            <p className="text-sm font-semibold text-[#111111]">Badges</p>
+            <p className="text-sm font-semibold text-[#1b1c1a]">Badges</p>
             <div className="mt-3 flex flex-wrap gap-2">
               {earnedBadges.map((badge) => (
                 <Badge key={badge.id} variant="solved">
@@ -199,58 +199,58 @@ export default function ProfileMeClient({
 
       <div className="space-y-6">
         <Card className="rounded-[22px] p-6">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#8AA79E]">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#6c7a71]">
             Edit Profile
           </p>
-          <h2 className="mt-3 text-[2rem] font-black leading-[0.95] tracking-[-0.04em] text-[#111111]">
+          <h2 className="mt-3 text-[2rem] font-black leading-[0.95] tracking-[-0.04em] text-[#1b1c1a]">
             Update your identity
           </h2>
 
           <form onSubmit={saveBasics} className="mt-8 space-y-4">
             <div className="grid gap-4 sm:grid-cols-2">
               <label className="block">
-                <span className="mb-2 block text-sm font-medium text-[#6B6B6B]">Name</span>
+                <span className="mb-2 block text-sm font-medium text-[#54615d]">Name</span>
                 <input
                   value={formState.full_name}
                   onChange={(event) => setFormState((state) => ({ ...state, full_name: event.target.value }))}
-                  className="w-full rounded-[14px] border border-[#E8E2D9] px-4 py-3 text-sm text-[#111111] outline-none focus:border-[#0C9F88]"
+                  className="w-full rounded-[14px] border border-[#d7e6e0] px-4 py-3 text-sm text-[#1b1c1a] outline-none focus:border-[#006c49]"
                 />
               </label>
 
               <label className="block">
-                <span className="mb-2 block text-sm font-medium text-[#6B6B6B]">Location</span>
+                <span className="mb-2 block text-sm font-medium text-[#54615d]">Location</span>
                 <input
                   value={formState.location}
                   onChange={(event) => setFormState((state) => ({ ...state, location: event.target.value }))}
-                  className="w-full rounded-[14px] border border-[#E8E2D9] px-4 py-3 text-sm text-[#111111] outline-none focus:border-[#0C9F88]"
+                  className="w-full rounded-[14px] border border-[#d7e6e0] px-4 py-3 text-sm text-[#1b1c1a] outline-none focus:border-[#006c49]"
                 />
               </label>
             </div>
 
             <label className="block">
-              <span className="mb-2 block text-sm font-medium text-[#6B6B6B]">Username</span>
+              <span className="mb-2 block text-sm font-medium text-[#54615d]">Username</span>
               <input
                 value={formState.username}
                 onChange={(event) => setFormState((state) => ({ ...state, username: event.target.value }))}
-                className="w-full rounded-[14px] border border-[#E8E2D9] px-4 py-3 text-sm text-[#111111] outline-none focus:border-[#0C9F88]"
+                className="w-full rounded-[14px] border border-[#d7e6e0] px-4 py-3 text-sm text-[#1b1c1a] outline-none focus:border-[#006c49]"
               />
             </label>
 
             <label className="block">
-              <span className="mb-2 block text-sm font-medium text-[#6B6B6B]">Avatar URL</span>
+              <span className="mb-2 block text-sm font-medium text-[#54615d]">Avatar URL</span>
               <input
                 value={formState.avatar_url}
                 onChange={(event) => setFormState((state) => ({ ...state, avatar_url: event.target.value }))}
-                className="w-full rounded-[14px] border border-[#E8E2D9] px-4 py-3 text-sm text-[#111111] outline-none focus:border-[#0C9F88]"
+                className="w-full rounded-[14px] border border-[#d7e6e0] px-4 py-3 text-sm text-[#1b1c1a] outline-none focus:border-[#006c49]"
               />
             </label>
 
             <label className="block">
-              <span className="mb-2 block text-sm font-medium text-[#6B6B6B]">Mode</span>
+              <span className="mb-2 block text-sm font-medium text-[#54615d]">Mode</span>
               <select
                 value={formState.user_mode}
                 onChange={(event) => setFormState((state) => ({ ...state, user_mode: event.target.value as "need_help" | "can_help" | "both" }))}
-                className="w-full rounded-[14px] border border-[#E8E2D9] px-4 py-3 text-sm text-[#111111] outline-none focus:border-[#0C9F88]"
+                className="w-full rounded-[14px] border border-[#d7e6e0] px-4 py-3 text-sm text-[#1b1c1a] outline-none focus:border-[#006c49]"
               >
                 <option value="need_help">Need help</option>
                 <option value="can_help">Can help</option>
@@ -259,12 +259,12 @@ export default function ProfileMeClient({
             </label>
 
             <label className="block">
-              <span className="mb-2 block text-sm font-medium text-[#6B6B6B]">Bio</span>
+              <span className="mb-2 block text-sm font-medium text-[#54615d]">Bio</span>
               <textarea
                 value={formState.bio}
                 onChange={(event) => setFormState((state) => ({ ...state, bio: event.target.value }))}
                 rows={4}
-                className="w-full rounded-[14px] border border-[#E8E2D9] px-4 py-3 text-sm leading-6 text-[#111111] outline-none focus:border-[#0C9F88]"
+                className="w-full rounded-[14px] border border-[#d7e6e0] px-4 py-3 text-sm leading-6 text-[#1b1c1a] outline-none focus:border-[#006c49]"
               />
             </label>
 
@@ -275,10 +275,10 @@ export default function ProfileMeClient({
         </Card>
 
         <Card className="rounded-[22px] p-6">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#8AA79E]">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#6c7a71]">
             Expertise
           </p>
-          <h3 className="mt-3 text-lg font-bold text-[#111111]">Your skills</h3>
+          <h3 className="mt-3 text-lg font-bold text-[#1b1c1a]">Your skills</h3>
           <div className="mt-4 flex flex-wrap gap-2">
             {allSkills.map((skill) => {
               const selected = selectedSkills.find((item) => item.id === skill.id);
@@ -289,7 +289,7 @@ export default function ProfileMeClient({
                   onClick={() => toggleSkill(skill)}
                   className={[
                     "rounded-full px-3 py-2 text-sm",
-                    selected ? "bg-[#EEF4EF] text-[#111111]" : "bg-[#F4F1EC] text-[#6B6B6B]",
+                    selected ? "bg-[#d7e6e0] text-[#1b1c1a]" : "bg-[#F4F1EC] text-[#54615d]",
                   ].join(" ")}
                 >
                   {skill.name}
@@ -301,15 +301,15 @@ export default function ProfileMeClient({
           {selectedSkills.length > 0 ? (
             <div className="mt-5 space-y-3">
               {selectedSkills.map((skill) => (
-                <div key={skill.id} className="rounded-[16px] border border-[#F0EBE3] p-4">
-                  <p className="text-sm font-semibold text-[#111111]">{skill.name}</p>
+                <div key={skill.id} className="rounded-[16px] border border-[#efeeea] p-4">
+                  <p className="text-sm font-semibold text-[#1b1c1a]">{skill.name}</p>
                   <div className="mt-3 flex gap-2">
                     <button
                       type="button"
                       onClick={() => toggleSkillMode(skill.id, "can_help")}
                       className={[
                         "rounded-full px-3 py-1.5 text-xs font-medium",
-                        skill.can_help ? "bg-[#EEF4EF] text-[#111111]" : "bg-[#F4F1EC] text-[#6B6B6B]",
+                        skill.can_help ? "bg-[#d7e6e0] text-[#1b1c1a]" : "bg-[#F4F1EC] text-[#54615d]",
                       ].join(" ")}
                     >
                       Can help
@@ -319,7 +319,7 @@ export default function ProfileMeClient({
                       onClick={() => toggleSkillMode(skill.id, "needs_help")}
                       className={[
                         "rounded-full px-3 py-1.5 text-xs font-medium",
-                        skill.needs_help ? "bg-[#FFF3E6] text-[#8B4B16]" : "bg-[#F4F1EC] text-[#6B6B6B]",
+                        skill.needs_help ? "bg-[#FFF3E6] text-[#8B4B16]" : "bg-[#F4F1EC] text-[#54615d]",
                       ].join(" ")}
                     >
                       Need help
@@ -338,10 +338,10 @@ export default function ProfileMeClient({
         </Card>
 
         <Card className="rounded-[22px] p-6">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#8AA79E]">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#6c7a71]">
             Focus Areas
           </p>
-          <h3 className="mt-3 text-lg font-bold text-[#111111]">Your interests</h3>
+          <h3 className="mt-3 text-lg font-bold text-[#1b1c1a]">Your interests</h3>
           <div className="mt-4 flex flex-wrap gap-2">
             {allInterests.map((interest) => {
               const selected = selectedInterestIds.includes(interest.id);
@@ -358,7 +358,7 @@ export default function ProfileMeClient({
                   }
                   className={[
                     "rounded-full px-3 py-2 text-sm",
-                    selected ? "bg-[#EEF4EF] text-[#111111]" : "bg-[#F4F1EC] text-[#6B6B6B]",
+                    selected ? "bg-[#d7e6e0] text-[#1b1c1a]" : "bg-[#F4F1EC] text-[#54615d]",
                   ].join(" ")}
                 >
                   {interest.name}
@@ -376,7 +376,7 @@ export default function ProfileMeClient({
 
         <Card className="rounded-[22px] border-[#F6D5D1] p-6">
           <p className="text-sm font-semibold text-[#8B1E1E]">Danger zone</p>
-          <p className="mt-3 text-sm leading-6 text-[#6B6B6B]">
+          <p className="mt-3 text-sm leading-6 text-[#54615d]">
             Deleting your account removes your profile and related activity.
           </p>
           <div className="mt-4">
@@ -387,7 +387,7 @@ export default function ProfileMeClient({
         </Card>
 
         {message ? (
-          <div className="rounded-[18px] bg-[#EEF4EF] px-4 py-3 text-sm text-[#245D51]">{message}</div>
+          <div className="rounded-[18px] bg-[#d7e6e0] px-4 py-3 text-sm text-[#006c49]">{message}</div>
         ) : null}
         {error ? (
           <div className="rounded-[18px] bg-[#FFF1EF] px-4 py-3 text-sm text-[#B42318]">{error}</div>

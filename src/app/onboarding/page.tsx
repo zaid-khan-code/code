@@ -4,8 +4,8 @@ import OnboardingClient from "./onboarding-client";
 export default function OnboardingPage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen bg-[#F5F0EA] flex items-center justify-center">
-        <div className="text-[#6B6B6B]">Loading...</div>
+      <div className="min-h-screen bg-[#fbf9f5] flex items-center justify-center">
+        <div className="text-[#54615d]">Loading...</div>
       </div>
     }>
       <OnboardingClient />

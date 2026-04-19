@@ -18,7 +18,7 @@ interface FeedFiltersProps {
 }
 
 const URGENCY_OPTIONS = [
-  { value: "low", label: "Low", color: "bg-[#D1FAF4] text-[#0C9F88]" },
+  { value: "low", label: "Low", color: "bg-[#D1FAF4] text-[#006c49]" },
   { value: "medium", label: "Medium", color: "bg-[#FEF3C7] text-[#B45309]" },
   { value: "high", label: "High", color: "bg-[#FFEDD5] text-[#C2410C]" },
   { value: "critical", label: "Critical", color: "bg-[#FEE2E2] text-[#B91C1C]" },
@@ -92,15 +92,15 @@ export default function FeedFilters({
   const selectedUrgencies = currentParams.urgency?.split(",") ?? [];
 
   return (
-    <div className="space-y-4 bg-white rounded-[14px] border border-[#E8E2D9] p-4">
+    <div className="space-y-4 bg-white rounded-[14px] border border-[#d7e6e0] p-4">
       <div className="flex flex-wrap gap-4 items-center">
         {/* Category filter */}
         <div className="flex items-center gap-2">
-          <label className="text-sm text-[#6B6B6B]">Category:</label>
+          <label className="text-sm text-[#54615d]">Category:</label>
           <select
             value={currentParams.category ?? "all"}
             onChange={handleCategoryChange}
-            className="px-3 py-1.5 text-sm border border-[#E8E2D9] rounded-[10px] bg-white text-[#111111] focus:border-[#0C9F88] focus:outline-none"
+            className="px-3 py-1.5 text-sm border border-[#d7e6e0] rounded-[10px] bg-white text-[#1b1c1a] focus:border-[#006c49] focus:outline-none"
           >
             <option value="all">All categories</option>
             {categories.map((c) => (
@@ -113,11 +113,11 @@ export default function FeedFilters({
 
         {/* Status filter */}
         <div className="flex items-center gap-2">
-          <label className="text-sm text-[#6B6B6B]">Status:</label>
+          <label className="text-sm text-[#54615d]">Status:</label>
           <select
             value={currentParams.status ?? "open"}
             onChange={handleStatusChange}
-            className="px-3 py-1.5 text-sm border border-[#E8E2D9] rounded-[10px] bg-white text-[#111111] focus:border-[#0C9F88] focus:outline-none"
+            className="px-3 py-1.5 text-sm border border-[#d7e6e0] rounded-[10px] bg-white text-[#1b1c1a] focus:border-[#006c49] focus:outline-none"
           >
             <option value="open">Open</option>
             <option value="in_progress">In Progress</option>
@@ -129,11 +129,11 @@ export default function FeedFilters({
 
         {/* Sort */}
         <div className="flex items-center gap-2">
-          <label className="text-sm text-[#6B6B6B]">Sort:</label>
+          <label className="text-sm text-[#54615d]">Sort:</label>
           <select
             value={currentParams.sort ?? "newest"}
             onChange={handleSortChange}
-            className="px-3 py-1.5 text-sm border border-[#E8E2D9] rounded-[10px] bg-white text-[#111111] focus:border-[#0C9F88] focus:outline-none"
+            className="px-3 py-1.5 text-sm border border-[#d7e6e0] rounded-[10px] bg-white text-[#1b1c1a] focus:border-[#006c49] focus:outline-none"
           >
             {SORT_OPTIONS.map((opt) => (
               <option key={opt.value} value={opt.value}>
@@ -146,7 +146,7 @@ export default function FeedFilters({
 
       {/* Urgency pills */}
       <div className="flex flex-wrap gap-2 items-center">
-        <span className="text-sm text-[#6B6B6B] mr-1">Urgency:</span>
+        <span className="text-sm text-[#54615d] mr-1">Urgency:</span>
         {URGENCY_OPTIONS.map((opt) => {
           const selected = selectedUrgencies.includes(opt.value);
           return (
@@ -155,7 +155,7 @@ export default function FeedFilters({
               onClick={() => handleUrgencyToggle(opt.value)}
               className={[
                 "px-3 py-1 rounded-[999px] text-xs font-medium transition-all",
-                selected ? opt.color : "bg-[#F0EBE3] text-[#6B6B6B]",
+                selected ? opt.color : "bg-[#efeeea] text-[#54615d]",
               ].join(" ")}
             >
               {opt.label}
@@ -166,13 +166,13 @@ export default function FeedFilters({
 
       {/* Location filter */}
       <div className="flex items-center gap-2">
-        <label className="text-sm text-[#6B6B6B]">Location:</label>
+        <label className="text-sm text-[#54615d]">Location:</label>
         <input
           type="text"
           placeholder="Filter by location..."
           defaultValue={currentParams.location ?? ""}
           onChange={handleLocationChange}
-          className="px-3 py-1.5 text-sm border border-[#E8E2D9] rounded-[10px] bg-white text-[#111111] focus:border-[#0C9F88] focus:outline-none w-48"
+          className="px-3 py-1.5 text-sm border border-[#d7e6e0] rounded-[10px] bg-white text-[#1b1c1a] focus:border-[#006c49] focus:outline-none w-48"
         />
       </div>
     </div>

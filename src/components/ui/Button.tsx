@@ -12,19 +12,19 @@ type Props = {
 
 const variantClasses: Record<NonNullable<Props["variant"]>, string> = {
   primary:
-    "border border-transparent bg-[linear-gradient(135deg,#109F88_0%,#24C9B0_100%)] text-white shadow-[0_14px_32px_rgba(16,159,136,0.22)] hover:-translate-y-px hover:brightness-[1.02]",
+    "border border-transparent bg-[#006c49] text-white shadow-[0_10px_28px_rgba(0,108,73,0.22)] hover:-translate-y-px hover:bg-[#005236]",
   secondary:
-    "border border-[#E7DED2] bg-white text-[#171717] shadow-[0_10px_20px_rgba(28,25,23,0.04)] hover:-translate-y-px hover:border-[#CDDAD4] hover:bg-[#FCFBF8]",
+    "border border-[#bbcabf] bg-white text-[#1b1c1a] shadow-[0_4px_12px_rgba(27,28,26,0.06)] hover:-translate-y-px hover:border-[#6c7a71] hover:bg-[#f5f3ef]",
   ghost:
-    "border border-transparent bg-transparent text-[#655F57] hover:bg-[#F2ECE4] hover:text-[#171717]",
+    "border border-transparent bg-transparent text-[#54615d] hover:bg-[#efeeea] hover:text-[#1b1c1a]",
   danger:
-    "border border-transparent bg-[#B42318] text-white shadow-[0_12px_24px_rgba(180,35,24,0.18)] hover:-translate-y-px hover:bg-[#9e1f16]",
+    "border border-transparent bg-[#ba1a1a] text-white shadow-[0_10px_24px_rgba(186,26,26,0.18)] hover:-translate-y-px hover:bg-[#93000a]",
 };
 
 const sizeClasses: Record<NonNullable<Props["size"]>, string> = {
   sm: "px-4 py-2 text-sm",
   md: "px-5 py-2.5 text-sm",
-  lg: "px-7 py-3.5 text-base",
+  lg: "px-7 py-3.5 text-[15px]",
 };
 
 export default function Button({
@@ -42,7 +42,7 @@ export default function Button({
       onClick={onClick}
       disabled={disabled}
       className={[
-        "inline-flex cursor-pointer select-none items-center justify-center font-semibold tracking-[-0.02em] transition-all",
+        "inline-flex cursor-pointer select-none items-center justify-center font-semibold tracking-[-0.01em] transition-all",
         "rounded-[999px]",
         variantClasses[variant],
         sizeClasses[size],

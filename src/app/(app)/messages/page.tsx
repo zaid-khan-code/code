@@ -88,16 +88,16 @@ export default async function MessagesPage({
 
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1.2fr)_420px]">
         <Card className="rounded-[22px] p-6">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#8AA79E]">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#6c7a71]">
             Conversation Stream
           </p>
-          <h2 className="mt-3 text-[2rem] font-black leading-[0.95] tracking-[-0.04em] text-[#111111]">
+          <h2 className="mt-3 text-[2rem] font-black leading-[0.95] tracking-[-0.04em] text-[#1b1c1a]">
             Recent messages
           </h2>
 
           <div className="mt-6 space-y-4">
             {conversationRows.length === 0 ? (
-              <p className="rounded-[18px] border border-[#F0EBE3] p-5 text-sm text-[#6B6B6B]">
+              <p className="rounded-[18px] border border-[#efeeea] p-5 text-sm text-[#54615d]">
                 No conversations yet. Start one from a request or send a direct message.
               </p>
             ) : (
@@ -110,23 +110,23 @@ export default async function MessagesPage({
                   <Link
                     key={conversation.id}
                     href={`/messages/${conversation.id}`}
-                    className="block rounded-[18px] border border-[#F0EBE3] p-4 no-underline transition-transform hover:-translate-y-0.5"
+                    className="block rounded-[18px] border border-[#efeeea] p-4 no-underline transition-transform hover:-translate-y-0.5"
                   >
                     <div className="flex items-center justify-between gap-3">
                       <div>
-                        <p className="text-sm font-semibold text-[#111111]">
+                        <p className="text-sm font-semibold text-[#1b1c1a]">
                           {otherUser?.full_name ?? "Community"} &rarr; {user.user_metadata?.full_name ?? "You"}
                         </p>
-                        <p className="mt-2 max-w-[420px] text-sm leading-6 text-[#6B6B6B]">
+                        <p className="mt-2 max-w-[420px] text-sm leading-6 text-[#54615d]">
                           {preview?.body ?? "No messages yet."}
                         </p>
                       </div>
-                      <div className="rounded-full bg-[#EEF4EF] px-3 py-2 text-xs font-semibold text-[#245D51]">
+                      <div className="rounded-full bg-[#d7e6e0] px-3 py-2 text-xs font-semibold text-[#006c49]">
                         {preview ? formatTime(preview.created_at) : "--"}
                       </div>
                     </div>
                     {(unreadCounts.get(conversation.id) ?? 0) > 0 ? (
-                      <p className="mt-3 text-xs font-semibold text-[#0C9F88]">
+                      <p className="mt-3 text-xs font-semibold text-[#006c49]">
                         {unreadCounts.get(conversation.id)} unread
                       </p>
                     ) : null}
@@ -138,20 +138,20 @@ export default async function MessagesPage({
         </Card>
 
         <Card className="rounded-[22px] p-6">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#8AA79E]">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#6c7a71]">
             Send Message
           </p>
-          <h2 className="mt-3 text-[2rem] font-black leading-[0.95] tracking-[-0.04em] text-[#111111]">
+          <h2 className="mt-3 text-[2rem] font-black leading-[0.95] tracking-[-0.04em] text-[#1b1c1a]">
             Start a conversation
           </h2>
 
           <form action={startConversation} className="mt-8 space-y-5">
             <label className="block">
-              <span className="mb-2 block text-sm font-medium text-[#6B6B6B]">To</span>
+              <span className="mb-2 block text-sm font-medium text-[#54615d]">To</span>
               <select
                 name="otherUserId"
                 defaultValue={params.user_id ?? ""}
-                className="w-full rounded-[14px] border border-[#E8E2D9] px-4 py-3 text-sm text-[#111111] outline-none focus:border-[#0C9F88]"
+                className="w-full rounded-[14px] border border-[#d7e6e0] px-4 py-3 text-sm text-[#1b1c1a] outline-none focus:border-[#006c49]"
               >
                 <option value="">Select a member</option>
                 {(recipientRows ?? []).map((recipient) => (
@@ -165,12 +165,12 @@ export default async function MessagesPage({
             <input type="hidden" name="requestId" value={params.request_id ?? ""} />
 
             <label className="block">
-              <span className="mb-2 block text-sm font-medium text-[#6B6B6B]">Message</span>
+              <span className="mb-2 block text-sm font-medium text-[#54615d]">Message</span>
               <textarea
                 name="body"
                 rows={6}
                 placeholder="Share support details, ask for files, or suggest next steps."
-                className="w-full rounded-[14px] border border-[#E8E2D9] px-4 py-3 text-sm leading-6 text-[#111111] outline-none placeholder:text-[#A0A0A0] focus:border-[#0C9F88]"
+                className="w-full rounded-[14px] border border-[#d7e6e0] px-4 py-3 text-sm leading-6 text-[#1b1c1a] outline-none placeholder:text-[#A0A0A0] focus:border-[#006c49]"
               />
             </label>
 

@@ -76,12 +76,12 @@ export default async function RequestDetailPage({ params }: PageProps) {
 
   return (
     <div className="space-y-6">
-      <Link href="/explore" className="inline-flex text-sm font-medium text-[#655F57] hover:text-[#171717]">
+      <Link href="/explore" className="inline-flex text-sm font-medium text-[#54615d] hover:text-[#1b1c1a]">
         &larr; Back to feed
       </Link>
 
-      <Card className="rounded-[24px] border-[#21403B] bg-[#17302E] p-7 text-white sm:p-10">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#93D7CB]">Request Detail</p>
+      <Card className="rounded-[24px] border-[#1a3530] bg-[#17302E] p-7 text-white sm:p-10">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#6ffbbe]">Request Detail</p>
         <div className="mt-4 flex flex-wrap gap-2">
           {request.category ? <Badge variant="category">{request.category}</Badge> : null}
           <Badge variant={getBadgeVariant(request.urgency)}>{request.urgency}</Badge>
@@ -96,12 +96,12 @@ export default async function RequestDetailPage({ params }: PageProps) {
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1.3fr)_380px]">
         <div className="space-y-6">
           <Card className="rounded-[24px] p-6">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#8AA79E]">AI Summary</p>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#6c7a71]">AI Summary</p>
             <div className="mt-3 flex items-center gap-2">
-              <div className="flex h-7 w-7 items-center justify-center rounded-full bg-[#109F88] text-xs font-bold text-white">
+              <div className="flex h-7 w-7 items-center justify-center rounded-full bg-[#006c49] text-xs font-bold text-white">
                 AI
               </div>
-              <span className="text-sm font-semibold text-[#171717]">HelpHub AI</span>
+              <span className="text-sm font-semibold text-[#1b1c1a]">HelpHub AI</span>
             </div>
             <p className="mt-3 text-sm leading-7 text-[#4F4F4F]">
               {request.ai_summary || request.description}
@@ -119,7 +119,7 @@ export default async function RequestDetailPage({ params }: PageProps) {
           </Card>
 
           <Card className="rounded-[24px] p-6">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#8AA79E]">Actions</p>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#6c7a71]">Actions</p>
             <div className="mt-4 flex flex-wrap gap-3">
               {!isAuthor && request.status === "open" && !existingOffer ? (
                 <form action={offerHelp}>
@@ -149,12 +149,12 @@ export default async function RequestDetailPage({ params }: PageProps) {
 
         <div className="space-y-6">
           <Card className="rounded-[24px] p-6">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#8AA79E]">Requester</p>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#6c7a71]">Requester</p>
             <div className="mt-4 flex items-center gap-3">
               <Avatar name={author?.full_name ?? author?.username ?? "User"} src={author?.avatar_url} size="md" />
               <div>
-                <p className="text-sm font-semibold text-[#171717]">{author?.full_name ?? "Community member"}</p>
-                <p className="text-xs text-[#655F57]">
+                <p className="text-sm font-semibold text-[#1b1c1a]">{author?.full_name ?? "Community member"}</p>
+                <p className="text-xs text-[#54615d]">
                   @{author?.username ?? "member"} &middot; {author?.location || "Community"} &middot; {author?.trust_score ?? 0}% trust
                 </p>
               </div>
@@ -162,15 +162,15 @@ export default async function RequestDetailPage({ params }: PageProps) {
           </Card>
 
           <Card className="rounded-[24px] p-6">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#8AA79E]">Helpers</p>
-            <h2 className="mt-3 text-xl font-extrabold tracking-[-0.03em] text-[#171717]">People ready to support</h2>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#6c7a71]">Helpers</p>
+            <h2 className="mt-3 text-xl font-extrabold tracking-[-0.03em] text-[#1b1c1a]">People ready to support</h2>
 
             <div className="mt-5 space-y-4">
               {(helperRows ?? []).map((row) => {
                 const helper = helperMap.get(row.helper_id);
 
                 return (
-                  <div key={row.id} className="rounded-[18px] border border-[#F2ECE4] p-4">
+                  <div key={row.id} className="rounded-[18px] border border-[#efeeea] p-4">
                     <div className="flex items-start justify-between gap-3">
                       <div className="flex items-center gap-3">
                         <Avatar
@@ -179,13 +179,13 @@ export default async function RequestDetailPage({ params }: PageProps) {
                           size="sm"
                         />
                         <div>
-                          <p className="text-sm font-semibold text-[#171717]">{helper?.full_name ?? "Helper"}</p>
+                          <p className="text-sm font-semibold text-[#1b1c1a]">{helper?.full_name ?? "Helper"}</p>
                           {helperSkillsMap.get(row.helper_id)?.length ? (
-                            <p className="mt-0.5 text-xs text-[#655F57]">
+                            <p className="mt-0.5 text-xs text-[#54615d]">
                               {helperSkillsMap.get(row.helper_id)!.slice(0, 3).join(", ")}
                             </p>
                           ) : null}
-                          <span className="mt-1 inline-block rounded-full bg-[#EEF4EF] px-2 py-0.5 text-xs font-semibold text-[#109F88]">
+                          <span className="mt-1 inline-block rounded-full bg-[#d7e6e0] px-2 py-0.5 text-xs font-semibold text-[#006c49]">
                             Trust {helper?.trust_score ?? 0}%
                           </span>
                         </div>
@@ -206,7 +206,7 @@ export default async function RequestDetailPage({ params }: PageProps) {
                       ) : (
                         <Link
                           href={`/messages?user_id=${row.helper_id}&request_id=${request.id}`}
-                          className="text-sm font-semibold text-[#171717] underline-offset-4 hover:underline"
+                          className="text-sm font-semibold text-[#1b1c1a] underline-offset-4 hover:underline"
                         >
                           Message
                         </Link>
@@ -219,7 +219,7 @@ export default async function RequestDetailPage({ params }: PageProps) {
               {(helperRows ?? []).length === 0 ? (
                 <>
                   {visibleHelperCandidates.slice(0, 2).map((candidate) => (
-                    <div key={candidate.id} className="rounded-[18px] border border-[#F2ECE4] p-4">
+                    <div key={candidate.id} className="rounded-[18px] border border-[#efeeea] p-4">
                       <div className="flex items-center gap-3">
                         <Avatar
                           name={candidate.full_name ?? candidate.username ?? "Helper"}
@@ -227,10 +227,10 @@ export default async function RequestDetailPage({ params }: PageProps) {
                           size="sm"
                         />
                         <div>
-                          <p className="text-sm font-semibold text-[#171717]">
+                          <p className="text-sm font-semibold text-[#1b1c1a]">
                             {candidate.full_name ?? "Suggested helper"}
                           </p>
-                          <span className="mt-1 inline-block rounded-full bg-[#EEF4EF] px-2 py-0.5 text-xs font-semibold text-[#109F88]">
+                          <span className="mt-1 inline-block rounded-full bg-[#d7e6e0] px-2 py-0.5 text-xs font-semibold text-[#006c49]">
                             Trust {candidate.trust_score}%
                           </span>
                         </div>

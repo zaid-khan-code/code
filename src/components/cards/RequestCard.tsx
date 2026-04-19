@@ -48,22 +48,28 @@ export default function RequestCard({
   helperCount = 0,
 }: Props) {
   return (
-    <article className="rounded-[24px] border border-[#E7DED2] bg-white/95 p-5 shadow-[0_12px_28px_rgba(28,25,23,0.05)] transition-all hover:-translate-y-0.5 hover:shadow-[0_20px_40px_rgba(28,25,23,0.08)]">
-      <div className="mb-3 flex flex-wrap items-center gap-2">
+    <article className="rounded-[20px] border border-[#d7e6e0] bg-white p-5 shadow-[0_8px_20px_rgba(27,28,26,0.05)] transition-all hover:-translate-y-0.5 hover:shadow-[0_16px_32px_rgba(27,28,26,0.08)]">
+      <div className="mb-3 flex flex-wrap items-center gap-1.5">
         {request.category ? <Badge variant="category">{request.category}</Badge> : null}
         <Badge variant={getUrgencyVariant(request.urgency)}>{request.urgency}</Badge>
         <Badge variant={getStatusVariant(request.status)}>{request.status.replace("_", " ")}</Badge>
       </div>
 
-      <h3 className="text-[1.15rem] font-extrabold leading-tight tracking-[-0.03em] text-[#171717]">
+      <h3
+        className="text-[1.1rem] font-bold leading-tight tracking-[-0.02em] text-[#1b1c1a]"
+        style={{ fontFamily: "var(--font-headline)" }}
+      >
         {request.title}
       </h3>
-      <p className="mt-2 line-clamp-2 text-sm leading-6 text-[#655F57]">
+      <p
+        className="mt-2 line-clamp-2 text-[13px] leading-[1.6] text-[#54615d]"
+        style={{ fontFamily: "var(--font-body)" }}
+      >
         {request.description}
       </p>
 
       {request.tags.length > 0 ? (
-        <div className="mt-4 flex flex-wrap gap-2">
+        <div className="mt-3 flex flex-wrap gap-1.5">
           {request.tags.slice(0, 4).map((tag) => (
             <Badge key={tag} variant="tag">
               {tag}
@@ -72,27 +78,29 @@ export default function RequestCard({
         </div>
       ) : null}
 
-      <div className="mt-4 flex items-center justify-between gap-4 border-t border-[#F2ECE4] pt-4">
-        <div className="flex min-w-0 items-center gap-3">
+      <div className="mt-4 flex items-center justify-between gap-4 border-t border-[#efeeea] pt-4">
+        <div className="flex min-w-0 items-center gap-2.5">
           <Avatar name={authorName} src={authorAvatarUrl} size="md" />
           <div className="min-w-0">
-            <p className="truncate text-sm font-semibold text-[#171717]">{authorName}</p>
-            <p className="truncate text-xs text-[#655F57]">
-              @{authorUsername} &middot; {request.location || "Community"} &middot; {authorTrustScore ?? 0}% trust
+            <p
+              className="truncate text-[13px] font-semibold text-[#1b1c1a]"
+              style={{ fontFamily: "var(--font-headline)" }}
+            >{authorName}</p>
+            <p
+              className="truncate text-xs text-[#54615d]"
+              style={{ fontFamily: "var(--font-body)" }}
+            >
+              {request.location || "Community"} &middot; {helperCount} helper{helperCount !== 1 ? "s" : ""} interested
             </p>
           </div>
         </div>
-        <div className="shrink-0 text-right">
-          <p className="text-xs text-[#655F57]">
-            {helperCount} helper{helperCount !== 1 ? "s" : ""} interested
-          </p>
-          <Link
-            href={`/requests/${request.id}`}
-            className="mt-1 inline-flex rounded-full bg-[#F2ECE4] px-3 py-1.5 text-sm font-semibold text-[#171717] no-underline transition-colors hover:bg-[#E7DED2]"
-          >
-            Open details
-          </Link>
-        </div>
+        <Link
+          href={`/requests/${request.id}`}
+          className="shrink-0 rounded-full bg-[#efeeea] px-3 py-1.5 text-[13px] font-semibold text-[#1b1c1a] no-underline transition-colors hover:bg-[#d7e6e0] hover:text-[#006c49]"
+          style={{ fontFamily: "var(--font-body)" }}
+        >
+          Open details
+        </Link>
       </div>
     </article>
   );

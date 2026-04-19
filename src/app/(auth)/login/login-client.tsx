@@ -27,7 +27,7 @@ export default function LoginClient({ nextPath }: { nextPath: string }) {
       footer={
         <p>
           Don&apos;t have an account?{' '}
-          <Link href="/signup" className="font-semibold text-[#109F88] no-underline hover:underline">
+          <Link href="/signup" className="font-semibold text-[#006c49] no-underline hover:underline">
             Sign up
           </Link>
         </p>
@@ -45,7 +45,7 @@ export default function LoginClient({ nextPath }: { nextPath: string }) {
             required
             autoComplete="email"
             placeholder="you@example.com"
-            className="w-full rounded-[18px] border border-[#E7DED2] bg-white px-4 py-3 text-sm text-[#171717] outline-none placeholder:text-[#9B948B] focus:border-[#109F88]"
+            className="w-full rounded-[18px] border border-[#d7e6e0] bg-white px-4 py-3 text-sm text-[#1b1c1a] outline-none placeholder:text-[#6c7a71] focus:border-[#006c49]"
           />
         </label>
 
@@ -58,7 +58,7 @@ export default function LoginClient({ nextPath }: { nextPath: string }) {
             required
             autoComplete="current-password"
             placeholder="Enter your password"
-            className="w-full rounded-[18px] border border-[#E7DED2] bg-white px-4 py-3 text-sm text-[#171717] outline-none placeholder:text-[#9B948B] focus:border-[#109F88]"
+            className="w-full rounded-[18px] border border-[#d7e6e0] bg-white px-4 py-3 text-sm text-[#1b1c1a] outline-none placeholder:text-[#6c7a71] focus:border-[#006c49]"
           />
         </label>
 

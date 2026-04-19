@@ -65,27 +65,27 @@ export default async function ProfilePage({ params }: PageProps) {
 
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1.2fr)_420px]">
         <Card className="rounded-[22px] p-6">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#8AA79E]">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#6c7a71]">
             Public Profile
           </p>
-          <h2 className="mt-3 text-[2rem] font-black leading-[0.95] tracking-[-0.04em] text-[#111111]">
+          <h2 className="mt-3 text-[2rem] font-black leading-[0.95] tracking-[-0.04em] text-[#1b1c1a]">
             Skills and reputation
           </h2>
 
-          <div className="mt-8 divide-y divide-[#F0EBE3] border-y border-[#F0EBE3]">
+          <div className="mt-8 divide-y divide-[#efeeea] border-y border-[#efeeea]">
             <div className="flex items-center justify-between py-4">
-              <p className="text-sm text-[#6B6B6B]">Trust score</p>
-              <p className="text-sm font-semibold text-[#111111]">{profile.trust_score}%</p>
+              <p className="text-sm text-[#54615d]">Trust score</p>
+              <p className="text-sm font-semibold text-[#1b1c1a]">{profile.trust_score}%</p>
             </div>
             <div className="flex items-center justify-between py-4">
-              <p className="text-sm text-[#6B6B6B]">Contributions</p>
-              <p className="text-sm font-semibold text-[#111111]">{helpCount ?? 0}</p>
+              <p className="text-sm text-[#54615d]">Contributions</p>
+              <p className="text-sm font-semibold text-[#1b1c1a]">{helpCount ?? 0}</p>
             </div>
           </div>
 
           <div className="mt-8 space-y-6">
             <div>
-              <p className="text-sm font-semibold text-[#111111]">Skills</p>
+              <p className="text-sm font-semibold text-[#1b1c1a]">Skills</p>
               <div className="mt-3 flex flex-wrap gap-2">
                 {[...canHelpSkills, ...needHelpSkills].map((skill) => (
                   <Badge key={skill} variant="tag">
@@ -96,7 +96,7 @@ export default async function ProfilePage({ params }: PageProps) {
             </div>
 
             <div>
-              <p className="text-sm font-semibold text-[#111111]">Badges</p>
+              <p className="text-sm font-semibold text-[#1b1c1a]">Badges</p>
               <div className="mt-3 flex flex-wrap gap-2">
                 {badges.length > 0 ? (
                   badges.map((badge) => (
@@ -105,20 +105,20 @@ export default async function ProfilePage({ params }: PageProps) {
                     </Badge>
                   ))
                 ) : (
-                  <span className="text-sm text-[#6B6B6B]">No badges earned yet.</span>
+                  <span className="text-sm text-[#54615d]">No badges earned yet.</span>
                 )}
               </div>
             </div>
 
             <div>
-              <p className="text-sm font-semibold text-[#111111]">Recent activity</p>
+              <p className="text-sm font-semibold text-[#1b1c1a]">Recent activity</p>
               <div className="mt-3 space-y-3">
                 {(trustEvents ?? []).map((event) => (
-                  <div key={event.id} className="rounded-[18px] border border-[#F0EBE3] p-4">
-                    <p className="text-sm font-medium capitalize text-[#111111]">
+                  <div key={event.id} className="rounded-[18px] border border-[#efeeea] p-4">
+                    <p className="text-sm font-medium capitalize text-[#1b1c1a]">
                       {event.event_type.replace(/_/g, " ")}
                     </p>
-                    <p className="mt-1 text-xs text-[#6B6B6B]">{timeAgo(event.created_at)}</p>
+                    <p className="mt-1 text-xs text-[#54615d]">{timeAgo(event.created_at)}</p>
                   </div>
                 ))}
               </div>
@@ -127,7 +127,7 @@ export default async function ProfilePage({ params }: PageProps) {
         </Card>
 
         <Card className="rounded-[22px] p-6">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#8AA79E]">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#6c7a71]">
             Community View
           </p>
           <div className="mt-4 flex items-center gap-3">
@@ -137,10 +137,10 @@ export default async function ProfilePage({ params }: PageProps) {
               size="lg"
             />
             <div>
-              <p className="text-lg font-bold text-[#111111]">
+              <p className="text-lg font-bold text-[#1b1c1a]">
                 {profile.full_name ?? profile.username ?? "Community member"}
               </p>
-              <p className="text-sm text-[#6B6B6B]">
+              <p className="text-sm text-[#54615d]">
                 @{profile.username ?? "member"} &middot; {profile.location ?? "Community"}
               </p>
             </div>
@@ -150,18 +150,18 @@ export default async function ProfilePage({ params }: PageProps) {
             <p className="mt-6 text-sm leading-7 text-[#5F5F5F]">{profile.bio}</p>
           ) : null}
 
-          <div className="mt-8 space-y-4 rounded-[18px] border border-[#F0EBE3] p-4">
+          <div className="mt-8 space-y-4 rounded-[18px] border border-[#efeeea] p-4">
             <div className="flex items-center justify-between text-sm">
-              <span className="text-[#6B6B6B]">Requests posted</span>
-              <span className="font-semibold text-[#111111]">{requestCount ?? 0}</span>
+              <span className="text-[#54615d]">Requests posted</span>
+              <span className="font-semibold text-[#1b1c1a]">{requestCount ?? 0}</span>
             </div>
             <div className="flex items-center justify-between text-sm">
-              <span className="text-[#6B6B6B]">Can help</span>
-              <span className="font-semibold text-[#111111]">{canHelpSkills.length}</span>
+              <span className="text-[#54615d]">Can help</span>
+              <span className="font-semibold text-[#1b1c1a]">{canHelpSkills.length}</span>
             </div>
             <div className="flex items-center justify-between text-sm">
-              <span className="text-[#6B6B6B]">Need help</span>
-              <span className="font-semibold text-[#111111]">{needHelpSkills.length}</span>
+              <span className="text-[#54615d]">Need help</span>
+              <span className="font-semibold text-[#1b1c1a]">{needHelpSkills.length}</span>
             </div>
           </div>
 

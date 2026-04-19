@@ -19,17 +19,17 @@ type Props = {
 };
 
 const variantClasses: Record<Variant, string> = {
-  solved:      "bg-[#E5F6EE] text-[#1F7A61]",
-  open:        "bg-[#F1EFE9] text-[#655F57]",
-  in_progress: "bg-[#E7F0FF] text-[#245FA8]",
-  closed:      "bg-[#F1F1F1] text-[#6B7280]",
-  low:         "bg-[#E5F6EE] text-[#1F7A61]",
-  medium:      "bg-[#FEF1D5] text-[#9B6312]",
-  high:        "bg-[#FEE5D8] text-[#B45309]",
-  critical:    "bg-[#FDE2E2] text-[#B42318]",
-  category:    "bg-[#EAF4EF] text-[#245D51]",
-  tag:         "border border-[#E7DED2] bg-[#FBFAF8] text-[#655F57]",
-  default:     "bg-[#F2ECE4] text-[#655F57]",
+  solved:      "bg-[#d7e6e0] text-[#006c49]",
+  open:        "bg-[#efeeea] text-[#3c4a42]",
+  in_progress: "bg-[#dceeff] text-[#1a4f8a]",
+  closed:      "bg-[#eae8e4] text-[#54615d]",
+  low:         "bg-[#d7e6e0] text-[#006c49]",
+  medium:      "bg-[#fef3c7] text-[#92400e]",
+  high:        "bg-[#fee2cc] text-[#9a3412]",
+  critical:    "bg-[#fde4e4] text-[#ba1a1a]",
+  category:    "bg-[#d7e6e0] text-[#006c49]",
+  tag:         "border border-[#bbcabf] bg-[#fbf9f5] text-[#3c4a42]",
+  default:     "bg-[#efeeea] text-[#54615d]",
 };
 
 export default function Badge({ variant, children }: Props) {
@@ -38,7 +38,10 @@ export default function Badge({ variant, children }: Props) {
       className={[
         "inline-flex items-center rounded-[999px] px-2.5 py-0.5 text-xs font-medium",
         variantClasses[variant],
-      ].join(" ")}
+      ]
+        .filter(Boolean)
+        .join(" ")}
+      style={{ fontFamily: "var(--font-body)" }}
     >
       {children}
     </span>

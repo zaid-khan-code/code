@@ -51,81 +51,81 @@ export default async function AICenterPage() {
 
       <div className="grid gap-4 sm:grid-cols-3">
         <Card className="rounded-[22px] p-6">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#8AA79E]">Trend Pulse</p>
-          <h2 className="mt-3 text-[1.6rem] font-black leading-tight tracking-[-0.04em] text-[#111111]">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#6c7a71]">Trend Pulse</p>
+          <h2 className="mt-3 text-[1.6rem] font-black leading-tight tracking-[-0.04em] text-[#1b1c1a]">
             {trends[0]?.category ?? "—"}
           </h2>
-          <p className="mt-2 text-sm text-[#6B6B6B]">Most common support area based on active community requests.</p>
+          <p className="mt-2 text-sm text-[#54615d]">Most common support area based on active community requests.</p>
         </Card>
         <Card className="rounded-[22px] p-6">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#8AA79E]">Urgency Watch</p>
-          <h2 className="mt-3 text-[1.6rem] font-black leading-tight tracking-[-0.04em] text-[#111111]">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#6c7a71]">Urgency Watch</p>
+          <h2 className="mt-3 text-[1.6rem] font-black leading-tight tracking-[-0.04em] text-[#1b1c1a]">
             {(urgency.critical ?? 0) + (urgency.high ?? 0)}
           </h2>
-          <p className="mt-2 text-sm text-[#6B6B6B]">Requests currently flagged high priority by the urgency detector.</p>
+          <p className="mt-2 text-sm text-[#54615d]">Requests currently flagged high priority by the urgency detector.</p>
         </Card>
         <Card className="rounded-[22px] p-6">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#8AA79E]">Mentor Pool</p>
-          <h2 className="mt-3 text-[1.6rem] font-black leading-tight tracking-[-0.04em] text-[#111111]">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#6c7a71]">Mentor Pool</p>
+          <h2 className="mt-3 text-[1.6rem] font-black leading-tight tracking-[-0.04em] text-[#1b1c1a]">
             {suggested.length}
           </h2>
-          <p className="mt-2 text-sm text-[#6B6B6B]">Trusted helpers with strong response history and contribution signals.</p>
+          <p className="mt-2 text-sm text-[#54615d]">Trusted helpers with strong response history and contribution signals.</p>
         </Card>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
         <Card className="rounded-[22px] p-6">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#8AA79E]">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#6c7a71]">
             Your Activity (30 days)
           </p>
-          <h2 className="mt-3 text-xl font-bold text-[#111111]">
+          <h2 className="mt-3 text-xl font-bold text-[#1b1c1a]">
             {activity.helpsGiven > 0
               ? `You helped ${activity.helpsGiven} ${activity.helpsGiven === 1 ? "person" : "people"} this month.`
               : "No solved helps logged yet."}
           </h2>
-          <p className="mt-2 text-sm text-[#6B6B6B]">
+          <p className="mt-2 text-sm text-[#54615d]">
             Trust gained this month:{" "}
-            <span className="font-semibold text-[#0C9F88]">+{activity.trustGain}</span>
+            <span className="font-semibold text-[#006c49]">+{activity.trustGain}</span>
           </p>
-          <div className="mt-4 rounded-[14px] border border-[#F0EBE3] p-4 text-sm text-[#6B6B6B]">
+          <div className="mt-4 rounded-[14px] border border-[#efeeea] p-4 text-sm text-[#54615d]">
             Current trust score:{" "}
-            <span className="font-bold text-[#111111]">{profile.trust_score}%</span>
+            <span className="font-bold text-[#1b1c1a]">{profile.trust_score}%</span>
           </div>
         </Card>
 
         <Card className="rounded-[22px] p-6">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#8AA79E]">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#6c7a71]">
             Tip of the Day
           </p>
-          <p className="mt-4 text-base leading-relaxed text-[#111111]">
+          <p className="mt-4 text-base leading-relaxed text-[#1b1c1a]">
             &ldquo;{todayTip()}&rdquo;
           </p>
           <div className="mt-4 flex items-center gap-2">
             <Badge variant="open">AI tip</Badge>
-            <span className="text-xs text-[#6B6B6B]">Rotates daily</span>
+            <span className="text-xs text-[#54615d]">Rotates daily</span>
           </div>
         </Card>
       </div>
 
       <Card className="rounded-[22px] p-6">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#8AA79E]">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#6c7a71]">
           Category Trends
         </p>
-        <h2 className="mt-2 text-lg font-bold text-[#111111]">Requests by category (last 30 days)</h2>
+        <h2 className="mt-2 text-lg font-bold text-[#1b1c1a]">Requests by category (last 30 days)</h2>
         {trends.length === 0 ? (
-          <p className="mt-4 text-sm text-[#6B6B6B]">No data yet.</p>
+          <p className="mt-4 text-sm text-[#54615d]">No data yet.</p>
         ) : (
           <div className="mt-6 space-y-3">
             {trends.map(({ category, count }) => (
               <div key={category} className="flex items-center gap-3">
-                <span className="w-28 shrink-0 text-sm text-[#6B6B6B]">{category}</span>
-                <div className="flex-1 rounded-full bg-[#F0EBE3] overflow-hidden h-3">
+                <span className="w-28 shrink-0 text-sm text-[#54615d]">{category}</span>
+                <div className="flex-1 rounded-full bg-[#efeeea] overflow-hidden h-3">
                   <div
-                    className="h-3 rounded-full bg-[#0C9F88]"
+                    className="h-3 rounded-full bg-[#006c49]"
                     style={{ width: `${(count / maxTrendCount) * 100}%` }}
                   />
                 </div>
-                <span className="w-8 shrink-0 text-right text-sm font-semibold text-[#111111]">
+                <span className="w-8 shrink-0 text-right text-sm font-semibold text-[#1b1c1a]">
                   {count}
                 </span>
               </div>
@@ -135,14 +135,14 @@ export default async function AICenterPage() {
       </Card>
 
       <Card className="rounded-[22px] p-6">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#8AA79E]">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#6c7a71]">
           Urgency Overview
         </p>
-        <h2 className="mt-2 text-lg font-bold text-[#111111]">Open requests by urgency</h2>
+        <h2 className="mt-2 text-lg font-bold text-[#1b1c1a]">Open requests by urgency</h2>
         <div className="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-4">
           {(["critical", "high", "medium", "low"] as const).map((level) => (
-            <div key={level} className="rounded-[14px] border border-[#F0EBE3] p-4 text-center">
-              <p className="text-2xl font-black tracking-tight text-[#111111]">
+            <div key={level} className="rounded-[14px] border border-[#efeeea] p-4 text-center">
+              <p className="text-2xl font-black tracking-tight text-[#1b1c1a]">
                 {urgency[level]}
               </p>
               <div className="mt-2">
@@ -154,33 +154,33 @@ export default async function AICenterPage() {
       </Card>
 
       <Card className="rounded-[22px] p-6">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#8AA79E]">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#6c7a71]">
           Skill Gaps
         </p>
-        <h2 className="mt-2 text-lg font-bold text-[#111111]">
+        <h2 className="mt-2 text-lg font-bold text-[#1b1c1a]">
           Top skills with most open requests and fewest helpers
         </h2>
         {gaps.length === 0 ? (
-          <p className="mt-4 text-sm text-[#6B6B6B]">No skill gaps detected.</p>
+          <p className="mt-4 text-sm text-[#54615d]">No skill gaps detected.</p>
         ) : (
           <div className="mt-4 space-y-3">
             {gaps.map(({ tag, demand, helpers }) => (
               <div
                 key={tag}
-                className="flex items-center justify-between rounded-[14px] border border-[#F0EBE3] p-4"
+                className="flex items-center justify-between rounded-[14px] border border-[#efeeea] p-4"
               >
                 <div>
-                  <p className="font-medium text-[#111111]">{tag}</p>
-                  <p className="text-xs text-[#6B6B6B]">{demand} open requests &middot; {helpers} helpers</p>
+                  <p className="font-medium text-[#1b1c1a]">{tag}</p>
+                  <p className="text-xs text-[#54615d]">{demand} open requests &middot; {helpers} helpers</p>
                 </div>
                 <Badge variant="critical">gap</Badge>
               </div>
             ))}
           </div>
         )}
-        <p className="mt-4 text-xs text-[#6B6B6B]">
+        <p className="mt-4 text-xs text-[#54615d]">
           Consider adding these to your skills in{" "}
-          <Link href="/profile/me" className="underline text-[#0C9F88]">
+          <Link href="/profile/me" className="underline text-[#006c49]">
             your profile
           </Link>
           .
@@ -188,26 +188,26 @@ export default async function AICenterPage() {
       </Card>
 
       <Card className="rounded-[22px] p-6">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#8AA79E]">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#6c7a71]">
           AI Recommendations
         </p>
-        <h2 className="mt-2 text-[1.7rem] font-black leading-tight tracking-[-0.04em] text-[#111111]">
+        <h2 className="mt-2 text-[1.7rem] font-black leading-tight tracking-[-0.04em] text-[#1b1c1a]">
           Requests needing attention
         </h2>
         {suggested.length === 0 ? (
-          <p className="mt-4 text-sm text-[#6B6B6B]">
+          <p className="mt-4 text-sm text-[#54615d]">
             No matches yet. Add skills in your profile to get personalized suggestions.
           </p>
         ) : (
-          <div className="mt-5 divide-y divide-[#F0EBE3]">
+          <div className="mt-5 divide-y divide-[#efeeea]">
             {suggested.map((req) => (
               <Link
                 key={req.id}
                 href={`/requests/${req.id}`}
                 className="block py-5 first:pt-0 last:pb-0 no-underline hover:opacity-80 transition-opacity"
               >
-                <p className="font-semibold text-[#111111] leading-snug">{req.title}</p>
-                <p className="mt-1.5 text-sm text-[#6B6B6B] leading-6 line-clamp-2">
+                <p className="font-semibold text-[#1b1c1a] leading-snug">{req.title}</p>
+                <p className="mt-1.5 text-sm text-[#54615d] leading-6 line-clamp-2">
                   AI summary: {req.ai_summary || req.description}
                 </p>
                 <div className="mt-3 flex flex-wrap gap-2">
@@ -222,10 +222,10 @@ export default async function AICenterPage() {
             ))}
           </div>
         )}
-        <div className="mt-4 border-t border-[#F0EBE3] pt-4">
+        <div className="mt-4 border-t border-[#efeeea] pt-4">
           <Link
             href="/explore"
-            className="text-sm font-medium text-[#0C9F88] hover:underline"
+            className="text-sm font-medium text-[#006c49] hover:underline"
           >
             Browse all open requests &rarr;
           </Link>

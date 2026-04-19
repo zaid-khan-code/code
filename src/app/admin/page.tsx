@@ -40,9 +40,9 @@ export default async function AdminOverviewPage() {
   return (
     <div className="space-y-6">
       <div>
-        <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#8AA79E]">Admin</p>
-        <h1 className="text-[2rem] font-black leading-[0.95] tracking-[-0.04em] text-[#111111]">Overview</h1>
-        <p className="mt-2 text-sm text-[#6B6B6B]">Platform health and key metrics</p>
+        <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#6c7a71]">Admin</p>
+        <h1 className="text-[2rem] font-black leading-[0.95] tracking-[-0.04em] text-[#1b1c1a]">Overview</h1>
+        <p className="mt-2 text-sm text-[#54615d]">Platform health and key metrics</p>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -56,24 +56,24 @@ export default async function AdminOverviewPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <Card className="rounded-[22px] p-6">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#8AA79E]">Navigation</p>
-          <h3 className="mt-2 text-lg font-bold text-[#111111]">Quick links</h3>
+          <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#6c7a71]">Navigation</p>
+          <h3 className="mt-2 text-lg font-bold text-[#1b1c1a]">Quick links</h3>
           <div className="mt-4 flex flex-wrap gap-3">
             <Link
               href="/admin/requests"
-              className="rounded-full px-4 py-2 text-sm font-medium bg-[#EEF4EF] text-[#111111] no-underline hover:bg-[#0C9F88] hover:text-white transition-colors"
+              className="rounded-full px-4 py-2 text-sm font-medium bg-[#d7e6e0] text-[#1b1c1a] no-underline hover:bg-[#006c49] hover:text-white transition-colors"
             >
               Manage requests
             </Link>
             <Link
               href="/admin/users"
-              className="rounded-full px-4 py-2 text-sm font-medium bg-[#EEF4EF] text-[#111111] no-underline hover:bg-[#0C9F88] hover:text-white transition-colors"
+              className="rounded-full px-4 py-2 text-sm font-medium bg-[#d7e6e0] text-[#1b1c1a] no-underline hover:bg-[#006c49] hover:text-white transition-colors"
             >
               Manage users
             </Link>
             <Link
               href="/admin/analytics"
-              className="rounded-full px-4 py-2 text-sm font-medium bg-[#EEF4EF] text-[#111111] no-underline hover:bg-[#0C9F88] hover:text-white transition-colors"
+              className="rounded-full px-4 py-2 text-sm font-medium bg-[#d7e6e0] text-[#1b1c1a] no-underline hover:bg-[#006c49] hover:text-white transition-colors"
             >
               View analytics
             </Link>
@@ -81,20 +81,20 @@ export default async function AdminOverviewPage() {
         </Card>
 
         <Card className="rounded-[22px] p-6">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#8AA79E]">Status</p>
-          <h3 className="mt-2 text-lg font-bold text-[#111111]">System status</h3>
+          <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#6c7a71]">Status</p>
+          <h3 className="mt-2 text-lg font-bold text-[#1b1c1a]">System status</h3>
           <div className="mt-4 space-y-3 text-sm">
-            <div className="flex justify-between items-center py-2 border-b border-[#F0EBE3]">
-              <span className="text-[#6B6B6B]">Database</span>
-              <span className="text-[#0C9F88] font-semibold">Connected</span>
+            <div className="flex justify-between items-center py-2 border-b border-[#efeeea]">
+              <span className="text-[#54615d]">Database</span>
+              <span className="text-[#006c49] font-semibold">Connected</span>
             </div>
-            <div className="flex justify-between items-center py-2 border-b border-[#F0EBE3]">
-              <span className="text-[#6B6B6B]">Authentication</span>
-              <span className="text-[#0C9F88] font-semibold">Active</span>
+            <div className="flex justify-between items-center py-2 border-b border-[#efeeea]">
+              <span className="text-[#54615d]">Authentication</span>
+              <span className="text-[#006c49] font-semibold">Active</span>
             </div>
             <div className="flex justify-between items-center py-2">
-              <span className="text-[#6B6B6B]">AI Services</span>
-              <span className="text-[#0C9F88] font-semibold">Running</span>
+              <span className="text-[#54615d]">AI Services</span>
+              <span className="text-[#006c49] font-semibold">Running</span>
             </div>
           </div>
         </Card>

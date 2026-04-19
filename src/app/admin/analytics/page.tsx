@@ -71,9 +71,9 @@ export default async function AdminAnalyticsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#8AA79E]">Admin</p>
-        <h1 className="text-[2rem] font-black leading-[0.95] tracking-[-0.04em] text-[#111111]">Analytics</h1>
-        <p className="mt-2 text-sm text-[#6B6B6B]">Platform health and trends</p>
+        <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#6c7a71]">Admin</p>
+        <h1 className="text-[2rem] font-black leading-[0.95] tracking-[-0.04em] text-[#1b1c1a]">Analytics</h1>
+        <p className="mt-2 text-sm text-[#54615d]">Platform health and trends</p>
       </div>
 
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
@@ -87,24 +87,24 @@ export default async function AdminAnalyticsPage() {
       </div>
 
       <Card className="rounded-[22px] p-6">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#8AA79E]">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#6c7a71]">
           Requests by Category
         </p>
-        <h2 className="mt-2 text-base font-bold text-[#111111]">Last 30 days</h2>
+        <h2 className="mt-2 text-base font-bold text-[#1b1c1a]">Last 30 days</h2>
         {trends.length === 0 ? (
-          <p className="mt-4 text-sm text-[#6B6B6B]">No data yet.</p>
+          <p className="mt-4 text-sm text-[#54615d]">No data yet.</p>
         ) : (
           <div className="mt-6 space-y-3">
             {trends.map(({ category, count }) => (
               <div key={category} className="flex items-center gap-3">
-                <span className="w-28 shrink-0 text-sm text-[#6B6B6B]">{category}</span>
-                <div className="flex-1 rounded-full bg-[#F0EBE3] overflow-hidden h-3">
+                <span className="w-28 shrink-0 text-sm text-[#54615d]">{category}</span>
+                <div className="flex-1 rounded-full bg-[#efeeea] overflow-hidden h-3">
                   <div
-                    className="h-3 rounded-full bg-[#0C9F88]"
+                    className="h-3 rounded-full bg-[#006c49]"
                     style={{ width: `${(count / maxTrendCount) * 100}%` }}
                   />
                 </div>
-                <span className="w-8 text-right text-sm font-semibold text-[#111111]">{count}</span>
+                <span className="w-8 text-right text-sm font-semibold text-[#1b1c1a]">{count}</span>
               </div>
             ))}
           </div>
@@ -112,12 +112,12 @@ export default async function AdminAnalyticsPage() {
       </Card>
 
       <Card className="rounded-[22px] p-6">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#8AA79E]">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#6c7a71]">
           Signups
         </p>
-        <h2 className="mt-2 text-base font-bold text-[#111111]">New users per day (last 30 days)</h2>
+        <h2 className="mt-2 text-base font-bold text-[#1b1c1a]">New users per day (last 30 days)</h2>
         {signupEntries.length === 0 ? (
-          <p className="mt-4 text-sm text-[#6B6B6B]">No signups yet.</p>
+          <p className="mt-4 text-sm text-[#54615d]">No signups yet.</p>
         ) : (
           <div className="mt-6 flex items-end gap-2 h-28 overflow-x-auto pb-2">
             {signupEntries.map(([day, count]) => (
@@ -127,7 +127,7 @@ export default async function AdminAnalyticsPage() {
                 title={`${day}: ${count}`}
               >
                 <div
-                  className="w-5 rounded-t-md bg-[#0C9F88] opacity-80"
+                  className="w-5 rounded-t-md bg-[#006c49] opacity-80"
                   style={{ height: `${(count / maxSignups) * 80}px` }}
                 />
                 <span className="text-[9px] text-[#A0A0A0] rotate-45 origin-left translate-y-2">
@@ -140,20 +140,20 @@ export default async function AdminAnalyticsPage() {
       </Card>
 
       <Card className="rounded-[22px] p-6">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#8AA79E]">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#6c7a71]">
           Skill Gaps
         </p>
-        <h2 className="mt-2 text-base font-bold text-[#111111]">
+        <h2 className="mt-2 text-base font-bold text-[#1b1c1a]">
           Most-demanded skills with fewest helpers
         </h2>
         {gaps.length === 0 ? (
-          <p className="mt-4 text-sm text-[#6B6B6B]">No skill gaps detected.</p>
+          <p className="mt-4 text-sm text-[#54615d]">No skill gaps detected.</p>
         ) : (
-          <div className="mt-4 divide-y divide-[#F0EBE3]">
+          <div className="mt-4 divide-y divide-[#efeeea]">
             {gaps.map(({ tag, demand, helpers }) => (
               <div key={tag} className="flex items-center justify-between py-3">
-                <span className="text-sm font-medium text-[#111111]">{tag}</span>
-                <div className="flex gap-4 text-sm text-[#6B6B6B]">
+                <span className="text-sm font-medium text-[#1b1c1a]">{tag}</span>
+                <div className="flex gap-4 text-sm text-[#54615d]">
                   <span>{demand} open</span>
                   <span>{helpers} helpers</span>
                 </div>

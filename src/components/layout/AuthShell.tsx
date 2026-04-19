@@ -24,7 +24,7 @@ export default function AuthShell({
   footer,
 }: Props) {
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-[#fbf9f5]">
       <Topbar
         navLinks={[
           { href: "/", label: "Home" },
@@ -33,63 +33,112 @@ export default function AuthShell({
         ]}
       />
 
-      <main className="px-4 py-8 sm:px-6 sm:py-12">
-        <div className="mx-auto grid w-full max-w-[1180px] gap-6 lg:grid-cols-[1.02fr_0.98fr]">
+      <main className="px-4 py-10 sm:px-6 sm:py-14">
+        <div className="mx-auto grid w-full max-w-[1100px] gap-6 lg:grid-cols-[1fr_1fr]">
+          {/* Left dark panel */}
           <section
-            className="order-2 rounded-[30px] border border-[#20403B] bg-[#17302E] px-7 py-8 text-white shadow-[0_24px_56px_rgba(23,48,46,0.16)] lg:order-1 lg:px-10 lg:py-10"
+            className="order-2 rounded-[28px] border border-[#1a3530] bg-[#17302E] px-8 py-10 text-white shadow-[0_24px_56px_rgba(23,48,46,0.18)] lg:order-1 lg:px-10 lg:py-12"
             style={{
               backgroundImage:
-                "radial-gradient(circle at top right, rgba(242,182,72,0.18), transparent 24%)",
+                "radial-gradient(circle at top right, rgba(16,185,129,0.14), transparent 28%), radial-gradient(circle at bottom left, rgba(0,108,73,0.06), transparent 36%)",
             }}
           >
-            <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#93D7CB]">
+            <p
+              className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#6ffbbe] mb-6"
+              style={{ fontFamily: "var(--font-body)" }}
+            >
               {panelLabel}
             </p>
-            <h1 className="mt-5 max-w-[520px] text-[2.6rem] font-black leading-[0.94] tracking-[-0.05em] sm:text-[4rem]">
+            <h1
+              className="max-w-[480px] text-[2.8rem] font-extrabold leading-[1.0] tracking-[-0.04em] sm:text-[3.8rem]"
+              style={{ fontFamily: "var(--font-headline)" }}
+            >
               {panelTitle}
             </h1>
-            <p className="mt-5 max-w-[520px] text-base leading-8 text-white/72">
+            <p
+              className="mt-5 max-w-[460px] text-[14px] leading-[1.7] text-white/65"
+              style={{ fontFamily: "var(--font-body)" }}
+            >
               {panelDescription}
             </p>
 
             <ul className="mt-8 space-y-4">
               {panelPoints.map((point) => (
-                <li key={point} className="flex items-start gap-3 text-base leading-7 text-white/78">
-                  <span className="mt-2 h-2.5 w-2.5 shrink-0 rounded-full bg-[#24C9B0]" />
+                <li
+                  key={point}
+                  className="flex items-start gap-3 text-[14px] leading-[1.6] text-white/72"
+                  style={{ fontFamily: "var(--font-body)" }}
+                >
+                  <span className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-[#4edea3]" />
                   <span>{point}</span>
                 </li>
               ))}
             </ul>
 
-            <div className="mt-10 rounded-[22px] border border-white/10 bg-white/6 p-5">
-              <p className="text-sm font-semibold text-white">HelpHub AI</p>
-              <p className="mt-2 text-sm leading-6 text-white/66">
+            <div className="mt-10 rounded-[18px] border border-white/10 bg-white/[0.06] p-5">
+              <p
+                className="text-sm font-semibold text-white"
+                style={{ fontFamily: "var(--font-headline)" }}
+              >HelpHub AI</p>
+              <p
+                className="mt-2 text-[13px] leading-[1.6] text-white/55"
+                style={{ fontFamily: "var(--font-body)" }}
+              >
                 Multi-page help requests, trust signals, messaging, notifications, and AI guidance in one product flow.
               </p>
             </div>
           </section>
 
-          <section className="order-1 rounded-[30px] border border-[#E7DED2] bg-white/96 px-6 py-7 shadow-[0_24px_56px_rgba(28,25,23,0.08)] lg:order-2 lg:px-8 lg:py-9">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#245D51]">
+          {/* Right form panel */}
+          <section className="order-1 rounded-[28px] border border-[#d7e6e0] bg-white px-7 py-8 shadow-[0_16px_48px_rgba(27,28,26,0.07)] lg:order-2 lg:px-9 lg:py-10">
+            <p
+              className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#006c49] mb-4"
+              style={{ fontFamily: "var(--font-body)" }}
+            >
               {formLabel}
             </p>
-            <h2 className="mt-4 max-w-[460px] text-[2.3rem] font-black leading-[0.98] tracking-[-0.05em] text-[#171717] sm:text-[3.4rem]">
+            <h2
+              className="max-w-[420px] text-[2.2rem] font-extrabold leading-[1.05] tracking-[-0.04em] text-[#1b1c1a] sm:text-[3rem]"
+              style={{ fontFamily: "var(--font-headline)" }}
+            >
               {formTitle}
             </h2>
             {formDescription ? (
-              <p className="mt-4 max-w-[460px] text-sm leading-7 text-[#655F57]">
+              <p
+                className="mt-3 max-w-[420px] text-[13px] leading-[1.6] text-[#54615d]"
+                style={{ fontFamily: "var(--font-body)" }}
+              >
                 {formDescription}
               </p>
             ) : null}
 
-            <div className="mt-8">{children}</div>
+            <div className="mt-7">{children}</div>
 
-            <div className="mt-7 border-t border-[#F2ECE4] pt-6 text-sm text-[#655F57]">
+            <div className="mt-6 border-t border-[#efeeea] pt-5 text-[13px] text-[#54615d]" style={{ fontFamily: "var(--font-body)" }}>
               {footer}
             </div>
           </section>
         </div>
       </main>
+
+      {/* Footer */}
+      <footer className="border-t border-[#d7e6e0] py-5 px-6">
+        <div className="max-w-[1100px] mx-auto flex items-center justify-between flex-wrap gap-3">
+          <p className="text-xs text-[#6c7a71]" style={{ fontFamily: "var(--font-body)" }}>
+            &copy; 2026 HelpHub AI. The Digital Sanctuary.
+          </p>
+          <div className="flex items-center gap-4">
+            {["Privacy Policy", "Terms of Service", "Community Guidelines"].map((link) => (
+              <a
+                key={link}
+                href="#"
+                className="text-xs text-[#6c7a71] no-underline hover:text-[#006c49]"
+                style={{ fontFamily: "var(--font-body)" }}
+              >{link}</a>
+            ))}
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }

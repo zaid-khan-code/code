@@ -67,10 +67,10 @@ export default async function NotificationsPage() {
       <Card className="rounded-[22px] p-6">
         <div className="flex items-center justify-between gap-4">
           <div>
-            <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#8AA79E]">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#6c7a71]">
               Live Updates
             </p>
-            <h2 className="mt-3 text-[2rem] font-black leading-[0.95] tracking-[-0.04em] text-[#111111]">
+            <h2 className="mt-3 text-[2rem] font-black leading-[0.95] tracking-[-0.04em] text-[#1b1c1a]">
               Notification feed
             </h2>
           </div>
@@ -79,7 +79,7 @@ export default async function NotificationsPage() {
             <form action={markAllNotificationsRead}>
               <button
                 type="submit"
-                className="rounded-full bg-[#EEF4EF] px-4 py-2 text-sm font-medium text-[#111111]"
+                className="rounded-full bg-[#d7e6e0] px-4 py-2 text-sm font-medium text-[#1b1c1a]"
               >
                 Mark all read
               </button>
@@ -97,13 +97,13 @@ export default async function NotificationsPage() {
                 {items.map((item) => (
                   <div
                     key={item.id}
-                    className="flex items-start justify-between gap-4 rounded-[18px] border border-[#F0EBE3] p-4"
+                    className="flex items-start justify-between gap-4 rounded-[18px] border border-[#efeeea] p-4"
                   >
                     <div className="min-w-0 flex-1">
-                      <p className="text-sm font-semibold text-[#111111]">
+                      <p className="text-sm font-semibold text-[#1b1c1a]">
                         {formatNotification(item.type, (item.payload ?? {}) as NotificationPayload)}
                       </p>
-                      <p className="mt-2 text-xs text-[#6B6B6B]">
+                      <p className="mt-2 text-xs text-[#54615d]">
                         {getTypeLabel(item.type)} &middot; {timeAgo(item.created_at)}
                       </p>
                     </div>
@@ -112,7 +112,7 @@ export default async function NotificationsPage() {
                       {!item.read ? (
                         <form action={markNotificationRead}>
                           <input type="hidden" name="id" value={item.id} />
-                          <button type="submit" className="text-xs font-medium text-[#111111]">
+                          <button type="submit" className="text-xs font-medium text-[#1b1c1a]">
                             Mark read
                           </button>
                         </form>
@@ -121,8 +121,8 @@ export default async function NotificationsPage() {
                         className={[
                           "rounded-full px-3 py-1 text-xs font-medium",
                           item.read
-                            ? "bg-[#F4F1EC] text-[#6B6B6B]"
-                            : "bg-[#EEF4EF] text-[#111111]",
+                            ? "bg-[#F4F1EC] text-[#54615d]"
+                            : "bg-[#d7e6e0] text-[#1b1c1a]",
                         ].join(" ")}
                       >
                         {item.read ? "Read" : "Unread"}

@@ -99,18 +99,18 @@ export default async function ExplorePage({
 
       <div className="grid gap-6 lg:grid-cols-[300px_minmax(0,1fr)]">
         <Card className="rounded-[22px] p-6">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#8AA79E]">Filters</p>
-          <h2 className="mt-3 text-[2rem] font-black leading-[0.95] tracking-[-0.04em] text-[#111111]">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#6c7a71]">Filters</p>
+          <h2 className="mt-3 text-[2rem] font-black leading-[0.95] tracking-[-0.04em] text-[#1b1c1a]">
             Refine the feed
           </h2>
 
           <form method="get" className="mt-8 space-y-5">
             <label className="block">
-              <span className="mb-2 block text-sm font-medium text-[#6B6B6B]">Category</span>
+              <span className="mb-2 block text-sm font-medium text-[#54615d]">Category</span>
               <select
                 name="category"
                 defaultValue={params.category ?? "all"}
-                className="w-full rounded-[14px] border border-[#E8E2D9] bg-white px-4 py-3 text-sm text-[#111111] outline-none focus:border-[#0C9F88]"
+                className="w-full rounded-[14px] border border-[#d7e6e0] bg-white px-4 py-3 text-sm text-[#1b1c1a] outline-none focus:border-[#006c49]"
               >
                 <option value="all">All categories</option>
                 {categories.map((category) => (
@@ -122,11 +122,11 @@ export default async function ExplorePage({
             </label>
 
             <label className="block">
-              <span className="mb-2 block text-sm font-medium text-[#6B6B6B]">Urgency</span>
+              <span className="mb-2 block text-sm font-medium text-[#54615d]">Urgency</span>
               <select
                 name="urgency"
                 defaultValue={params.urgency ?? "all"}
-                className="w-full rounded-[14px] border border-[#E8E2D9] bg-white px-4 py-3 text-sm text-[#111111] outline-none focus:border-[#0C9F88]"
+                className="w-full rounded-[14px] border border-[#d7e6e0] bg-white px-4 py-3 text-sm text-[#1b1c1a] outline-none focus:border-[#006c49]"
               >
                 <option value="all">All urgency levels</option>
                 <option value="low">Low</option>
@@ -137,31 +137,31 @@ export default async function ExplorePage({
             </label>
 
             <label className="block">
-              <span className="mb-2 block text-sm font-medium text-[#6B6B6B]">Skills</span>
+              <span className="mb-2 block text-sm font-medium text-[#54615d]">Skills</span>
               <input
                 name="skills"
                 defaultValue={params.skills ?? ""}
                 placeholder="React, Figma, Git/GitHub"
-                className="w-full rounded-[14px] border border-[#E8E2D9] bg-white px-4 py-3 text-sm text-[#111111] outline-none placeholder:text-[#A0A0A0] focus:border-[#0C9F88]"
+                className="w-full rounded-[14px] border border-[#d7e6e0] bg-white px-4 py-3 text-sm text-[#1b1c1a] outline-none placeholder:text-[#A0A0A0] focus:border-[#006c49]"
               />
             </label>
 
             <label className="block">
-              <span className="mb-2 block text-sm font-medium text-[#6B6B6B]">Location</span>
+              <span className="mb-2 block text-sm font-medium text-[#54615d]">Location</span>
               <input
                 name="location"
                 defaultValue={params.location ?? ""}
                 placeholder="Karachi, Lahore, Remote"
-                className="w-full rounded-[14px] border border-[#E8E2D9] bg-white px-4 py-3 text-sm text-[#111111] outline-none placeholder:text-[#A0A0A0] focus:border-[#0C9F88]"
+                className="w-full rounded-[14px] border border-[#d7e6e0] bg-white px-4 py-3 text-sm text-[#1b1c1a] outline-none placeholder:text-[#A0A0A0] focus:border-[#006c49]"
               />
             </label>
 
             <label className="block">
-              <span className="mb-2 block text-sm font-medium text-[#6B6B6B]">Status</span>
+              <span className="mb-2 block text-sm font-medium text-[#54615d]">Status</span>
               <select
                 name="status"
                 defaultValue={params.status ?? "all"}
-                className="w-full rounded-[14px] border border-[#E8E2D9] bg-white px-4 py-3 text-sm text-[#111111] outline-none focus:border-[#0C9F88]"
+                className="w-full rounded-[14px] border border-[#d7e6e0] bg-white px-4 py-3 text-sm text-[#1b1c1a] outline-none focus:border-[#006c49]"
               >
                 <option value="all">All statuses</option>
                 <option value="open">Open</option>
@@ -173,12 +173,12 @@ export default async function ExplorePage({
 
             <div className="flex gap-3 pt-2">
               <Button type="submit">Apply filters</Button>
-              <Link href="/explore" className="inline-flex items-center text-sm font-medium text-[#6B6B6B]">
+              <Link href="/explore" className="inline-flex items-center text-sm font-medium text-[#54615d]">
                 Clear
               </Link>
             </div>
 
-            <div className="rounded-[14px] bg-[#F7F2EC] p-4 text-xs leading-5 text-[#6B6B6B]">
+            <div className="rounded-[14px] bg-[#efeeea] p-4 text-xs leading-5 text-[#54615d]">
               {skillRows?.length ?? 0} skills in the community catalog &middot; {count ?? 0} requests visible
             </div>
           </form>
@@ -187,8 +187,8 @@ export default async function ExplorePage({
         <div className="space-y-4">
           {requestRows.length === 0 ? (
             <Card className="rounded-[22px] p-10 text-center">
-              <p className="text-lg font-semibold text-[#111111]">No requests match the current filters.</p>
-              <p className="mt-2 text-sm text-[#6B6B6B]">Try widening the category or clearing the skills/location filters.</p>
+              <p className="text-lg font-semibold text-[#1b1c1a]">No requests match the current filters.</p>
+              <p className="mt-2 text-sm text-[#54615d]">Try widening the category or clearing the skills/location filters.</p>
             </Card>
           ) : (
             requestRows.map((request) => {

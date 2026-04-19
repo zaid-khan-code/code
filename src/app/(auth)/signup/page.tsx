@@ -36,7 +36,7 @@ export default function SignupPage() {
       footer={
         <p>
           Already have an account?{' '}
-          <Link href="/login" className="font-semibold text-[#109F88] no-underline hover:underline">
+          <Link href="/login" className="font-semibold text-[#006c49] no-underline hover:underline">
             Log in
           </Link>
         </p>
@@ -52,7 +52,7 @@ export default function SignupPage() {
             required
             autoComplete="name"
             placeholder="Ayesha Khan"
-            className="w-full rounded-[18px] border border-[#E7DED2] bg-white px-4 py-3 text-sm text-[#171717] outline-none placeholder:text-[#9B948B] focus:border-[#109F88]"
+            className="w-full rounded-[18px] border border-[#d7e6e0] bg-white px-4 py-3 text-sm text-[#1b1c1a] outline-none placeholder:text-[#6c7a71] focus:border-[#006c49]"
           />
         </label>
 
@@ -65,7 +65,7 @@ export default function SignupPage() {
             required
             autoComplete="email"
             placeholder="community@helphub.ai"
-            className="w-full rounded-[18px] border border-[#E7DED2] bg-white px-4 py-3 text-sm text-[#171717] outline-none placeholder:text-[#9B948B] focus:border-[#109F88]"
+            className="w-full rounded-[18px] border border-[#d7e6e0] bg-white px-4 py-3 text-sm text-[#1b1c1a] outline-none placeholder:text-[#6c7a71] focus:border-[#006c49]"
           />
         </label>
 
@@ -78,7 +78,7 @@ export default function SignupPage() {
             required
             autoComplete="new-password"
             placeholder="Min 8 characters"
-            className="w-full rounded-[18px] border border-[#E7DED2] bg-white px-4 py-3 text-sm text-[#171717] outline-none placeholder:text-[#9B948B] focus:border-[#109F88]"
+            className="w-full rounded-[18px] border border-[#d7e6e0] bg-white px-4 py-3 text-sm text-[#1b1c1a] outline-none placeholder:text-[#6c7a71] focus:border-[#006c49]"
           />
         </label>
 
@@ -94,8 +94,8 @@ export default function SignupPage() {
                   className={[
                     'cursor-pointer rounded-[18px] border px-4 py-4 transition-all',
                     active
-                      ? 'border-[#109F88] bg-[#EAF8F5] shadow-[0_12px_24px_rgba(16,159,136,0.08)]'
-                      : 'border-[#E7DED2] bg-white hover:border-[#CFE5DF]',
+                      ? 'border-[#006c49] bg-[#d7e6e0] shadow-[0_12px_24px_rgba(16,159,136,0.08)]'
+                      : 'border-[#d7e6e0] bg-white hover:border-[#CFE5DF]',
                   ].join(' ')}
                 >
                   <input
@@ -106,10 +106,10 @@ export default function SignupPage() {
                     onChange={() => setSelectedRole(role.value)}
                     className="sr-only"
                   />
-                  <p className={active ? 'text-sm font-semibold text-[#109F88]' : 'text-sm font-semibold text-[#171717]'}>
+                  <p className={active ? 'text-sm font-semibold text-[#006c49]' : 'text-sm font-semibold text-[#1b1c1a]'}>
                     {role.label}
                   </p>
-                  <p className="mt-1 text-xs leading-5 text-[#655F57]">{role.desc}</p>
+                  <p className="mt-1 text-xs leading-5 text-[#54615d]">{role.desc}</p>
                 </label>
               );
             })}
