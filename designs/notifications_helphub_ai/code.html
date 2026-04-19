@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Notifications | HelpHub AI</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&amp;family=Manrope:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary-fixed-variant": "#3c4a45",
+                        "primary-container": "#10b981",
+                        "outline-variant": "#bbcabf",
+                        "tertiary-fixed": "#ffdad7",
+                        "on-error": "#ffffff",
+                        "on-secondary-fixed": "#111e1a",
+                        "tertiary-container": "#fc7c78",
+                        "on-secondary": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "primary-fixed-dim": "#4edea3",
+                        "surface-container-high": "#eae8e4",
+                        "error": "#ba1a1a",
+                        "on-tertiary-fixed-variant": "#842225",
+                        "on-primary-container": "#00422b",
+                        "secondary-container": "#d7e6e0",
+                        "on-tertiary-container": "#711419",
+                        "inverse-primary": "#4edea3",
+                        "inverse-on-surface": "#f2f0ed",
+                        "surface-tint": "#006c49",
+                        "surface-bright": "#fbf9f5",
+                        "background": "#fbf9f5",
+                        "secondary-fixed": "#d7e6e0",
+                        "surface-container-low": "#f5f3ef",
+                        "surface-dim": "#dbdad6",
+                        "primary-fixed": "#6ffbbe",
+                        "on-background": "#1b1c1a",
+                        "surface-container": "#efeeea",
+                        "on-primary-fixed": "#002113",
+                        "tertiary": "#a43a3a",
+                        "on-secondary-container": "#596762",
+                        "on-primary": "#ffffff",
+                        "on-surface": "#1b1c1a",
+                        "outline": "#6c7a71",
+                        "error-container": "#ffdad6",
+                        "secondary-fixed-dim": "#bbcac4",
+                        "tertiary-fixed-dim": "#ffb3af",
+                        "secondary": "#54615d",
+                        "surface": "#fbf9f5",
+                        "on-error-container": "#93000a",
+                        "on-tertiary-fixed": "#410005",
+                        "surface-variant": "#e4e2de",
+                        "surface-container-highest": "#e4e2de",
+                        "on-surface-variant": "#3c4a42",
+                        "on-primary-fixed-variant": "#005236",
+                        "primary": "#006c49",
+                        "inverse-surface": "#30312e",
+                        "on-tertiary": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Plus Jakarta Sans"],
+                        "body": ["Manrope"],
+                        "label": ["Manrope"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Manrope', sans-serif; background-color: #fbf9f5; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+    </style>
+</head>
+<body class="text-on-surface">
+<!-- TopAppBar -->
+<nav class="fixed top-0 w-full z-50 bg-[#fbf9f5]/80 dark:bg-[#23302c]/80 backdrop-blur-xl shadow-[0_20px_50px_rgba(89,103,98,0.05)]">
+<div class="flex justify-between items-center max-w-7xl mx-auto px-8 h-20">
+<div class="flex items-center gap-2 text-lg font-extrabold text-[#23302c] dark:text-[#fbf9f5] font-['Plus_Jakarta_Sans'] tracking-tight">
+<span class="material-symbols-outlined text-[#10b981]" style="font-variation-settings: 'FILL' 1;">hub</span>
+                HelpHub AI
+            </div>
+<div class="hidden md:flex items-center gap-1">
+<a class="text-[#596762] dark:text-[#bbcabf] hover:text-[#10b981] px-4 py-2 transition-colors" href="#">Dashboard</a>
+<a class="text-[#596762] dark:text-[#bbcabf] hover:text-[#10b981] px-4 py-2 transition-colors" href="#">Explore</a>
+<a class="bg-[#10b981]/10 text-[#10b981] px-4 py-2 rounded-full font-semibold" href="#">Notifications</a>
+</div>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined p-2 hover:bg-[#f2f0ea] dark:hover:bg-[#2a3a35] rounded-full transition-all duration-300 text-on-surface-variant">account_circle</button>
+</div>
+</div>
+</nav>
+<main class="pt-24 pb-20 px-4 md:px-8 max-w-7xl mx-auto">
+<!-- Hero Section -->
+<section class="relative mb-12">
+<div class="bg-[#23302c] rounded-xl md:rounded-xl p-12 md:p-20 overflow-hidden relative min-h-[400px] flex flex-col justify-end">
+<!-- Background visual element -->
+<div class="absolute top-0 right-0 w-1/2 h-full opacity-10 pointer-events-none transform translate-x-1/4 -translate-y-1/4">
+<div class="w-full h-full bg-gradient-to-br from-primary-container to-transparent rounded-full blur-[120px]"></div>
+</div>
+<div class="relative z-10 max-w-2xl">
+<span class="text-surface-variant/60 font-bold tracking-[0.2em] text-xs md:text-sm font-label mb-4 block">NOTIFICATIONS</span>
+<h1 class="text-surface text-4xl md:text-6xl font-headline font-extrabold leading-[1.1] tracking-tight">
+                        Stay updated on requests, helpers, and trust signals.
+                    </h1>
+</div>
+</div>
+</section>
+<!-- Main Content Area -->
+<section class="max-w-4xl mx-auto -mt-24 relative z-20 pb-16">
+<div class="bg-surface-container-lowest rounded-xl shadow-[0_40px_100px_rgba(35,48,44,0.08)] p-8 md:p-12">
+<header class="mb-12">
+<span class="text-primary-container font-bold tracking-widest text-xs font-label block mb-2">LIVE UPDATES</span>
+<h2 class="text-3xl font-headline font-bold text-on-surface">Notification feed</h2>
+</header>
+<!-- Notification List -->
+<div class="space-y-4">
+<!-- Item 1 -->
+<div class="group flex items-center justify-between p-6 rounded-lg transition-all duration-300 hover:bg-surface-container-low">
+<div class="flex items-start gap-5">
+<div class="mt-1 w-2.5 h-2.5 rounded-full bg-primary-container shadow-[0_0_12px_rgba(16,185,129,0.5)]"></div>
+<div>
+<h3 class="text-on-surface font-bold text-lg leading-snug">"Need help" was marked as solved</h3>
+<p class="text-on-secondary-container font-medium text-sm mt-1">Status • Just now</p>
+</div>
+</div>
+<button class="bg-[#10b981]/15 text-[#10b981] px-6 py-2 rounded-full font-bold text-sm tracking-wide transition-all group-hover:scale-105 active:scale-95">Unread</button>
+</div>
+<!-- Item 2 -->
+<div class="group flex items-center justify-between p-6 rounded-lg transition-all duration-300 hover:bg-surface-container-low">
+<div class="flex items-start gap-5">
+<div class="mt-1 w-2.5 h-2.5 rounded-full bg-primary-container shadow-[0_0_12px_rgba(16,185,129,0.5)]"></div>
+<div>
+<h3 class="text-on-surface font-bold text-lg leading-snug">Ayesha Khan offered help on "Need help"</h3>
+<p class="text-on-secondary-container font-medium text-sm mt-1">Match • Just now</p>
+</div>
+</div>
+<button class="bg-[#10b981]/15 text-[#10b981] px-6 py-2 rounded-full font-bold text-sm tracking-wide transition-all group-hover:scale-105 active:scale-95">Unread</button>
+</div>
+<!-- Item 3 -->
+<div class="group flex items-center justify-between p-6 rounded-lg transition-all duration-300 hover:bg-surface-container-low">
+<div class="flex items-start gap-5">
+<div class="mt-1 w-2.5 h-2.5 rounded-full bg-primary-container shadow-[0_0_12px_rgba(16,185,129,0.5)]"></div>
+<div>
+<h3 class="text-on-surface font-bold text-lg leading-snug">Your request "Need help" is now live in the community feed</h3>
+<p class="text-on-secondary-container font-medium text-sm mt-1">Request • Just now</p>
+</div>
+</div>
+<button class="bg-[#10b981]/15 text-[#10b981] px-6 py-2 rounded-full font-bold text-sm tracking-wide transition-all group-hover:scale-105 active:scale-95">Unread</button>
+</div>
+<!-- Item 4 -->
+<div class="group flex items-center justify-between p-6 rounded-lg transition-all duration-300 hover:bg-surface-container-low">
+<div class="flex items-start gap-5">
+<div class="mt-1 w-2.5 h-2.5 rounded-full bg-primary-container shadow-[0_0_12px_rgba(16,185,129,0.5)]"></div>
+<div>
+<h3 class="text-on-surface font-bold text-lg leading-snug">"Need help making my portfolio responsive before demo day" was marked as solved</h3>
+<p class="text-on-secondary-container font-medium text-sm mt-1">Status • Just now</p>
+</div>
+</div>
+<button class="bg-[#10b981]/15 text-[#10b981] px-6 py-2 rounded-full font-bold text-sm tracking-wide transition-all group-hover:scale-105 active:scale-95">Unread</button>
+</div>
+<!-- Item 5 -->
+<div class="group flex items-center justify-between p-6 rounded-lg transition-all duration-300 hover:bg-surface-container-low">
+<div class="flex items-start gap-5">
+<div class="mt-1 w-2.5 h-2.5 rounded-full bg-primary-container shadow-[0_0_12px_rgba(16,185,129,0.5)]"></div>
+<div>
+<h3 class="text-on-surface font-bold text-lg leading-snug">New helper matched to your responsive portfolio request</h3>
+<p class="text-on-secondary-container font-medium text-sm mt-1">Match • 12 min ago</p>
+</div>
+</div>
+<button class="bg-[#10b981]/15 text-[#10b981] px-6 py-2 rounded-full font-bold text-sm tracking-wide transition-all group-hover:scale-105 active:scale-95">Unread</button>
+</div>
+<!-- Item 6 -->
+<div class="group flex items-center justify-between p-6 rounded-lg transition-all duration-300 hover:bg-surface-container-low">
+<div class="flex items-start gap-5">
+<div class="mt-1 w-2.5 h-2.5 rounded-full bg-primary-container shadow-[0_0_12px_rgba(16,185,129,0.5)]"></div>
+<div>
+<h3 class="text-on-surface font-bold text-lg leading-snug">Your trust score increased after a solved request</h3>
+<p class="text-on-secondary-container font-medium text-sm mt-1">Reputation • 1 hr ago</p>
+</div>
+</div>
+<button class="bg-[#10b981]/15 text-[#10b981] px-6 py-2 rounded-full font-bold text-sm tracking-wide transition-all group-hover:scale-105 active:scale-95">Unread</button>
+</div>
+<!-- Item 7 -->
+<div class="group flex items-center justify-between p-6 rounded-lg transition-all duration-300 hover:bg-surface-container-low">
+<div class="flex items-start gap-5">
+<div class="mt-1 w-2.5 h-2.5 rounded-full bg-outline-variant/30"></div>
+<div>
+<h3 class="text-on-surface-variant font-medium text-lg leading-snug">AI Center detected rising demand for interview prep</h3>
+<p class="text-on-secondary-container/60 font-medium text-sm mt-1">Insight • Today</p>
+</div>
+</div>
+<button class="bg-surface-container-high/50 text-on-secondary-container/50 px-6 py-2 rounded-full font-bold text-sm tracking-wide">Read</button>
+</div>
+</div>
+<div class="mt-12 flex justify-center">
+<button class="group flex items-center gap-2 text-primary font-bold hover:gap-4 transition-all duration-300">
+                        View older notifications
+                        <span class="material-symbols-outlined text-lg">arrow_forward</span>
+</button>
+</div>
+</div>
+</section>
+<!-- Aesthetic Bento-ish Secondary Info -->
+<section class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-20">
+<div class="bg-surface-container-low p-8 rounded-lg">
+<span class="material-symbols-outlined text-primary mb-4 text-3xl">verified_user</span>
+<h4 class="font-headline font-bold text-xl mb-2">Trust Signal</h4>
+<p class="text-on-secondary-container text-sm leading-relaxed">Your community standing is currently high. Continue helping to unlock exclusive AI features.</p>
+</div>
+<div class="bg-secondary-container p-8 rounded-lg">
+<span class="material-symbols-outlined text-[#23302c] mb-4 text-3xl">lightbulb</span>
+<h4 class="font-headline font-bold text-xl mb-2">Pro-active Matching</h4>
+<p class="text-[#23302c]/70 text-sm leading-relaxed">Helpers are notified within 2 minutes of your request going live for maximum response speed.</p>
+</div>
+<div class="bg-surface-container-low p-8 rounded-lg">
+<span class="material-symbols-outlined text-primary mb-4 text-3xl">privacy_tip</span>
+<h4 class="font-headline font-bold text-xl mb-2">Safety First</h4>
+<p class="text-on-secondary-container text-sm leading-relaxed">All offers are vetted by our sanctuary AI to ensure a respectful and productive environment.</p>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="w-full py-12 mt-auto bg-[#fbf9f5] dark:bg-[#23302c]">
+<div class="bg-[#f2f0ea] dark:bg-[#2a3a35] h-px w-full opacity-20 mb-8"></div>
+<div class="flex flex-col md:flex-row justify-between items-center max-w-7xl mx-auto px-8 gap-4">
+<p class="font-['Manrope'] text-sm tracking-wide text-[#596762] dark:text-[#bbcabf]">© 2024 HelpHub AI. Designed for focus.</p>
+<div class="flex gap-8">
+<a class="text-[#596762] dark:text-[#bbcabf] hover:text-[#10b981] transition-colors duration-200 text-sm font-medium" href="#">Privacy</a>
+<a class="text-[#596762] dark:text-[#bbcabf] hover:text-[#10b981] transition-colors duration-200 text-sm font-medium" href="#">Terms</a>
+<a class="text-[#596762] dark:text-[#bbcabf] hover:text-[#10b981] transition-colors duration-200 text-sm font-medium" href="#">Support</a>
+</div>
+</div>
+</footer>
+</body></html>

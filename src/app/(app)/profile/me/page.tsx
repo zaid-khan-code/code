@@ -39,12 +39,14 @@ export default async function ProfileMePage() {
     .map((row) => badgeMap.get(row.badge_id))
     .filter((b): b is NonNullable<typeof b> => b != null);
 
+  const modeLabel = profile.user_mode === "need_help" ? "Need Help" : profile.user_mode === "can_help" ? "Can Help" : "Both";
+
   return (
     <div className="space-y-6">
       <HeroBanner
         label="Profile"
         title={profile.full_name ?? profile.username ?? "Community member"}
-        subtitle={`${profile.user_mode ?? "both"} / ${profile.location ?? "Community"}`}
+        subtitle={`${modeLabel} · ${profile.location ?? "Community"}`}
       />
 
       <ProfileMeClient

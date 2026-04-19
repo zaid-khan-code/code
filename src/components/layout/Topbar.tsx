@@ -24,10 +24,10 @@ export default function Topbar({
     <header className="sticky top-0 z-40 border-b border-[#E8E2D9]/80 bg-[#F5F0EA]/95 backdrop-blur">
       <div className="mx-auto flex w-full max-w-[1180px] items-center justify-between gap-4 px-4 py-4">
         <Link href="/" className="flex shrink-0 items-center gap-3 no-underline">
-          <span className="flex h-10 w-10 items-center justify-center rounded-[14px] bg-[#0C9F88] text-sm font-bold text-white">
+          <span className="flex h-8 w-8 items-center justify-center rounded-[8px] bg-[#0C9F88] text-sm font-extrabold text-white">
             H
           </span>
-          <span className="text-base font-extrabold tracking-[-0.03em] text-[#111111]">
+          <span className="text-[15px] font-bold tracking-tight text-[#111111]">
             HelpHub AI
           </span>
         </Link>

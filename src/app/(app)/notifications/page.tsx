@@ -7,6 +7,18 @@ import { markAllNotificationsRead, markNotificationRead } from "./actions";
 
 type NotificationPayload = Record<string, unknown>;
 
+function getTypeLabel(type: string): string {
+  switch (type) {
+    case "new_helper": return "Match";
+    case "request_solved": return "Status";
+    case "status_change": return "Status";
+    case "new_message": return "Message";
+    case "badge_earned": return "Achievement";
+    case "system": return "Insight";
+    default: return "Update";
+  }
+}
+
 function formatNotification(type: string, payload: NotificationPayload) {
   switch (type) {
     case "new_helper":
@@ -92,7 +104,7 @@ export default async function NotificationsPage() {
                         {formatNotification(item.type, (item.payload ?? {}) as NotificationPayload)}
                       </p>
                       <p className="mt-2 text-xs text-[#6B6B6B]">
-                        {item.type.replace("_", " ")} &middot; {timeAgo(item.created_at)}
+                        {getTypeLabel(item.type)} &middot; {timeAgo(item.created_at)}
                       </p>
                     </div>
 

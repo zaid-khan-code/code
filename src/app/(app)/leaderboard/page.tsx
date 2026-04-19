@@ -40,7 +40,7 @@ export default async function LeaderboardPage({
   const profileIds = profileRows.map((profile) => profile.id);
   const top3Ids = profileRows.slice(0, 3).map((profile) => profile.id);
 
-  const [{ data: helperRows }, { data: weeklyEvents }, { data: badgeRows }] = await Promise.all([
+  const [{ data: helperRows }, { data: weeklyEvents }, { data: badgeRows }, { data: skillRows }] = await Promise.all([
     profileIds.length > 0
       ? admin.from("request_helpers").select("helper_id").in("helper_id", profileIds)
       : Promise.resolve({ data: [] as never[] }),
@@ -53,6 +53,9 @@ export default async function LeaderboardPage({
       : Promise.resolve({ data: [] as never[] }),
     top3Ids.length > 0
       ? admin.from("user_badges").select("user_id, badges(name)").in("user_id", top3Ids)
+      : Promise.resolve({ data: [] as never[] }),
+    profileIds.length > 0
+      ? admin.from("user_skills").select("user_id, skills(name)").in("user_id", profileIds).eq("can_help", true)
       : Promise.resolve({ data: [] as never[] }),
   ]);
 
@@ -68,6 +71,15 @@ export default async function LeaderboardPage({
     const existing = badgeNamesMap.get(row.user_id) ?? [];
     existing.push(badgeName);
     badgeNamesMap.set(row.user_id, existing);
+  }
+
+  const skillNamesMap = new Map<string, string[]>();
+  for (const row of skillRows ?? []) {
+    const skillName = (row.skills as { name: string } | null)?.name;
+    if (!skillName) continue;
+    const existing = skillNamesMap.get(row.user_id) ?? [];
+    existing.push(skillName);
+    skillNamesMap.set(row.user_id, existing);
   }
 
   const weeklyTrust = new Map<string, number>();
@@ -136,7 +148,7 @@ export default async function LeaderboardPage({
                     #{index + 1} {row.full_name ?? row.username ?? "Community helper"}
                   </p>
                   <p className="truncate text-xs text-[#655F57]">
-                    {row.location || "Community"} &middot; {row.contributions} contributions
+                    {skillNamesMap.get(row.id)?.slice(0, 3).join(", ") || row.location || "Community"} &middot; {row.contributions} contributions
                   </p>
                 </div>
                 <p className="text-sm font-bold text-[#109F88]">{row.trust_score}%</p>

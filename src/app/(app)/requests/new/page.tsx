@@ -186,6 +186,23 @@ export default function NewRequestPage() {
 
               <div className="grid gap-4 md:grid-cols-2">
                 <label className="block">
+                  <span className="mb-2 block text-sm font-medium text-[#6B6B6B]">Tags</span>
+                  <input
+                    value={tagInput}
+                    onChange={(event) => setTagInput(event.target.value)}
+                    onBlur={() => addTag(tagInput)}
+                    onKeyDown={(event) => {
+                      if (event.key === "Enter") {
+                        event.preventDefault();
+                        addTag(tagInput);
+                      }
+                    }}
+                    placeholder="JavaScript, Debugging, Review"
+                    className="w-full rounded-[14px] border border-[#E8E2D9] bg-white px-4 py-3 text-sm text-[#111111] outline-none placeholder:text-[#A0A0A0] focus:border-[#0C9F88]"
+                  />
+                </label>
+
+                <label className="block">
                   <span className="mb-2 block text-sm font-medium text-[#6B6B6B]">Category</span>
                   <select
                     value={category}
@@ -200,52 +217,33 @@ export default function NewRequestPage() {
                     ))}
                   </select>
                 </label>
-
-                <label className="block">
-                  <span className="mb-2 block text-sm font-medium text-[#6B6B6B]">Urgency</span>
-                  <select
-                    value={urgency}
-                    onChange={(event) =>
-                      setUrgency(event.target.value as "low" | "medium" | "high" | "critical")
-                    }
-                    className="w-full rounded-[14px] border border-[#E8E2D9] bg-white px-4 py-3 text-sm text-[#111111] outline-none focus:border-[#0C9F88]"
-                  >
-                    <option value="low">Low</option>
-                    <option value="medium">Medium</option>
-                    <option value="high">High</option>
-                    <option value="critical">Critical</option>
-                  </select>
-                </label>
               </div>
 
-              <div className="grid gap-4 md:grid-cols-2">
-                <label className="block">
-                  <span className="mb-2 block text-sm font-medium text-[#6B6B6B]">Location</span>
-                  <input
-                    value={location}
-                    onChange={(event) => setLocation(event.target.value)}
-                    placeholder="Remote, Karachi, Lahore"
-                    className="w-full rounded-[14px] border border-[#E8E2D9] bg-white px-4 py-3 text-sm text-[#111111] outline-none placeholder:text-[#A0A0A0] focus:border-[#0C9F88]"
-                  />
-                </label>
+              <label className="block">
+                <span className="mb-2 block text-sm font-medium text-[#6B6B6B]">Urgency</span>
+                <select
+                  value={urgency}
+                  onChange={(event) =>
+                    setUrgency(event.target.value as "low" | "medium" | "high" | "critical")
+                  }
+                  className="w-full rounded-[14px] border border-[#E8E2D9] bg-white px-4 py-3 text-sm text-[#111111] outline-none focus:border-[#0C9F88]"
+                >
+                  <option value="low">Low</option>
+                  <option value="medium">Medium</option>
+                  <option value="high">High</option>
+                  <option value="critical">Critical</option>
+                </select>
+              </label>
 
-                <label className="block">
-                  <span className="mb-2 block text-sm font-medium text-[#6B6B6B]">Tags</span>
-                  <input
-                    value={tagInput}
-                    onChange={(event) => setTagInput(event.target.value)}
-                    onBlur={() => addTag(tagInput)}
-                    onKeyDown={(event) => {
-                      if (event.key === "Enter") {
-                        event.preventDefault();
-                        addTag(tagInput);
-                      }
-                    }}
-                    placeholder="Add tag and press Enter"
-                    className="w-full rounded-[14px] border border-[#E8E2D9] bg-white px-4 py-3 text-sm text-[#111111] outline-none placeholder:text-[#A0A0A0] focus:border-[#0C9F88]"
-                  />
-                </label>
-              </div>
+              <label className="block">
+                <span className="mb-2 block text-sm font-medium text-[#6B6B6B]">Location <span className="text-[#A0A0A0] font-normal">(optional)</span></span>
+                <input
+                  value={location}
+                  onChange={(event) => setLocation(event.target.value)}
+                  placeholder="Remote, Karachi, Lahore"
+                  className="w-full rounded-[14px] border border-[#E8E2D9] bg-white px-4 py-3 text-sm text-[#111111] outline-none placeholder:text-[#A0A0A0] focus:border-[#0C9F88]"
+                />
+              </label>
 
               {tags.length > 0 ? (
                 <div className="flex flex-wrap gap-2">

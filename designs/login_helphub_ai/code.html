@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "tertiary-fixed-dim": "#ffb3af",
+                      "error": "#ba1a1a",
+                      "on-secondary": "#ffffff",
+                      "tertiary": "#a43a3a",
+                      "on-error": "#ffffff",
+                      "primary-container": "#10b981",
+                      "tertiary-fixed": "#ffdad7",
+                      "secondary-container": "#d7e6e0",
+                      "on-tertiary": "#ffffff",
+                      "error-container": "#ffdad6",
+                      "tertiary-container": "#fc7c78",
+                      "surface-container-low": "#f5f3ef",
+                      "surface-dim": "#dbdad6",
+                      "secondary-fixed": "#d7e6e0",
+                      "secondary": "#54615d",
+                      "on-tertiary-container": "#711419",
+                      "inverse-primary": "#4edea3",
+                      "on-primary-container": "#00422b",
+                      "surface-container-high": "#eae8e4",
+                      "surface-container": "#efeeea",
+                      "surface-container-lowest": "#ffffff",
+                      "on-surface": "#1b1c1a",
+                      "on-primary-fixed-variant": "#005236",
+                      "on-surface-variant": "#3c4a42",
+                      "on-primary-fixed": "#002113",
+                      "primary-fixed": "#6ffbbe",
+                      "surface": "#fbf9f5",
+                      "primary": "#006c49",
+                      "on-error-container": "#93000a",
+                      "surface-variant": "#e4e2de",
+                      "on-secondary-container": "#596762",
+                      "on-tertiary-fixed": "#410005",
+                      "outline-variant": "#bbcabf",
+                      "inverse-on-surface": "#f2f0ed",
+                      "surface-bright": "#fbf9f5",
+                      "inverse-surface": "#30312e",
+                      "on-background": "#1b1c1a",
+                      "on-tertiary-fixed-variant": "#842225",
+                      "on-secondary-fixed-variant": "#3c4a45",
+                      "background": "#fbf9f5",
+                      "surface-container-highest": "#e4e2de",
+                      "surface-tint": "#006c49",
+                      "primary-fixed-dim": "#4edea3",
+                      "secondary-fixed-dim": "#bbcac4",
+                      "on-secondary-fixed": "#111e1a",
+                      "on-primary": "#ffffff",
+                      "outline": "#6c7a71"
+              },
+              "borderRadius": {
+                      "DEFAULT": "1rem",
+                      "lg": "2rem",
+                      "xl": "3rem",
+                      "full": "9999px"
+              },
+              "spacing": {},
+              "fontFamily": {
+                      "headline": ["Plus Jakarta Sans"],
+                      "body": ["Inter"],
+                      "label": ["Inter"]
+              }
+            },
+          }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            background-color: #fbf9f5;
+        }
+    </style>
+</head>
+<body class="font-body text-on-surface antialiased">
+<!-- TopNavBar -->
+<nav class="fixed top-0 left-0 w-full z-50 bg-[#fbf9f5]/70 dark:bg-[#121412]/70 backdrop-blur-[20px] shadow-[0_40px_60px_-10px_rgba(84,97,93,0.08)]">
+<div class="flex justify-between items-center px-8 md:px-16 py-6 w-full mx-auto">
+<div class="text-[#10B981] font-black text-xl flex items-center gap-2 font-headline">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">hub</span>
+<span>HelpHub AI</span>
+</div>
+<div class="hidden md:flex items-center gap-10 font-['Plus_Jakarta_Sans'] text-sm font-semibold tracking-tight">
+<a class="text-[#54615d] hover:text-[#10B981] hover:scale-105 transition-all duration-300" href="#">Home</a>
+<a class="text-[#54615d] hover:text-[#10B981] hover:scale-105 transition-all duration-300" href="#">Explore</a>
+<a class="text-[#54615d] hover:text-[#10B981] hover:scale-105 transition-all duration-300" href="#">Leaderboard</a>
+</div>
+<div class="flex items-center gap-4">
+<button class="px-6 py-2 rounded-full font-headline text-sm font-bold bg-primary-container text-on-primary-container hover:scale-105 active:scale-95 transition-all duration-300 shadow-lg shadow-primary-container/20">
+                    Sign In
+                </button>
+</div>
+</div>
+</nav>
+<!-- Main Content Canvas -->
+<main class="min-h-screen pt-32 pb-20 px-6 md:px-16 max-w-7xl mx-auto flex flex-col justify-center">
+<!-- Authentication Container -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
+<!-- Left Column: Branding Content -->
+<section class="bg-on-primary-fixed-variant rounded-xl p-10 md:p-16 flex flex-col justify-center text-surface-container-lowest relative overflow-hidden">
+<!-- Background Decorative Glow -->
+<div class="absolute -top-24 -right-24 w-64 h-64 bg-primary-container/20 blur-[100px] rounded-full"></div>
+<div class="relative z-10">
+<p class="font-label text-xs uppercase tracking-widest text-outline-variant mb-4 font-bold">COMMUNITY ACCESS</p>
+<h1 class="font-headline text-4xl md:text-5xl font-extrabold leading-tight tracking-tight mb-6">Enter the support network.</h1>
+<p class="text-surface-variant font-body text-lg leading-relaxed mb-10 opacity-90">
+                        Choose a demo identity, set your role, and jump into a multi-page product flow designed for asking, offering, and tracking help with a premium interface.
+                    </p>
+<ul class="space-y-6">
+<li class="flex items-start gap-4">
+<span class="material-symbols-outlined text-primary-container bg-surface-container-lowest/10 p-2 rounded-lg">person_check</span>
+<span class="text-surface-container-lowest font-medium">Role-based entry for Need Help, Can Help, or Both</span>
+</li>
+<li class="flex items-start gap-4">
+<span class="material-symbols-outlined text-primary-container bg-surface-container-lowest/10 p-2 rounded-lg">dashboard_customize</span>
+<span class="text-surface-container-lowest font-medium">Direct path into dashboard, requests, AI Center, and community feed</span>
+</li>
+<li class="flex items-start gap-4">
+<span class="material-symbols-outlined text-primary-container bg-surface-container-lowest/10 p-2 rounded-lg">database</span>
+<span class="text-surface-container-lowest font-medium">Persistent demo session powered by LocalStorage</span>
+</li>
+</ul>
+</div>
+<!-- Footer Image Element -->
+<div class="mt-16 rounded-lg overflow-hidden h-48 opacity-40 mix-blend-luminosity">
+<img alt="Community" class="w-full h-full object-cover" data-alt="a Diverse group of people collaborating in a bright modern co-working space with large windows and lush plants" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBmrV6-LOxChHgiuhPqvXKJmW3Y6mAJOro-nLTORDIMbVDm-Dl8X71S-40p9QkizfC7oD0U0XUQPJr47Y0y-OKzFIDlIfxeBtG-oEiPiKcyZMuZFCFpVqfu7ZDMcxy5PoFjeStYaeHtoiDSy96XHpcI_52q6C_5bnmAdtnyYBPoZLq5cwQiRa6Z_7McCAgU9ioSi4iYU_8zINOM1Rn3ui2hjDl9mcCBQ94kaz9GdKDntSxA5J1msl4Ge6pQMTw6GQohXg1YuTxHB8b1"/>
+</div>
+</section>
+<!-- Right Column: Login Form -->
+<section class="bg-surface-container-lowest rounded-xl p-10 md:p-16 shadow-[0_60px_80px_-20px_rgba(0,0,0,0.06)] flex flex-col justify-center">
+<div class="mb-10">
+<p class="font-label text-xs uppercase tracking-widest text-primary-container font-extrabold mb-4">LOGIN / SIGNUP</p>
+<h2 class="font-headline text-3xl font-bold text-on-primary-fixed-variant">Authenticate your community profile</h2>
+</div>
+<form class="space-y-6">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<!-- Dropdown 1 -->
+<div class="space-y-2">
+<label class="text-xs font-bold text-on-surface-variant px-1">Select demo user</label>
+<div class="relative">
+<select class="w-full bg-surface-container-low border-none rounded-lg py-4 px-5 text-on-surface font-medium focus:ring-2 focus:ring-primary-container/20 appearance-none">
+<option selected="">Ayesha Khan</option>
+<option>Marcus Chen</option>
+<option>Elena Rodriguez</option>
+</select>
+<span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-outline">expand_more</span>
+</div>
+</div>
+<!-- Dropdown 2 -->
+<div class="space-y-2">
+<label class="text-xs font-bold text-on-surface-variant px-1">Role selection</label>
+<div class="relative">
+<select class="w-full bg-surface-container-low border-none rounded-lg py-4 px-5 text-on-surface font-medium focus:ring-2 focus:ring-primary-container/20 appearance-none">
+<option selected="">Both</option>
+<option>Need Help</option>
+<option>Can Help</option>
+</select>
+<span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-outline">expand_more</span>
+</div>
+</div>
+</div>
+<!-- Email Field -->
+<div class="space-y-2">
+<label class="text-xs font-bold text-on-surface-variant px-1">Email</label>
+<input class="w-full bg-surface-container-low border-none rounded-lg py-4 px-5 text-on-surface font-medium focus:ring-2 focus:ring-primary-container/20" type="email" value="community@helphub.ai"/>
+</div>
+<!-- Password Field -->
+<div class="space-y-2">
+<label class="text-xs font-bold text-on-surface-variant px-1">Password</label>
+<div class="relative">
+<input class="w-full bg-surface-container-low border-none rounded-lg py-4 px-5 text-on-surface font-medium focus:ring-2 focus:ring-primary-container/20" type="password" value="••••••••"/>
+<span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer text-outline hover:text-primary transition-colors">visibility</span>
+</div>
+</div>
+<div class="flex items-center justify-between text-sm py-2">
+<label class="flex items-center gap-2 cursor-pointer">
+<input checked="" class="rounded border-none bg-surface-container-low text-primary-container focus:ring-primary-container" type="checkbox"/>
+<span class="text-on-secondary-container">Keep me signed in</span>
+</label>
+<a class="text-primary font-bold hover:underline" href="#">Forgot?</a>
+</div>
+<!-- CTA Button -->
+<button class="w-full py-5 rounded-full bg-primary-container text-on-primary-container font-headline font-extrabold text-lg shadow-xl shadow-primary-container/30 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 mt-4" type="submit">
+                        Continue to dashboard
+                    </button>
+<div class="relative py-4">
+<div class="absolute inset-0 flex items-center"><div class="w-full border-t border-outline-variant/30"></div></div>
+<div class="relative flex justify-center text-xs uppercase"><span class="bg-surface-container-lowest px-4 text-outline font-bold tracking-widest">Or access with</span></div>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<button class="flex items-center justify-center gap-3 py-4 rounded-full bg-surface-container-low hover:bg-surface-container transition-colors text-on-surface font-bold text-sm" type="button">
+<img alt="Google" class="w-5 h-5" data-alt="Official Google logo icon with standard brand colors" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD1CUeCFgNYGQmpIPjHrf5ehlhejMmDDGJnKWyx6xbnNQ_P1QjQB0_Iyz5zUd-DVNOI1yPTah5yY67IfbQQzGrNGrsSqKVzc8pXbSyQS-Q-nxutYTVYb_xRY6fHTT4_MF70fd8xCJiQpAbLt9fdWY9kAJqN4J1ChACaqhvOBmFVJDGyDUw-iry3urWfDTUvpSmPUh1gc1BCSIVjFswqPsm0LMKQhNi7bLy9HI16x84ua1gBu9-jhnodMk1BXh91c8lUooMvscpxvQHK"/> Google
+                        </button>
+<button class="flex items-center justify-center gap-3 py-4 rounded-full bg-surface-container-low hover:bg-surface-container transition-colors text-on-surface font-bold text-sm" type="button">
+<span class="material-symbols-outlined text-lg">ios</span> Apple
+                        </button>
+</div>
+</form>
+</section>
+</div>
+</main>
+<!-- Footer -->
+<footer class="w-full rounded-t-[3rem] mt-20 bg-[#f5f3ef] dark:bg-[#1a1c1a]">
+<div class="flex flex-col md:flex-row justify-between items-center px-16 py-12 w-full">
+<div class="mb-8 md:mb-0">
+<p class="font-['Inter'] text-xs uppercase tracking-widest text-[#54615d] dark:text-[#bbcabf]">© 2024 HelpHub AI. The Digital Sanctuary.</p>
+</div>
+<div class="flex flex-wrap justify-center gap-8 font-['Inter'] text-xs uppercase tracking-widest">
+<a class="text-[#54615d] dark:text-[#bbcabf] hover:text-[#10B981] transition-colors" href="#">Privacy Policy</a>
+<a class="text-[#54615d] dark:text-[#bbcabf] hover:text-[#10B981] transition-colors" href="#">Terms of Service</a>
+<a class="text-[#54615d] dark:text-[#bbcabf] hover:text-[#10B981] transition-colors" href="#">Community Guidelines</a>
+</div>
+</div>
+</footer>
+</body></html>
