@@ -100,7 +100,7 @@ export default function OnboardingClient() {
     <div className="min-h-screen bg-[#F5F0EA] flex items-center justify-center p-4">
       <div className="w-full max-w-2xl bg-white rounded-[14px] border border-[#E8E2D9] p-8 shadow-[0_4px_12px_rgba(0,0,0,.06)]">
         <div className="mb-8">
-          <h1 className="text-2xl font-semibold text-[#111111] mb-2">Welcome to Helplytics</h1>
+          <h1 className="text-2xl font-semibold text-[#111111] mb-2">Welcome to HelpHub AI</h1>
           <p className="text-sm text-[#6B6B6B]">Step {currentStep} of 4</p>
           <div className="flex gap-2 mt-4">
             {[1, 2, 3, 4].map(s => (
@@ -129,7 +129,7 @@ export default function OnboardingClient() {
 
         {currentStep === 2 && (
           <div className="space-y-4">
-            <p className="text-sm text-[#6B6B6B] mb-4">How do you want to use Helplytics?</p>
+            <p className="text-sm text-[#6B6B6B] mb-4">How do you want to use HelpHub AI?</p>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               {[
                 { id: "need_help", label: "Get Help", desc: "I need help with things" },

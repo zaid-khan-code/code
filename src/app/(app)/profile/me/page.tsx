@@ -44,7 +44,7 @@ export default async function ProfileMePage() {
       <HeroBanner
         label="Profile"
         title={profile.full_name ?? profile.username ?? "Community member"}
-        subtitle={`${profile.user_mode ?? "both"} · ${profile.location ?? "Community"}`}
+        subtitle={`${profile.user_mode ?? "both"} / ${profile.location ?? "Community"}`}
       />
 
       <ProfileMeClient

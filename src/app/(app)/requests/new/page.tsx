@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import HeroBanner from "@/components/ui/HeroBanner";
 import Button from "@/components/ui/Button";
+import Card from "@/components/ui/Card";
 import Badge from "@/components/ui/Badge";
 import { createRequest } from "./actions";
 
@@ -159,125 +160,128 @@ export default function NewRequestPage() {
       />
 
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1.3fr)_420px]">
-        <form
-          onSubmit={handleSubmit}
-          className="rounded-[22px] border border-[#E8E2D9] bg-white p-6 shadow-[0_12px_28px_rgba(17,17,17,0.04)]"
-        >
-          <div className="space-y-5">
-            <label className="block">
-              <span className="mb-2 block text-sm font-medium text-[#6B6B6B]">Title</span>
-              <input
-                value={title}
-                onChange={(event) => setTitle(event.target.value)}
-                placeholder="Need review on my JavaScript quiz app before submission"
-                className="w-full rounded-[14px] border border-[#E8E2D9] px-4 py-3 text-sm text-[#111111] outline-none placeholder:text-[#A0A0A0] focus:border-[#0C9F88]"
-              />
-            </label>
-
-            <label className="block">
-              <span className="mb-2 block text-sm font-medium text-[#6B6B6B]">Description</span>
-              <textarea
-                value={description}
-                onChange={(event) => setDescription(event.target.value)}
-                placeholder="Explain the challenge, your current progress, deadline, and what kind of help would be useful."
-                rows={8}
-                className="w-full rounded-[14px] border border-[#E8E2D9] px-4 py-3 text-sm leading-6 text-[#111111] outline-none placeholder:text-[#A0A0A0] focus:border-[#0C9F88]"
-              />
-            </label>
-
-            <div className="grid gap-4 md:grid-cols-2">
+        <Card className="rounded-[22px] p-6">
+          <form onSubmit={handleSubmit}>
+            <div className="space-y-5">
               <label className="block">
-                <span className="mb-2 block text-sm font-medium text-[#6B6B6B]">Tags</span>
+                <span className="mb-2 block text-sm font-medium text-[#6B6B6B]">Title</span>
                 <input
-                  value={tagInput}
-                  onChange={(event) => setTagInput(event.target.value)}
-                  onBlur={() => addTag(tagInput)}
-                  placeholder="JavaScript, Debugging, Review"
-                  className="w-full rounded-[14px] border border-[#E8E2D9] px-4 py-3 text-sm text-[#111111] outline-none placeholder:text-[#A0A0A0] focus:border-[#0C9F88]"
+                  value={title}
+                  onChange={(event) => setTitle(event.target.value)}
+                  placeholder="Need review on my JavaScript quiz app before submission"
+                  className="w-full rounded-[14px] border border-[#E8E2D9] bg-white px-4 py-3 text-sm text-[#111111] outline-none placeholder:text-[#A0A0A0] focus:border-[#0C9F88]"
                 />
               </label>
 
               <label className="block">
-                <span className="mb-2 block text-sm font-medium text-[#6B6B6B]">Category</span>
-                <select
-                  value={category}
-                  onChange={(event) => setCategory(event.target.value)}
-                  className="w-full rounded-[14px] border border-[#E8E2D9] px-4 py-3 text-sm text-[#111111] outline-none focus:border-[#0C9F88]"
-                >
-                  <option value="">Select category</option>
-                  {categories.map((item) => (
-                    <option key={item} value={item}>
-                      {item}
-                    </option>
+                <span className="mb-2 block text-sm font-medium text-[#6B6B6B]">Description</span>
+                <textarea
+                  value={description}
+                  onChange={(event) => setDescription(event.target.value)}
+                  placeholder="Explain the challenge, your current progress, deadline, and what kind of help would be useful."
+                  rows={8}
+                  className="w-full rounded-[14px] border border-[#E8E2D9] bg-white px-4 py-3 text-sm leading-6 text-[#111111] outline-none placeholder:text-[#A0A0A0] focus:border-[#0C9F88]"
+                />
+              </label>
+
+              <div className="grid gap-4 md:grid-cols-2">
+                <label className="block">
+                  <span className="mb-2 block text-sm font-medium text-[#6B6B6B]">Category</span>
+                  <select
+                    value={category}
+                    onChange={(event) => setCategory(event.target.value)}
+                    className="w-full rounded-[14px] border border-[#E8E2D9] bg-white px-4 py-3 text-sm text-[#111111] outline-none focus:border-[#0C9F88]"
+                  >
+                    <option value="">Select category</option>
+                    {categories.map((item) => (
+                      <option key={item} value={item}>
+                        {item}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+
+                <label className="block">
+                  <span className="mb-2 block text-sm font-medium text-[#6B6B6B]">Urgency</span>
+                  <select
+                    value={urgency}
+                    onChange={(event) =>
+                      setUrgency(event.target.value as "low" | "medium" | "high" | "critical")
+                    }
+                    className="w-full rounded-[14px] border border-[#E8E2D9] bg-white px-4 py-3 text-sm text-[#111111] outline-none focus:border-[#0C9F88]"
+                  >
+                    <option value="low">Low</option>
+                    <option value="medium">Medium</option>
+                    <option value="high">High</option>
+                    <option value="critical">Critical</option>
+                  </select>
+                </label>
+              </div>
+
+              <div className="grid gap-4 md:grid-cols-2">
+                <label className="block">
+                  <span className="mb-2 block text-sm font-medium text-[#6B6B6B]">Location</span>
+                  <input
+                    value={location}
+                    onChange={(event) => setLocation(event.target.value)}
+                    placeholder="Remote, Karachi, Lahore"
+                    className="w-full rounded-[14px] border border-[#E8E2D9] bg-white px-4 py-3 text-sm text-[#111111] outline-none placeholder:text-[#A0A0A0] focus:border-[#0C9F88]"
+                  />
+                </label>
+
+                <label className="block">
+                  <span className="mb-2 block text-sm font-medium text-[#6B6B6B]">Tags</span>
+                  <input
+                    value={tagInput}
+                    onChange={(event) => setTagInput(event.target.value)}
+                    onBlur={() => addTag(tagInput)}
+                    onKeyDown={(event) => {
+                      if (event.key === "Enter") {
+                        event.preventDefault();
+                        addTag(tagInput);
+                      }
+                    }}
+                    placeholder="Add tag and press Enter"
+                    className="w-full rounded-[14px] border border-[#E8E2D9] bg-white px-4 py-3 text-sm text-[#111111] outline-none placeholder:text-[#A0A0A0] focus:border-[#0C9F88]"
+                  />
+                </label>
+              </div>
+
+              {tags.length > 0 ? (
+                <div className="flex flex-wrap gap-2">
+                  {tags.map((tag) => (
+                    <Badge key={tag} variant="tag">
+                      {tag}
+                      <button
+                        type="button"
+                        onClick={() => setTags((current) => current.filter((item) => item !== tag))}
+                        className="ml-2 text-[#8B8B8B] hover:text-[#111111]"
+                      >
+                        &times;
+                      </button>
+                    </Badge>
                   ))}
-                </select>
-              </label>
-            </div>
+                </div>
+              ) : null}
 
-            <div className="grid gap-4 md:grid-cols-2">
-              <label className="block">
-                <span className="mb-2 block text-sm font-medium text-[#6B6B6B]">Urgency</span>
-                <select
-                  value={urgency}
-                  onChange={(event) =>
-                    setUrgency(event.target.value as "low" | "medium" | "high" | "critical")
-                  }
-                  className="w-full rounded-[14px] border border-[#E8E2D9] px-4 py-3 text-sm text-[#111111] outline-none focus:border-[#0C9F88]"
-                >
-                  <option value="low">Low</option>
-                  <option value="medium">Medium</option>
-                  <option value="high">High</option>
-                  <option value="critical">Critical</option>
-                </select>
-              </label>
+              {error ? (
+                <div className="rounded-[14px] bg-[#FFF1EF] px-4 py-3 text-sm text-[#B42318]">
+                  {error}
+                </div>
+              ) : null}
 
-              <label className="block">
-                <span className="mb-2 block text-sm font-medium text-[#6B6B6B]">Location</span>
-                <input
-                  value={location}
-                  onChange={(event) => setLocation(event.target.value)}
-                  placeholder="Remote, Karachi, Lahore"
-                  className="w-full rounded-[14px] border border-[#E8E2D9] px-4 py-3 text-sm text-[#111111] outline-none placeholder:text-[#A0A0A0] focus:border-[#0C9F88]"
-                />
-              </label>
-            </div>
-
-            {tags.length > 0 ? (
-              <div className="flex flex-wrap gap-2">
-                {tags.map((tag) => (
-                  <Badge key={tag} variant="tag">
-                    {tag}
-                    <button
-                      type="button"
-                      onClick={() => setTags((current) => current.filter((item) => item !== tag))}
-                      className="ml-2 text-[#8B8B8B]"
-                    >
-                      x
-                    </button>
-                  </Badge>
-                ))}
+              <div className="flex flex-wrap gap-3 pt-2">
+                <Button type="button" variant="secondary" onClick={runAiSuggestions}>
+                  {isLoadingAI ? "Applying AI..." : "Apply AI suggestions"}
+                </Button>
+                <Button type="submit">{isSubmitting ? "Publishing..." : "Publish request"}</Button>
               </div>
-            ) : null}
-
-            {error ? (
-              <div className="rounded-[14px] bg-[#FFF1EF] px-4 py-3 text-sm text-[#B42318]">
-                {error}
-              </div>
-            ) : null}
-
-            <div className="flex flex-wrap gap-3 pt-2">
-              <Button type="button" variant="secondary" onClick={runAiSuggestions}>
-                {isLoadingAI ? "Applying AI..." : "Apply AI suggestions"}
-              </Button>
-              <Button type="submit">{isSubmitting ? "Publishing..." : "Publish request"}</Button>
             </div>
-          </div>
-        </form>
+          </form>
+        </Card>
 
-        <aside className="rounded-[22px] border border-[#E8E2D9] bg-white p-6 shadow-[0_12px_28px_rgba(17,17,17,0.04)]">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#8AA79E]">
-            AI Assistant
-          </p>
+        <Card className="rounded-[22px] p-6">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#8AA79E]">AI Assistant</p>
           <h2 className="mt-3 text-[2rem] font-black leading-[0.95] tracking-[-0.04em] text-[#111111]">
             Smart request guidance
           </h2>
@@ -286,7 +290,7 @@ export default function NewRequestPage() {
             <div className="grid grid-cols-[140px_1fr] gap-3 border-b border-[#F0EBE3] pb-4">
               <span className="text-[#6B6B6B]">Suggested category</span>
               <span className="font-semibold text-[#111111]">
-                {category || suggestions.category}
+                {category || suggestions.category || "--"}
               </span>
             </div>
             <div className="grid grid-cols-[140px_1fr] gap-3 border-b border-[#F0EBE3] pb-4">
@@ -306,7 +310,8 @@ export default function NewRequestPage() {
                 {suggestions.rewrite ? (
                   <Button
                     type="button"
-                    variant="ghost"
+                    variant="secondary"
+                    size="sm"
                     onClick={() => setDescription(suggestions.rewrite ?? description)}
                   >
                     Use rewrite
@@ -315,7 +320,7 @@ export default function NewRequestPage() {
               </div>
             </div>
           </div>
-        </aside>
+        </Card>
       </div>
     </div>
   );

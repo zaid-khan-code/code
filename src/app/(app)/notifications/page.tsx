@@ -92,7 +92,7 @@ export default async function NotificationsPage() {
                         {formatNotification(item.type, (item.payload ?? {}) as NotificationPayload)}
                       </p>
                       <p className="mt-2 text-xs text-[#6B6B6B]">
-                        {item.type.replace("_", " ")} · {timeAgo(item.created_at)}
+                        {item.type.replace("_", " ")} &middot; {timeAgo(item.created_at)}
                       </p>
                     </div>
 

@@ -12,19 +12,19 @@ type Props = {
 
 const variantClasses: Record<NonNullable<Props["variant"]>, string> = {
   primary:
-    "bg-[#0C9F88] text-white hover:bg-[#0a8a77] border border-transparent",
+    "border border-transparent bg-[linear-gradient(135deg,#109F88_0%,#24C9B0_100%)] text-white shadow-[0_14px_32px_rgba(16,159,136,0.22)] hover:-translate-y-px hover:brightness-[1.02]",
   secondary:
-    "bg-white text-[#0C9F88] border border-[#0C9F88] hover:bg-[#F0EBE3]",
+    "border border-[#E7DED2] bg-white text-[#171717] shadow-[0_10px_20px_rgba(28,25,23,0.04)] hover:-translate-y-px hover:border-[#CDDAD4] hover:bg-[#FCFBF8]",
   ghost:
-    "bg-transparent text-[#6B6B6B] border border-transparent hover:bg-[#F0EBE3]",
+    "border border-transparent bg-transparent text-[#655F57] hover:bg-[#F2ECE4] hover:text-[#171717]",
   danger:
-    "bg-[#EF4444] text-white border border-transparent hover:bg-[#dc2626]",
+    "border border-transparent bg-[#B42318] text-white shadow-[0_12px_24px_rgba(180,35,24,0.18)] hover:-translate-y-px hover:bg-[#9e1f16]",
 };
 
 const sizeClasses: Record<NonNullable<Props["size"]>, string> = {
-  sm: "px-3 py-1.5 text-xs",
-  md: "px-5 py-2 text-sm",
-  lg: "px-7 py-3 text-base",
+  sm: "px-4 py-2 text-sm",
+  md: "px-5 py-2.5 text-sm",
+  lg: "px-7 py-3.5 text-base",
 };
 
 export default function Button({
@@ -42,11 +42,11 @@ export default function Button({
       onClick={onClick}
       disabled={disabled}
       className={[
-        "inline-flex items-center justify-center font-medium transition-colors cursor-pointer select-none",
+        "inline-flex cursor-pointer select-none items-center justify-center font-semibold tracking-[-0.02em] transition-all",
         "rounded-[999px]",
         variantClasses[variant],
         sizeClasses[size],
-        disabled ? "opacity-50 cursor-not-allowed pointer-events-none" : "",
+        disabled ? "pointer-events-none opacity-50" : "",
         className,
       ]
         .filter(Boolean)

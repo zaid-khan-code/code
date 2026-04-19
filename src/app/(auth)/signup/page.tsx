@@ -1,204 +1,131 @@
 'use client';
 
-import { useActionState } from 'react';
+import Link from 'next/link';
+import { useActionState, useState } from 'react';
 import { signUp } from '@/lib/auth/actions';
+import AuthShell from '@/components/layout/AuthShell';
+import Button from '@/components/ui/Button';
 
 const initialState = { error: null as string | null };
 
-const inputStyle: React.CSSProperties = {
-  width: '100%',
-  padding: '10px 14px',
-  borderRadius: 'var(--radius-md)',
-  border: '1px solid var(--color-border)',
-  fontSize: '14px',
-  color: 'var(--color-text)',
-  background: '#fff',
-  outline: 'none',
-  boxSizing: 'border-box',
-};
+type RoleType = 'need_help' | 'can_help' | 'both';
+
+const roleOptions: { value: RoleType; label: string; desc: string }[] = [
+  { value: 'need_help', label: 'I need help', desc: 'Get support from community members.' },
+  { value: 'can_help', label: 'I can help', desc: 'Offer your skills and build trust.' },
+  { value: 'both', label: 'Both', desc: 'Ask and offer help in the community.' },
+];
 
 export default function SignupPage() {
   const [state, formAction, pending] = useActionState(signUp, initialState);
+  const [selectedRole, setSelectedRole] = useState<RoleType>('both');
 
   return (
-    <div style={{
-      minHeight: '100vh',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      padding: '24px',
-      background: 'var(--color-bg)',
-    }}>
-      <div style={{
-        display: 'flex',
-        width: '100%',
-        maxWidth: '900px',
-        borderRadius: 'var(--radius-xl)',
-        overflow: 'hidden',
-        boxShadow: 'var(--shadow-lg)',
-      }}>
-        {/* Left dark card */}
-        <div style={{
-          flex: '0 0 380px',
-          background: 'var(--color-hero-dark)',
-          color: 'var(--color-hero-dark-fg)',
-          padding: '48px 40px',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-        }} className="auth-left-panel">
-          <span style={{
-            fontSize: '11px',
-            fontWeight: 600,
-            letterSpacing: '0.12em',
-            color: 'var(--color-brand)',
-            textTransform: 'uppercase',
-            marginBottom: '16px',
-            display: 'block',
-          }}>
-            Community Access
-          </span>
-          <h1 style={{
-            fontSize: '32px',
-            fontWeight: 700,
-            lineHeight: 1.2,
-            margin: '0 0 24px',
-            color: '#fff',
-          }}>
-            Join the support network.
-          </h1>
-          <ul style={{
-            listStyle: 'none',
-            padding: 0,
-            margin: 0,
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '14px',
-          }}>
-            {[
-              'Get help from skilled community members',
-              'Build your trust score over time',
-              'AI matches you with the right helpers',
-              'Earn badges for contributions',
-            ].map((f) => (
-              <li key={f} style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', fontSize: '14px', color: 'rgba(255,255,255,0.75)' }}>
-                <span style={{ color: 'var(--color-brand)', marginTop: '1px', flexShrink: 0 }}>✓</span>
-                {f}
-              </li>
-            ))}
-          </ul>
+    <AuthShell
+      panelLabel="Community Access"
+      panelTitle="Build a support profile that moves with you."
+      panelDescription="Set your identity, choose how you want to participate, and step into the same premium multi-page flow shown across the product."
+      panelPoints={[
+        'Choose whether you need help, can help, or want both roles at once.',
+        'Get routed into onboarding, requests, feed, messages, and trust-building tools.',
+        'Keep your profile, contribution history, and community reputation in one place.',
+      ]}
+      formLabel="Create Account"
+      formTitle="Set up your community profile"
+      formDescription="Create your account to start requesting help, offering support, and building trust."
+      footer={
+        <p>
+          Already have an account?{' '}
+          <Link href="/login" className="font-semibold text-[#109F88] no-underline hover:underline">
+            Log in
+          </Link>
+        </p>
+      }
+    >
+      <form action={formAction} className="space-y-5">
+        <label className="block">
+          <span className="mb-2 block text-sm font-semibold text-[#3B342D]">Full name</span>
+          <input
+            id="full_name"
+            name="full_name"
+            type="text"
+            required
+            autoComplete="name"
+            placeholder="Ayesha Khan"
+            className="w-full rounded-[18px] border border-[#E7DED2] bg-white px-4 py-3 text-sm text-[#171717] outline-none placeholder:text-[#9B948B] focus:border-[#109F88]"
+          />
+        </label>
+
+        <label className="block">
+          <span className="mb-2 block text-sm font-semibold text-[#3B342D]">Email</span>
+          <input
+            id="email"
+            name="email"
+            type="email"
+            required
+            autoComplete="email"
+            placeholder="community@helphub.ai"
+            className="w-full rounded-[18px] border border-[#E7DED2] bg-white px-4 py-3 text-sm text-[#171717] outline-none placeholder:text-[#9B948B] focus:border-[#109F88]"
+          />
+        </label>
+
+        <label className="block">
+          <span className="mb-2 block text-sm font-semibold text-[#3B342D]">Password</span>
+          <input
+            id="password"
+            name="password"
+            type="password"
+            required
+            autoComplete="new-password"
+            placeholder="Min 8 characters"
+            className="w-full rounded-[18px] border border-[#E7DED2] bg-white px-4 py-3 text-sm text-[#171717] outline-none placeholder:text-[#9B948B] focus:border-[#109F88]"
+          />
+        </label>
+
+        <div>
+          <span className="mb-2 block text-sm font-semibold text-[#3B342D]">Role selection</span>
+          <div className="grid gap-3 sm:grid-cols-3">
+            {roleOptions.map((role) => {
+              const active = selectedRole === role.value;
+
+              return (
+                <label
+                  key={role.value}
+                  className={[
+                    'cursor-pointer rounded-[18px] border px-4 py-4 transition-all',
+                    active
+                      ? 'border-[#109F88] bg-[#EAF8F5] shadow-[0_12px_24px_rgba(16,159,136,0.08)]'
+                      : 'border-[#E7DED2] bg-white hover:border-[#CFE5DF]',
+                  ].join(' ')}
+                >
+                  <input
+                    type="radio"
+                    name="user_mode"
+                    value={role.value}
+                    checked={active}
+                    onChange={() => setSelectedRole(role.value)}
+                    className="sr-only"
+                  />
+                  <p className={active ? 'text-sm font-semibold text-[#109F88]' : 'text-sm font-semibold text-[#171717]'}>
+                    {role.label}
+                  </p>
+                  <p className="mt-1 text-xs leading-5 text-[#655F57]">{role.desc}</p>
+                </label>
+              );
+            })}
+          </div>
         </div>
 
-        {/* Right white card */}
-        <div style={{
-          flex: 1,
-          background: 'var(--color-surface)',
-          padding: '48px 40px',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-        }}>
-          <span style={{
-            fontSize: '11px',
-            fontWeight: 600,
-            letterSpacing: '0.12em',
-            color: 'var(--color-text-muted)',
-            textTransform: 'uppercase',
-            marginBottom: '12px',
-            display: 'block',
-          }}>
-            Create Account
-          </span>
-          <h2 style={{ fontSize: '22px', fontWeight: 700, margin: '0 0 32px', color: 'var(--color-text)' }}>
-            Set up your community profile
-          </h2>
-
-          <form action={formAction} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-              <label htmlFor="full_name" style={{ fontSize: '13px', fontWeight: 500, color: 'var(--color-text)' }}>
-                Full name
-              </label>
-              <input
-                id="full_name"
-                name="full_name"
-                type="text"
-                required
-                autoComplete="name"
-                style={inputStyle}
-                placeholder="Jane Doe"
-              />
-            </div>
-
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-              <label htmlFor="email" style={{ fontSize: '13px', fontWeight: 500, color: 'var(--color-text)' }}>
-                Email
-              </label>
-              <input
-                id="email"
-                name="email"
-                type="email"
-                required
-                autoComplete="email"
-                style={inputStyle}
-                placeholder="you@example.com"
-              />
-            </div>
-
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-              <label htmlFor="password" style={{ fontSize: '13px', fontWeight: 500, color: 'var(--color-text)' }}>
-                Password
-              </label>
-              <input
-                id="password"
-                name="password"
-                type="password"
-                required
-                autoComplete="new-password"
-                style={inputStyle}
-                placeholder="Min 8 characters"
-              />
-            </div>
-
-            {state.error && (
-              <p style={{ margin: 0, fontSize: '13px', color: '#EF4444', background: '#FEE2E2', padding: '10px 14px', borderRadius: 'var(--radius-md)' }}>
-                {state.error}
-              </p>
-            )}
-
-            <button
-              type="submit"
-              disabled={pending}
-              style={{
-                background: 'var(--color-brand)',
-                color: '#fff',
-                border: 'none',
-                borderRadius: 'var(--radius-pill)',
-                padding: '12px 28px',
-                fontSize: '15px',
-                fontWeight: 600,
-                cursor: pending ? 'not-allowed' : 'pointer',
-                opacity: pending ? 0.7 : 1,
-                transition: 'opacity 0.15s',
-              }}
-            >
-              {pending ? 'Creating account…' : 'Create account'}
-            </button>
-          </form>
-
-          <p style={{ marginTop: '24px', fontSize: '13px', color: 'var(--color-text-muted)', textAlign: 'center' }}>
-            Already have an account?{' '}
-            <a href="/login" style={{ color: 'var(--color-brand)', fontWeight: 500, textDecoration: 'none' }}>
-              Log in
-            </a>
+        {state.error ? (
+          <p className="rounded-[18px] bg-[#FFF1EF] px-4 py-3 text-sm text-[#B42318]">
+            {state.error}
           </p>
-        </div>
-      </div>
+        ) : null}
 
-      <style>{`
-        @media (max-width: 640px) {
-          .auth-left-panel { display: none !important; }
-        }
-      `}</style>
-    </div>
+        <Button type="submit" disabled={pending} size="lg" className="w-full">
+          {pending ? 'Creating account...' : 'Create account'}
+        </Button>
+      </form>
+    </AuthShell>
   );
 }

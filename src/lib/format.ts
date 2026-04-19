@@ -17,6 +17,10 @@ export function timeAgo(iso: string) {
   });
 }
 
+export function daysAgoISOString(days: number) {
+  return new Date(Date.now() - days * 24 * 60 * 60 * 1000).toISOString();
+}
+
 export function formatDate(iso: string, opts?: Intl.DateTimeFormatOptions) {
   return new Date(iso).toLocaleDateString("en-US", {
     month: "short",

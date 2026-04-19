@@ -58,7 +58,7 @@ export default async function ProfilePage({ params }: PageProps) {
       <HeroBanner
         label="Profile"
         title={profile.full_name ?? profile.username ?? "Community member"}
-        subtitle={`${profile.user_mode ?? "both"} · ${profile.location ?? "Community"}`}
+        subtitle={`${profile.user_mode ?? "both"} / ${profile.location ?? "Community"}`}
       />
 
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1.2fr)_420px]">
@@ -139,7 +139,7 @@ export default async function ProfilePage({ params }: PageProps) {
                 {profile.full_name ?? profile.username ?? "Community member"}
               </p>
               <p className="text-sm text-[#6B6B6B]">
-                @{profile.username ?? "member"} · {profile.location ?? "Community"}
+                @{profile.username ?? "member"} / {profile.location ?? "Community"}
               </p>
             </div>
           </div>

@@ -3,6 +3,7 @@ import { requireOnboarded } from "@/lib/auth/guards";
 import { createAdminClient } from "@/lib/supabase/admin";
 import HeroBanner from "@/components/ui/HeroBanner";
 import Button from "@/components/ui/Button";
+import Card from "@/components/ui/Card";
 import RequestCard from "@/components/cards/RequestCard";
 
 type SearchParams = Promise<{
@@ -97,18 +98,13 @@ export default async function ExplorePage({
       />
 
       <div className="grid gap-6 lg:grid-cols-[300px_minmax(0,1fr)]">
-        <form
-          method="get"
-          className="rounded-[22px] border border-[#E8E2D9] bg-white p-6 shadow-[0_12px_28px_rgba(17,17,17,0.04)]"
-        >
-          <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#8AA79E]">
-            Filters
-          </p>
+        <Card className="rounded-[22px] p-6">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#8AA79E]">Filters</p>
           <h2 className="mt-3 text-[2rem] font-black leading-[0.95] tracking-[-0.04em] text-[#111111]">
             Refine the feed
           </h2>
 
-          <div className="mt-8 space-y-5">
+          <form method="get" className="mt-8 space-y-5">
             <label className="block">
               <span className="mb-2 block text-sm font-medium text-[#6B6B6B]">Category</span>
               <select
@@ -160,6 +156,21 @@ export default async function ExplorePage({
               />
             </label>
 
+            <label className="block">
+              <span className="mb-2 block text-sm font-medium text-[#6B6B6B]">Status</span>
+              <select
+                name="status"
+                defaultValue={params.status ?? "all"}
+                className="w-full rounded-[14px] border border-[#E8E2D9] bg-white px-4 py-3 text-sm text-[#111111] outline-none focus:border-[#0C9F88]"
+              >
+                <option value="all">All statuses</option>
+                <option value="open">Open</option>
+                <option value="in_progress">In Progress</option>
+                <option value="solved">Solved</option>
+                <option value="closed">Closed</option>
+              </select>
+            </label>
+
             <div className="flex gap-3 pt-2">
               <Button type="submit">Apply filters</Button>
               <Link href="/explore" className="inline-flex items-center text-sm font-medium text-[#6B6B6B]">
@@ -167,22 +178,21 @@ export default async function ExplorePage({
               </Link>
             </div>
 
-            <div className="rounded-[18px] bg-[#F7F2EC] p-4 text-xs leading-5 text-[#6B6B6B]">
-              {skillRows?.length ?? 0} skills in the community catalog · {count ?? 0} requests visible
+            <div className="rounded-[14px] bg-[#F7F2EC] p-4 text-xs leading-5 text-[#6B6B6B]">
+              {skillRows?.length ?? 0} skills in the community catalog &middot; {count ?? 0} requests visible
             </div>
-          </div>
-        </form>
+          </form>
+        </Card>
 
         <div className="space-y-4">
           {requestRows.length === 0 ? (
-            <div className="rounded-[22px] border border-[#E8E2D9] bg-white p-10 text-center shadow-[0_12px_28px_rgba(17,17,17,0.04)]">
+            <Card className="rounded-[22px] p-10 text-center">
               <p className="text-lg font-semibold text-[#111111]">No requests match the current filters.</p>
               <p className="mt-2 text-sm text-[#6B6B6B]">Try widening the category or clearing the skills/location filters.</p>
-            </div>
+            </Card>
           ) : (
             requestRows.map((request) => {
               const author = authorMap.get(request.author_id);
-
               return (
                 <RequestCard
                   key={request.id}

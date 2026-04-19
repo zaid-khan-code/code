@@ -1,7 +1,6 @@
 import Link from "next/link";
 import Badge from "@/components/ui/Badge";
 import Avatar from "@/components/ui/Avatar";
-import { timeAgo } from "@/lib/format";
 
 type Request = {
   id: string;
@@ -49,17 +48,17 @@ export default function RequestCard({
   helperCount = 0,
 }: Props) {
   return (
-    <article className="rounded-[22px] border border-[#E8E2D9] bg-white p-5 shadow-[0_12px_28px_rgba(17,17,17,0.04)]">
+    <article className="rounded-[24px] border border-[#E7DED2] bg-white/95 p-5 shadow-[0_12px_28px_rgba(28,25,23,0.05)] transition-all hover:-translate-y-0.5 hover:shadow-[0_20px_40px_rgba(28,25,23,0.08)]">
       <div className="mb-3 flex flex-wrap items-center gap-2">
         {request.category ? <Badge variant="category">{request.category}</Badge> : null}
         <Badge variant={getUrgencyVariant(request.urgency)}>{request.urgency}</Badge>
         <Badge variant={getStatusVariant(request.status)}>{request.status.replace("_", " ")}</Badge>
       </div>
 
-      <h3 className="text-[1.15rem] font-extrabold leading-tight tracking-[-0.03em] text-[#111111]">
+      <h3 className="text-[1.15rem] font-extrabold leading-tight tracking-[-0.03em] text-[#171717]">
         {request.title}
       </h3>
-      <p className="mt-2 line-clamp-2 text-sm leading-6 text-[#6B6B6B]">
+      <p className="mt-2 line-clamp-2 text-sm leading-6 text-[#655F57]">
         {request.description}
       </p>
 
@@ -73,15 +72,23 @@ export default function RequestCard({
         </div>
       ) : null}
 
-      <div className="mt-4 border-t border-[#F0EBE3] pt-4">
-        <p className="text-sm font-semibold text-[#111111]">{authorName}</p>
-        <div className="mt-1.5 flex items-center justify-between gap-2">
-          <p className="text-xs text-[#6B6B6B]">
-            {request.location || "Community"} · {helperCount} helper{helperCount !== 1 ? "s" : ""} interested
+      <div className="mt-4 flex items-center justify-between gap-4 border-t border-[#F2ECE4] pt-4">
+        <div className="flex min-w-0 items-center gap-3">
+          <Avatar name={authorName} src={authorAvatarUrl} size="md" />
+          <div className="min-w-0">
+            <p className="truncate text-sm font-semibold text-[#171717]">{authorName}</p>
+            <p className="truncate text-xs text-[#655F57]">
+              @{authorUsername} &middot; {request.location || "Community"} &middot; {authorTrustScore ?? 0}% trust
+            </p>
+          </div>
+        </div>
+        <div className="shrink-0 text-right">
+          <p className="text-xs text-[#655F57]">
+            {helperCount} helper{helperCount !== 1 ? "s" : ""} interested
           </p>
           <Link
             href={`/requests/${request.id}`}
-            className="shrink-0 text-sm font-semibold text-[#111111] underline-offset-4 hover:underline"
+            className="mt-1 inline-flex rounded-full bg-[#F2ECE4] px-3 py-1.5 text-sm font-semibold text-[#171717] no-underline transition-colors hover:bg-[#E7DED2]"
           >
             Open details
           </Link>

@@ -275,7 +275,10 @@ export default function ProfileMeClient({
         </Card>
 
         <Card className="rounded-[22px] p-6">
-          <p className="text-sm font-semibold text-[#111111]">Skills</p>
+          <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#8AA79E]">
+            Expertise
+          </p>
+          <h3 className="mt-3 text-lg font-bold text-[#111111]">Your skills</h3>
           <div className="mt-4 flex flex-wrap gap-2">
             {allSkills.map((skill) => {
               const selected = selectedSkills.find((item) => item.id === skill.id);
@@ -335,7 +338,10 @@ export default function ProfileMeClient({
         </Card>
 
         <Card className="rounded-[22px] p-6">
-          <p className="text-sm font-semibold text-[#111111]">Interests</p>
+          <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#8AA79E]">
+            Focus Areas
+          </p>
+          <h3 className="mt-3 text-lg font-bold text-[#111111]">Your interests</h3>
           <div className="mt-4 flex flex-wrap gap-2">
             {allInterests.map((interest) => {
               const selected = selectedInterestIds.includes(interest.id);

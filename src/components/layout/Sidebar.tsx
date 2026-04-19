@@ -47,7 +47,7 @@ export default function Sidebar({ activeHref, user }: Props) {
           >
             H
           </span>
-          <span className="font-semibold text-[#111111] text-sm">Helplytics AI</span>
+          <span className="font-semibold text-[#111111] text-sm">HelpHub AI</span>
         </Link>
 
         {/* Nav links */}

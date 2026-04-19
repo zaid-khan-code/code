@@ -49,7 +49,6 @@ export default async function AICenterPage() {
         subtitle="AI-like insights summarize demand trends, helper readiness, urgency signals, and request recommendations."
       />
 
-      {/* 3 stat cards — Trend Pulse / Urgency Watch / Mentor Pool */}
       <div className="grid gap-4 sm:grid-cols-3">
         <Card className="rounded-[22px] p-6">
           <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#8AA79E]">Trend Pulse</p>
@@ -75,7 +74,6 @@ export default async function AICenterPage() {
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
-        {/* Your activity summary */}
         <Card className="rounded-[22px] p-6">
           <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#8AA79E]">
             Your Activity (30 days)
@@ -91,11 +89,10 @@ export default async function AICenterPage() {
           </p>
           <div className="mt-4 rounded-[14px] border border-[#F0EBE3] p-4 text-sm text-[#6B6B6B]">
             Current trust score:{" "}
-            <span className="font-bold text-[#111111]">{profile.trust_score}</span>
+            <span className="font-bold text-[#111111]">{profile.trust_score}%</span>
           </div>
         </Card>
 
-        {/* Response quality tip */}
         <Card className="rounded-[22px] p-6">
           <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#8AA79E]">
             Tip of the Day
@@ -110,7 +107,6 @@ export default async function AICenterPage() {
         </Card>
       </div>
 
-      {/* Category trends bar chart */}
       <Card className="rounded-[22px] p-6">
         <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#8AA79E]">
           Category Trends
@@ -138,7 +134,6 @@ export default async function AICenterPage() {
         )}
       </Card>
 
-      {/* Urgency stats */}
       <Card className="rounded-[22px] p-6">
         <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#8AA79E]">
           Urgency Overview
@@ -158,7 +153,6 @@ export default async function AICenterPage() {
         </div>
       </Card>
 
-      {/* Skill gaps */}
       <Card className="rounded-[22px] p-6">
         <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#8AA79E]">
           Skill Gaps
@@ -177,7 +171,7 @@ export default async function AICenterPage() {
               >
                 <div>
                   <p className="font-medium text-[#111111]">{tag}</p>
-                  <p className="text-xs text-[#6B6B6B]">{demand} open requests · {helpers} helpers</p>
+                  <p className="text-xs text-[#6B6B6B]">{demand} open requests &middot; {helpers} helpers</p>
                 </div>
                 <Badge variant="critical">gap</Badge>
               </div>
@@ -193,7 +187,6 @@ export default async function AICenterPage() {
         </p>
       </Card>
 
-      {/* AI-suggested requests for you */}
       <Card className="rounded-[22px] p-6">
         <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#8AA79E]">
           AI Recommendations
@@ -234,7 +227,7 @@ export default async function AICenterPage() {
             href="/explore"
             className="text-sm font-medium text-[#0C9F88] hover:underline"
           >
-            Browse all open requests →
+            Browse all open requests &rarr;
           </Link>
         </div>
       </Card>

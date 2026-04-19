@@ -1,23 +1,23 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Manrope } from "next/font/google";
 import "./globals.css";
 
-const inter = Inter({
+const manrope = Manrope({
   subsets: ["latin"],
   display: "swap",
   variable: "--font-sans",
 });
 
 export const metadata: Metadata = {
-  title: "Helplytics AI",
-  description: "AI-powered community help platform",
+  title: "HelpHub AI",
+  description: "Community support, trust signals, and AI-guided help requests.",
 };
 
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={inter.variable}>
+    <html lang="en" className={manrope.variable}>
       <body className="min-h-screen bg-[var(--color-bg)] text-[var(--color-text)] antialiased">
         {children}
       </body>

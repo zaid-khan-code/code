@@ -2,9 +2,17 @@
 
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/admin';
 import { signUpSchema, signInSchema, updateProfileSchema } from '@/lib/zod/schemas';
 import { TRUST_EVENTS } from '@/lib/trust/score';
 import { DEFAULT_ROLE, type Role } from './roles';
+
+function getSafeNextPath(value: FormDataEntryValue | null) {
+  const nextPath = value?.toString().trim();
+  if (!nextPath) return null;
+  if (!nextPath.startsWith('/') || nextPath.startsWith('//')) return null;
+  return nextPath;
+}
 
 export async function signUp(
   _prev: { error: string | null },
@@ -36,18 +44,27 @@ export async function signUp(
   if (error) return { error: error.message };
   if (!data.user) return { error: 'Signup failed' };
 
-  // Emit trust event for signup
-  await supabase.rpc('trust_emit', {
+  const admin = createAdminClient();
+
+  await admin
+    .from('profiles')
+    .update({
+      full_name: parsed.data.full_name || null,
+      user_mode: parsed.data.user_mode ?? 'both',
+      updated_at: new Date().toISOString(),
+    })
+    .eq('id', data.user.id);
+
+  await admin.rpc('trust_emit', {
     p_user: data.user.id,
     p_type: 'signup',
     p_delta: TRUST_EVENTS.signup,
   });
 
-  if (parsed.data.user_mode) {
-    await supabase
-      .from("profiles")
-      .update({ user_mode: parsed.data.user_mode })
-      .eq("id", data.user.id);
+  if (!data.session) {
+    return {
+      error: 'Check your email to verify your account, then log in to continue.',
+    };
   }
 
   redirect(parsed.data.user_mode ? `/onboarding?mode=${parsed.data.user_mode}` : '/onboarding');
@@ -80,6 +97,8 @@ export async function signIn(
 
   if (!user) return { error: 'Authentication failed' };
 
+  const nextPath = getSafeNextPath(formData.get('next'));
+
   const { data: profile } = await supabase
     .from('profiles')
     .select('role, onboarded')
@@ -92,7 +111,7 @@ export async function signIn(
 
   if (!profile?.onboarded) redirect('/onboarding');
 
-  redirect('/dashboard');
+  redirect(nextPath ?? '/dashboard');
 }
 
 export async function signOut(): Promise<void> {

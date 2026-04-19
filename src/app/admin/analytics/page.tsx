@@ -1,6 +1,7 @@
 import { requireAdmin } from "@/lib/auth/guards";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getCategoryTrends, getSkillGaps } from "@/lib/ai/insights";
+import { daysAgoISOString } from "@/lib/format";
 import Card from "@/components/ui/Card";
 import Stat from "@/components/ui/Stat";
 
@@ -8,10 +9,8 @@ export default async function AdminAnalyticsPage() {
   await requireAdmin();
   const sb = createAdminClient();
 
-  // eslint-disable-next-line react-hooks/purity
-  const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
-  // eslint-disable-next-line react-hooks/purity
-  const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
+  const thirtyDaysAgo = daysAgoISOString(30);
+  const sevenDaysAgo = daysAgoISOString(7);
 
   const [
     trends,
@@ -38,7 +37,6 @@ export default async function AdminAnalyticsPage() {
     ? Math.round(((solvedRequests ?? 0) / totalRequests) * 100)
     : 0;
 
-  // Signups per day (last 30d)
   const signupsByDay: Record<string, number> = {};
   for (const { created_at } of signupsRaw ?? []) {
     const day = created_at.slice(0, 10);
@@ -47,7 +45,6 @@ export default async function AdminAnalyticsPage() {
   const signupEntries = Object.entries(signupsByDay).sort(([a], [b]) => a.localeCompare(b));
   const maxSignups = Math.max(...signupEntries.map(([, v]) => v), 1);
 
-  // Avg time to first helper
   const firstHelperByRequest: Record<string, string> = {};
   for (const r of firstHelperRaw ?? []) {
     if (!firstHelperByRequest[r.request_id]) {
@@ -74,8 +71,9 @@ export default async function AdminAnalyticsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-xl font-semibold text-[#111111]">Analytics</h1>
-        <p className="text-sm text-[#6B6B6B]">Platform health and trends</p>
+        <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#8AA79E]">Admin</p>
+        <h1 className="text-[2rem] font-black leading-[0.95] tracking-[-0.04em] text-[#111111]">Analytics</h1>
+        <p className="mt-2 text-sm text-[#6B6B6B]">Platform health and trends</p>
       </div>
 
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
@@ -88,7 +86,6 @@ export default async function AdminAnalyticsPage() {
         />
       </div>
 
-      {/* Requests by category */}
       <Card className="rounded-[22px] p-6">
         <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#8AA79E]">
           Requests by Category
@@ -114,7 +111,6 @@ export default async function AdminAnalyticsPage() {
         )}
       </Card>
 
-      {/* Signups per day */}
       <Card className="rounded-[22px] p-6">
         <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#8AA79E]">
           Signups
@@ -123,18 +119,18 @@ export default async function AdminAnalyticsPage() {
         {signupEntries.length === 0 ? (
           <p className="mt-4 text-sm text-[#6B6B6B]">No signups yet.</p>
         ) : (
-          <div className="mt-6 flex items-end gap-1 h-24 overflow-x-auto">
+          <div className="mt-6 flex items-end gap-2 h-28 overflow-x-auto pb-2">
             {signupEntries.map(([day, count]) => (
               <div
                 key={day}
-                className="shrink-0 flex flex-col items-center gap-1"
+                className="shrink-0 flex flex-col items-center gap-2"
                 title={`${day}: ${count}`}
               >
                 <div
-                  className="w-4 rounded-sm bg-[#0C9F88] opacity-80"
+                  className="w-5 rounded-t-md bg-[#0C9F88] opacity-80"
                   style={{ height: `${(count / maxSignups) * 80}px` }}
                 />
-                <span className="text-[8px] text-[#A0A0A0] rotate-90 origin-center w-6">
+                <span className="text-[9px] text-[#A0A0A0] rotate-45 origin-left translate-y-2">
                   {day.slice(5)}
                 </span>
               </div>
@@ -143,7 +139,6 @@ export default async function AdminAnalyticsPage() {
         )}
       </Card>
 
-      {/* Skill gaps */}
       <Card className="rounded-[22px] p-6">
         <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#8AA79E]">
           Skill Gaps
